@@ -1,11 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="scss/main.css">
     <title>Document</title>
 </head>
 <body>
-<button class="btn btn-primary">Cliquez ici</button>
-    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <nav class="navbar navbar-expand-lg bg-secondary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Vite & Gourmand</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Acceuil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Nos menus</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Mon compte</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">Inscription</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">Nous contacter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+  </nav>
+  <main id="main-page">
+    <!--Contenu de la page-->
+  </main>
+  <footer class="bg-secondary text-white text-center footer mt-5">
+    <div class="container py-2">
+      <div class="row align-items-center">
+        <div class="col-3 text-md-start">
+          <h5>Contact</h5>
+          <p>06.55.55.55.55</p>
+          <a href="#" class="btn btn-primary">Nous contacter</a>
+        </div>
+        <div class="col-6">
+          <h3><a class="navbar-brand" href="/">Vite & Gourmand</a></h3>
+          <p>Avenue Gambetta</p>
+          <p>33000 Bordeaux</p>
+        </div>
+        <div class="col-3 text-md-end">
+          <h5>Nos horaires</h5>
+          <ul class="list-unstyled">
+            <li>lundi : 9h00 - 18h00</li>
+            <li>mardi : 9h00 - 18h00</li>
+            <li>mercredi : 9h00 - 18h00</li>
+            <li>jeudi : 9h00 - 18h00</li>
+            <li>vendredi : 9h00 - 18h00</li>
+            <li>samedi : 9h00 - 18h00</li>
+            <li>dimanche : 9h00 - 18h00</li> 
+          </ul>  
+        </div>
+      </div>
+    </div>
+    <hr class="border-light">    
+    <div class="small">
+      <p class="mb-0">2026 - Vite&Gourmand - <a href="#" class="text-decoration-none text-white">Condition général de vente</a> - <a href="#" class="text-decoration-none text-white">Mentions légales</a></p>
+    </div>
+  </footer>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="router/Router.js"></script>
 </body>
 </html>

@@ -1,0 +1,16 @@
+// Custom.scss
+// Option A: Include all of Bootstrap
+
+// Include any default variable overrides here (though functions won’t be available)
+$primary: #B8892C;
+$secondary: #963D30;
+$info : #A1A1A1;
+$dark: #39150E;
+$black: #292222;
+$font-family-sans-serif: 'Montserrat', sans-serif;
+$font-family-serif: "Hind Madurai", serif;
+$form-select-indicator-color: #B8892C;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+// Then add additional custom code here
