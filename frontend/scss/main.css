@@ -11980,9 +11980,34 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
 footer.footer {
   padding: 15px;
-  position: absolute;
-  bottom: 0;
+}
+
+.text-justify {
+  text-align: center;
+}
+
+.carousel-item {
+  aspect-ratio: 16/9;
+}
+
+.carousel-item img {
   width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
 }/*# sourceMappingURL=main.css.map */
