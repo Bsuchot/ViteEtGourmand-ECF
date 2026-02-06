@@ -1,6 +1,7 @@
 @import '../node_modules/bootstrap-icons/font/bootstrap-icons.css';
 @import 'custom';
 
+//style général
 html, body {
   height: 100%;
 }
@@ -22,6 +23,42 @@ footer.footer {
     text-align: center;
 }
 
+.hero-scene{
+    position: relative;
+    margin-bottom: 15px;
+    &::before{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url(../assets/images/pexels-picsfast-8753672.jpg);
+        background-size: cover;
+        filter: brightness(0.3);
+    }
+
+    *{
+    // Positionner les éléments avant le before
+    position: relative;
+    }
+
+    .hero-scene-content{
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+}
+
+.btn {
+  color: #fff;
+}
+
+
+//style page home
 .carousel-item {
   aspect-ratio: 16 / 9;
 }
@@ -31,3 +68,44 @@ footer.footer {
   height: 100%;
   object-fit: contain;
 }
+
+
+
+//style page menu
+
+//accordéon filtre
+
+//accordéon choix menu
+#accordionMenu {
+  .menu1 {
+  position: relative;
+
+    .accordion-button {
+      position: relative;
+      color: #fff;
+      background-image: url("../assets/images/repasAutomn.jpg");
+      background-size: cover;
+      background-position: center;
+      z-index: 1;
+      align-items: stretch;
+      padding-right: 3rem;
+
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: -1;
+      }
+    }
+  }
+  .accordion-button::after {
+    filter: brightness(0) invert(1);
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    top: auto;
+    transform: none;
+  }
+}
+
