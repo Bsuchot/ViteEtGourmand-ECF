@@ -106,7 +106,7 @@
                         </div>     
                     </div> 
                     <div class="d-flex justify-content-center my-3">
-                        <button class="btn btn-primary">Laisser un avis</button>   
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">Donner votre avis</button>   
                     </div>    
                 </div>
                 <!--carroussel-->
@@ -137,3 +137,55 @@
         </div>
     </article>
 </section>
+
+<!-- Modal avis client-->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="reviewModal">Donner votre avis</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+            <input type="text" class="form-control" id="firstnameFormControlInput1" placeholder="votre prénom">
+        </div>
+        <div class="mb-3">
+            <input type="text" class="form-control" id="nameFormControlInput1" placeholder="votre Nom">
+        </div>
+        <div>
+            <select class="form-select" aria-label="Default select avisMenus">
+                <option selected>Pour quel menu ?</option>
+                <option value="1">Menu 1</option>
+                <option value="2">Menu 2</option>
+                <option value="3">Menu 3</option>
+            </select>  
+        </div>
+        <div class="col-md-6">
+            <div class="rating-card p-4">
+                <div class="star-rating animated-stars">
+                    <input type="radio" id="star5" name="rating" value="5">
+                    <label for="star5" class="bi bi-star-fill"></label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4" class="bi bi-star-fill"></label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3" class="bi bi-star-fill"></label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2" class="bi bi-star-fill"></label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1" class="bi bi-star-fill"></label>
+                </div>
+                <p class="text-muted mt-2">Cliquer pour noter</p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <textarea class="form-control" id="reviewFormControlTextarea1" rows="3" placeholder="Laisser votre avis ici !"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Valider</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>
