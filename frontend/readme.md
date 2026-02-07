@@ -1,0 +1,2 @@
+framework : bootstrap
+plugin : nouislider
