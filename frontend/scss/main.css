@@ -12066,10 +12066,10 @@ footer.footer {
   color: #ffc107;
 }
 
-#accordionMenu .menu1 {
+#accordionMenu .menuOne {
   position: relative;
 }
-#accordionMenu .menu1 .accordion-button {
+#accordionMenu .menuOne .accordion-button {
   position: relative;
   color: #fff;
   background-image: url("../assets/images/repasAutomn.jpg");
@@ -12079,7 +12079,7 @@ footer.footer {
   align-items: stretch;
   padding-right: 3rem;
 }
-#accordionMenu .menu1 .accordion-button::before {
+#accordionMenu .menuOne .accordion-button::before {
   content: "";
   position: absolute;
   inset: 0;

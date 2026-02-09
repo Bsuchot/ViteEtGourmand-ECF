@@ -7,7 +7,7 @@
 <div class="container">
     <div class="row">
         <!--Filtre-->
-        <div class="col-2">
+        <div class="col-12 col-md-12 col-lg-2 mb-3">
             <div class="accordion" id="accordionFilter">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
@@ -24,11 +24,23 @@
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
                                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#themeCollapseOne" aria-expanded="false" aria-controls="themeCollapseOne">
-                                                Thèmes :
+                                                Thèmes
                                             </button>
                                             </h2>
                                             <div id="themeCollapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionThemeFilter">
-                                                <div class="accordion-body">  
+                                                <div class="accordion-body">
+                                                    <div class="form-check check-theme">
+                                                        <input class="form-check-input" type="checkbox" value="" id="checkNoel">
+                                                        <label class="form-check-label" for="checkNoel">
+                                                            Noël
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check check-theme">
+                                                        <input class="form-check-input" type="checkbox" value="" id="checkAutomn">
+                                                        <label class="form-check-label" for="checkAutomn">
+                                                            Automne
+                                                        </label>
+                                                    </div>  
                                                 </div>
                                             </div>
                                         </div>
@@ -40,13 +52,13 @@
                                 <div class="col-6">
                                     <div class="mb-3">
                                         <label for="minPriceFormControlInput1" class="form-label">Prix min</label>
-                                        <input type="text" class="form-control" id="minPriceFormControlInput1" placeholder="0">
+                                        <input type="number" class="form-control" id="minPriceFormControlInput1" placeholder="0">
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="mb-3">
                                         <label for="maxPriceFormControlInput1" class="form-label">Prix max</label>
-                                        <input type="text" class="form-control" id="maxPriceFormControlInput1" placeholder="100">
+                                        <input type="number" class="form-control" id="maxPriceFormControlInput1" placeholder="100">
                                     </div>
                                 </div>
                             </div>
@@ -57,11 +69,23 @@
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
                                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#dietCollapseOne" aria-expanded="false" aria-controls="dietCollapseOne">
-                                                Régime alimentaire :
+                                                Régime alimentaire
                                             </button>
                                             </h2>
                                             <div id="dietCollapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionDietFilter">
-                                                <div class="accordion-body">  
+                                                <div class="accordion-body">
+                                                    <div class="form-check check-Diet">
+                                                        <input class="form-check-input" type="checkbox" value="" id="checkVege">
+                                                        <label class="form-check-label" for="checkVege">
+                                                            végétarien
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check check-Diet">
+                                                        <input class="form-check-input" type="checkbox" value="" id="checkVegan">
+                                                        <label class="form-check-label" for="checkVegan">
+                                                            végétalien
+                                                        </label>
+                                                    </div>   
                                                 </div>
                                             </div>
                                         </div>
@@ -73,41 +97,42 @@
                                 <div class="col">
                                     <div class="mb-3">
                                         <label for="minPersonFormControlInput1" class="form-label">Personne min</label>
-                                        <input type="text" class="form-control" id="minPersonFormControlInput1" placeholder="2">
+                                        <input type="number" class="form-control" id="minPersonFormControlInput1" placeholder="2">
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-primary">Annuler tout les Changements</button>
+                            <button type="button" class="btn btn-primary">Annuler tous les filtres</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!--Choix menu-->
-        <div class="col-10">
+        <div class="col-12 col-md-12 col-lg-10">
             <div class="accordion" id="accordionMenu">
-                <div class="accordion-item menuOne border-secondary">
+                <div class="accordion-item menuOne border-secondary" data-them="" data-price="" data-diet="" data-person-min="">
                     <h2 class="accordion-header">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMenuOne" aria-expanded="false" aria-controls="collapseMenuOne">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col align-item-start">
+                                <div class="col-12 col-md-4 mb-3 mb-md-0">
                                     <h5>Titre du menu</h5>
-                                    <p class="text-info">Thème : thème</p>
-                                    <p>option : végétarien / végétalien .</p>
-                                    <p>Nombre de de personne min : 5</p>
+                                    <p class="text-info mb-1" >Thème : thème</p>
+                                    <p class="mb-1">option : végétarien / végétalien .</p>
+                                    <p class="mb-0">personnes min : 5</p>
                                     
                                 </div>
-                                <div class="col text-justify">
-                                    <p>Une description du menu et combien vous allez l'aimer Quo artibus duce maiestatis incertum ei tempore rettulimus pileo firmum templum imperii Celsen maiestatis qua qua pileo ignavia maiestatis pulsatae portenderetur ignavia vetitis artibus artibus absolvi suum ei populatam fatidicum.</p>
+                                <div class="col-12 col-md-5 mb-3 mb-md-0">
+                                    <p class="mb-0">Une description du menu et combien vous allez l'aimer Quo artibus duce maiestatis incertum ei tempore rettulimus pileo firmum templum imperii Celsen maiestatis qua qua pileo ignavia maiestatis pulsatae portenderetur ignavia vetitis artibus artibus absolvi suum ei populatam fatidicum.</p>
                                 </div>
-                                <div class="col text-end">
-                                    <ul class="list-unstyled">
+                                <div class="col-12 col-md-3 text-md-end">
+                                    <ul class="list-unstyled mb-2">
                                         <li>Entrées</li>
                                         <li>Plats</li>
                                         <li>Desserts</li>
                                     </ul>
-                                    <strong class="text-primary fs-3">60 €</strong>
+                                    <strong class="text-primary fs-3 price">60 €</strong>
+                                    <p>Ecore <strong>5</strong> disponible</p>
                                 </div>
                             </div>
                         </div>
@@ -140,8 +165,9 @@
                                 <li>Dessert 2</li>
                                 <li>Description</li>
                             </ul>
-                            <button class="btn btn-primary">Commander</button>
-                            <p>À commander ... jours avant</p>
+                            <button type="submit" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#coordoneesModal">Commander</button>
+                            <br>
+                            <strong class="text-secondary">À commander ... jours avant</strong>
                         </div>
                     </div>
                 </div>
@@ -172,4 +198,64 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal coordonées-->
+<div class="modal fade" id="coordoneesModal" tabindex="-1" aria-labelledby="coordoneesModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="coordoneesModal">Informations prestation</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="">
+        <div class="modal-body">
+            <!--Information client-->
+            <h6 class="text-primary text-center">Informations Client</h6>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="nameFormControlInput2" name="name" placeholder="Nom">
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="firstnameFormControlInput2" name="firstname" placeholder="Prénom">
+            </div>
+            <div class="mb-3">
+                <input type="email" class="form-control" id="mailFormControlInput2" name="email" placeholder="Email">
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="gsmFormControlInput2" name="gsm" placeholder="numéro de GSM">
+            </div>
+            <!--Adresse liuvraison-->
+            <h6 class="text-primary text-center">Adresse de livraison</h6>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="adressFormControlInput2" name="adress" placeholder="Adresse">
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="postalCodeFormControlInput2" name="postal_code" placeholder="Code postal">
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="cityFormControlInput2" name="city" placeholder="Ville">
+            </div>
+            <p class="text-secondary text-justify">(facturation de 5 euros (majoré de 59 centimes par kilomètre parcouru) si la livraison n’est pas dans la ville de bordeaux).</p>
+            <!--date et heure de livraison-->
+            <h6 class="text-primary text-center">Date et heure de livraison</h6>
+            <div class="mb-3">
+                <label for="deliveryDateFormControlInput2">Date de livraison</label>
+                <input type="date" class="form-control" name="delivery_date" id="deliveryDateFormControlInput2">
+            </div>
+            <div class="mb-3">
+                <select class="form-select" name="delivery_time" id="deliveryTime" required>
+                    <option value="">Choisir une heure</option>
+                </select>
+                <small class="text-muted">
+                    Livraison possible de 9h à 19h
+                </small>
+            </div>     
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Suivant</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
