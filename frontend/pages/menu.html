@@ -140,58 +140,124 @@
                     </h2>
                     <div id="collapseMenuOne" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">
                         <div class="accordion-body text-center">
-                            <p>Entrée, Plats et Desserts</p>
-                            <h6 class="text-uppercase text-primary">Entrées</h6>
-                            <ul class="list-unstyled">
-                                <li>Entrée 1</li>
-                                <li>Description</li>
-                                <li>------------------------</li>
-                                <li>Entrée 2</li>
-                                <li>Description</li>
-                            </ul>
-                            <h6 class="text-uppercase text-primary">Plats</h6>
-                            <ul class="list-unstyled">
-                                <li>Plat 1</li>
-                                <li>Description</li>
-                                <li>------------------------</li>
-                                <li>Plat 2</li>
-                                <li>Description</li>
-                            </ul>
-                            <h6 class="text-uppercase text-primary">Dessert</h6>
-                            <ul class="list-unstyled">
-                                <li>Dessert 1</li>
-                                <li>Description</li>
-                                <li>------------------------</li>
-                                <li>Dessert 2</li>
-                                <li>Description</li>
-                            </ul>
-                            <button type="submit" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#coordoneesModal">Commander</button>
-                            <br>
-                            <strong class="text-secondary">À commander ... jours avant</strong>
+                            <div class="container">
+                                <div class="row my-4">
+                                    <p>Entrée, Plats et Desserts</p>
+                                </div>
+                                <!--Entrées-->
+                                <div class="row my-5">
+                                    <div class="col d-flex align-items-start justify-content-end img-entree-one">
+                                        <div class="image-card text-white">
+                                            <img src="/assets/images/pouletFrit.jpg" class="rounded img-fluid" alt="entrée 1"/>
+                                            <p class="titre-image">Entrée 1</p>
+                                        </div>
+                                    </div>    
+                                    <div class="col justify-content-center align-self-center mb-5">
+                                        <h6 class="text-uppercase text-primary my-3">Entrées</h6>
+                                        <ul class="list-unstyled">
+                                            <li>Entrée 1</li>
+                                            <li class="text-info">Une description du menu et combien vous allez l'aimer Quo artibus</li>
+                                            <hr class="my-4"/>
+                                            <li>Entrée 2</li>
+                                            <li class="text-info">Une description du menu et combien vous allez l'aimer Quo artibus</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col d-flex align-items-end justify-content-start image-entree-two">
+                                        <div class="image-card text-white">
+                                            <img src="/assets/images/profiterole.jpg" class="rounded img-fluid" alt="entrée 2"/>
+                                            <p class="titre-image">Entrée 2</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Plats-->
+                                <div class="row my-5">
+                                    <div class="col d-flex align-items-start justify-content-end img-plat-one">
+                                        <div class="image-card text-white">
+                                            <img src="/assets/images/pouletFrit.jpg" class="rounded img-fluid" alt="Plat 1"/>
+                                            <p class="titre-image">Plat 1</p>
+                                        </div>
+                                    </div> 
+                                    <div class="col justify-content-center align-self-center mb-5">
+                                        <h6 class="text-uppercase text-primary my-3">Plats</h6>
+                                        <ul class="list-unstyled">
+                                            <li>Plat 1</li>
+                                            <li class="text-info">Une description du menu et combien vous allez l'aimer Quo artibus</li>
+                                            <hr/>
+                                            <li>Plat 2</li>
+                                            <li class="text-info">Une description du menu et combien vous allez l'aimer Quo artibus</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col d-flex align-items-end justify-content-start img-plat-two">
+                                        <div class="image-card text-white">
+                                            <img src="/assets/images/pouletFrit.jpg" class="rounded img-fluid" alt="Plat 2"/>
+                                            <p class="titre-image">Plat 2</p>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <!--Desserts-->
+                                <div class="row my-5">
+                                    <div class="col d-flex align-items-start justify-content-end img-dessert-one">
+                                        <div class="image-card text-white">
+                                            <img src="/assets/images/pouletFrit.jpg" class="rounded img-fluid" alt="dessert 1"/>
+                                            <p class="titre-image">Dessert1</p>
+                                        </div>
+                                    </div> 
+                                    <div class="col justify-content-center align-self-center mb-5">
+                                        <h6 class="text-uppercase text-primary my-3">Dessert</h6>
+                                        <ul class="list-unstyled">
+                                            <li>Dessert 1</li>
+                                            <li class="text-info">Une description du menu et combien vous allez l'aimer Quo artibus</li>
+                                            <hr/>
+                                            <li>Dessert 2</li>
+                                            <li class="text-info">Une description du menu et combien vous allez l'aimer Quo artibus</li>
+                                        </ul> 
+                                    </div>
+                                    <div class="col d-flex align-items-end justify-content-start img-dessert-two">
+                                        <div class="image-card text-white">
+                                            <img src="/assets/images/pouletFrit.jpg" class="rounded img-fluid" alt="dessert 2"/>
+                                            <p class="titre-image">Dessert 2</p>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#coordoneesModal">Commander</button>
+                                <br>
+                                <strong class="text-secondary">À commander ... jours avant</strong>
+                            </div>    
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item menuTwo border-secondary">
+                <div class="accordion-item menuTwo soldout border-secondary">
                     <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMenuTwo" aria-expanded="false" aria-controls="collapseMenuTwo">
-                        Accordion Item #2
+                         <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                    <h5>Titre du menu</h5>
+                                    <p class="text-info mb-1" >Thème : thème</p>
+                                    <p class="mb-1">option : végétarien / végétalien .</p>
+                                    <p class="mb-0">personnes min : 5</p>
+                                    
+                                </div>
+                                <div class="col-12 col-md-5 mb-3 mb-md-0">
+                                    <p class="mb-0">Une description du menu et combien vous allez l'aimer Quo artibus duce maiestatis incertum ei tempore rettulimus pileo firmum templum imperii Celsen maiestatis qua qua pileo ignavia maiestatis pulsatae portenderetur ignavia vetitis artibus artibus absolvi suum ei populatam fatidicum.</p>
+                                </div>
+                                <div class="col-12 col-md-3 text-md-end">
+                                    <ul class="list-unstyled mb-2">
+                                        <li>Entrées</li>
+                                        <li>Plats</li>
+                                        <li>Desserts</li>
+                                    </ul>
+                                    <strong class="text-primary fs-3 price">60 €</strong>
+                                    <br>
+                                    <strong class="text-danger soldout-text">Victime de sont succés</strong>
+                                </div>
+                            </div>
+                        </div>
                     </button>
                     </h2>
                     <div id="collapseMenuTwo" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
                             <strong>This is the second item’s accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item menuThree border-secondary">
-                    <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMenuThree" aria-expanded="false" aria-controls="collapseMenuThree">
-                        Accordion Item #3
-                    </button>
-                    </h2>
-                    <div id="collapseMenuThree" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">
-                        <div class="accordion-body">
-                            <strong>This is the third item’s accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
                         </div>
                     </div>
                 </div>
@@ -243,7 +309,7 @@
                 <input type="date" class="form-control" name="delivery_date" id="deliveryDateFormControlInput2">
             </div>
             <div class="mb-3">
-                <select class="form-select" name="delivery_time" id="deliveryTime" required>
+                <select class="form-select" aria-label="Delivery select time" name="delivery_time" id="deliveryTime">
                     <option value="">Choisir une heure</option>
                 </select>
                 <small class="text-muted">
@@ -251,8 +317,106 @@
                 </small>
             </div>     
         </div>
+        <div class="modal-footer align-items-center">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#commandModal">Suivant</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal commandes-->
+<div class="modal fade" id="commandModal" tabindex="-1" aria-labelledby="commandModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="commandModal">Commander votre menu</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="">
+        <div class="modal-body">
+            <!--Choix du menu-->
+            <h5 class="text-primary text-center">Choix du menu</h5>
+            <div class="mb-3">
+                <select class="form-select" aria-label="Menu select" name="command_choice_menu" id="commandeChoiceMenu">
+                    <option value="">Choisir un menu</option>
+                </select>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="mb-3">
+                            <label for="numberPersonFormControlInput2" class="form-label">Pour</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="numberPersonFormControlInput2" placeholder="5">
+                                <span class="input-group-text" id="addon-icon-person"><i class="bi bi-person-arms-up"></i></span>
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Composition du menu-->
+            <h5 class="text-primary text-center my-4">Composition du menu</h5>
+            <h6 class="text-center">Entrée</h6>
+            <select class="form-select" aria-label="Menu select entree" name="command_menu_entree" id="commandeMenuEntree">
+                    <option value="">Choisir une Entrée</option>
+            </select>
+            <br>
+            <h6 class="text-center">Plat</h6>
+            <select class="form-select" aria-label="Menu select plat" name="command_menu_plat" id="commandeMenuPlat">
+                    <option value="">Choisir un Plat</option>
+            </select>
+            <br>
+            <h6 class="text-center">Dessert</h6>
+            <select class="form-select" aria-label="Menu select entree" name="command_menu_dessert" id="commandeMenuDessert">
+                    <option value="">Choisir un Dessert</option>
+            </select>
+        </div>
+        <div class="modal-footer align-items-center">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#comfirmationcommandModal">Commander</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal confirmation commandes-->
+<div class="modal fade" id="comfirmationcommandModal" tabindex="-1" aria-labelledby="comfirmationcommandModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="comfirmationcommandModal">Comfirmation de votre commande</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="">
+        <div class="modal-body text-center align-items-center">
+            <!--Choix du menu-->
+            <h5>Nom du menu</h5>
+            <!--Composition du menu-->
+            <h5 class="text-primary my-4">Composition du menu</h5>
+            <h6>Entrée</h6>
+            <p>Entrée 1</p>
+            <hr/>
+            <h6>Plat</h6>
+            <p>Plat 1</p>
+            <hr/>
+            <h6>Dessert</h6>
+            <p>Dessert 1</p>
+            <button type="button" class="btn btn-primary my-4" data-bs-toggle="modal" data-bs-target="#commandModal">Modifier le menu</button>
+            <!--coordonées-->
+            <h5 class="text-primary my-4">Coordonées de livraison</h5>
+            <p>Prénom Name</p>
+            <p>Adresse</p>
+            <p>Code postal</p>
+            <p>Ville</p>
+            <p>Email</p>
+            <p>Gsm</p>
+            <button type="button" class="btn btn-primary my-4" data-bs-toggle="modal" data-bs-target="#coordoneesModal">Modifier vos coordonées</button>
+        </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Suivant</button>
+            <button type="submit" class="btn btn-primary">Commander</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
         </div>
       </form>

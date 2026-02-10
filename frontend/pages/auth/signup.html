@@ -1,0 +1,82 @@
+<div class="hero-scene text-center text-white">
+    <div class="hero-scene-content">
+        <h1>Inscription</h1>
+    </div>
+</div>
+<div class="container">
+    <form>
+        <div class="mb-3">
+            <label for="NomInput" class="form-label">Nom</label>
+            <input type="text" class="form-control" id="NomInput" placeholder="Votre nom" name="Nom"> 
+            <div class="invalid-feedback">
+                Le nom est requis.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="PrenomInput" class="form-label">Prénom</label>
+            <input type="text" class="form-control" id="PrenomInput" placeholder="Votre prénom" name="Prenom"> 
+            <div class="invalid-feedback">
+                Le prénom est requis.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="AdresseInput" class="form-label">Adresse postal</label>
+            <input type="text" class="form-control" id="AdressInput" name="adress" placeholder="Votre Adresse">
+            <div class="invalid-feedback">
+                L'adresse postal est requis.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="PostalCodeInput" class="form-label">Code postal</label>
+            <input type="text" class="form-control" id="PostalCodeInput" name="postal_code" placeholder="Votre code postal">
+            <div class="invalid-feedback">
+                Le code postal est requis.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="CityInput" class="form-label">Ville</label>
+            <input type="text" class="form-control" id="CityInput" name="city" placeholder="Votre ville">
+            <div class="invalid-feedback">
+                La ville est requis.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="GsmInput" class="form-label">Gsm</label>
+            <input type="text" class="form-control" id="GsmInput" placeholder="Votre Gsm" name="0655555555"> 
+            <div class="invalid-feedback">
+                Le gsm est requis.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="EmailInput" class="form-label">Email</label>
+            <input type="email" class="form-control" id="EmailInput" placeholder="test@mail.fr" name="Email"> 
+            <div class="invalid-feedback">
+                L'adresse email n'est pas valide.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="PasswordInput" class="form-label">Mot de passe</label>
+            <input type="password" class="form-control" id="PasswordInput" name="Password">
+            <div class="invalid-feedback">
+                Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.
+            </div>
+            <div class="valid-feedback">
+                Mot de passe valide.
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="ValidatePasswordInput" class="form-label">Confirmez votre mot de passe</label>
+            <input type="password" class="form-control" id="ValidatePasswordInput" name="PasswordConfirm">
+            <div class="invalid-feedback">
+                Les mots de passe ne correspondent pas.
+            </div>
+          </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary" id="btn-validation-inscription">Inscription</button>
+        </div>
+    </form>
+    <div class="text-center pt-3">
+        <a href="/signin">Vous avez déjà un compte ? Connectez-vous ici !</a>
+    </div>
+</div>

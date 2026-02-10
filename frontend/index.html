@@ -46,42 +46,56 @@
     <!--Contenu de la page-->
   </main>
   <!--footer-->
-  <footer class="bg-secondary text-white text-center footer mt-5">
-    <div class="container py-2">
-      <div class="row align-items-center">
-        <!--contact-->
-        <div class="col-3 text-md-start">
-          <h5>Contact</h5>
-          <p>06.55.55.55.55</p>
-          <a href="/contact" class="btn btn-primary">Nous contacter</a>
-        </div>
-        <!--adresse-->
-        <div class="col-6">
-          <h3><a class="navbar-brand" href="/">Vite & Gourmand</a></h3>
-          <p>Avenue Gambetta</p>
-          <p>33000 Bordeaux</p>
-        </div>
-        <!--horaire-->
-        <div class="col-3 text-md-end">
-          <h5>Nos horaires</h5>
-          <ul class="list-unstyled">
-            <li>lundi : 9h00 - 18h00</li>
-            <li>mardi : 9h00 - 18h00</li>
-            <li>mercredi : 9h00 - 18h00</li>
-            <li>jeudi : 9h00 - 18h00</li>
-            <li>vendredi : 9h00 - 18h00</li>
-            <li>samedi : 9h00 - 18h00</li>
-            <li>dimanche : 9h00 - 18h00</li> 
-          </ul>  
+  <footer class="bg-secondary text-white mt-5">
+  <div class="container py-4">
+    <div class="row align-items-center text-center text-md-start">
+      <!-- Contact -->
+      <div class="col-12 col-md-3 mb-3 mb-md-0">
+        <h5>Contact</h5>
+        <p class="mb-1">06.55.55.55.55</p>
+        <a href="/contact" class="btn btn-primary btn-sm">Nous contacter</a>
+      </div>
+
+      <!-- Adresse -->
+      <div class="col-12 col-md-6 mb-3 mb-md-0 text-center">
+        <h3><a class="navbar-brand text-white text-decoration-none" href="/">Vite & Gourmand</a></h3>
+        <p class="mb-1">Avenue Gambetta</p>
+        <p class="mb-0">33000 Bordeaux</p>
+      </div>
+
+      <!-- Horaires -->
+      <div class="col-12 col-md-3 text-center text-md-end mb-3 mb-md-0">
+        <h5>Nos horaires</h5>
+        <div class="row justify-content-center justify-content-md-end gx-2">
+          <div class="col-6 col-md-12">
+            <ul class="list-unstyled mb-0">
+              <li>lundi : 9h - 18h</li>
+              <li>mardi : 9h - 18h</li>
+              <li>mercredi : 9h - 18h</li>
+            </ul>
+          </div>
+          <div class="col-6 col-md-12">
+            <ul class="list-unstyled mb-0">
+              <li>jeudi : 9h - 18h</li>
+              <li>vendredi : 9h - 18h</li>
+              <li>samedi : 9h - 18h</li>
+              <li>dimanche : 9h - 18h</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-    <!--CVG et mentions légales-->
-    <hr class="border-light">    
-    <div class="small">
-      <p class="mb-0">2026 - Vite&Gourmand - <a href="#" class="text-decoration-none text-white">Condition général de vente</a> - <a href="#" class="text-decoration-none text-white">Mentions légales</a></p>
+
+    <!-- CVG et mentions légales -->
+    <hr class="border-light my-3">    
+    <div class="text-center small">
+      <p class="mb-0">2026 - Vite & Gourmand - 
+        <a href="#" class="text-white text-decoration-none">Conditions générales de vente</a> - 
+        <a href="#" class="text-white text-decoration-none">Mentions légales</a>
+      </p>
     </div>
-  </footer>
+  </div>
+</footer>
   <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="scripts/main.js"></script>
   <script type="module" src="router/Router.js"></script>
