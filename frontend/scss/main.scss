@@ -56,6 +56,10 @@ footer.footer {
   color: #fff;
 }
 
+.bg-tertiary {
+  background-color: $tertiary;
+}
+
 
 //style page home
 .carousel-item {
@@ -237,7 +241,9 @@ footer.footer {
 }
 
 // style page account
-.bg-tertiary {
-  background-color: $tertiary;
+
+.price {
+  min-width: 80px;   /* largeur fixe pour aligner les € */
+  white-space: nowrap;
 }
 

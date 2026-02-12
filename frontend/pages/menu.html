@@ -290,7 +290,7 @@
             <div class="mb-3">
                 <input type="text" class="form-control" id="gsmFormControlInput2" name="gsm" placeholder="numéro de GSM">
             </div>
-            <!--Adresse liuvraison-->
+            <!--Adresse livraison-->
             <h6 class="text-primary text-center">Adresse de livraison</h6>
             <div class="mb-3">
                 <input type="text" class="form-control" id="adressFormControlInput2" name="adress" placeholder="Adresse">
@@ -344,16 +344,37 @@
                 </select>
             </div>
             <div class="container">
-                <div class="row">
-                    <div class="col-3">
-                        <div class="mb-3">
-                            <label for="numberPersonFormControlInput2" class="form-label">Pour</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" id="numberPersonFormControlInput2" placeholder="5">
-                                <span class="input-group-text" id="addon-icon-person"><i class="bi bi-person-arms-up"></i></span>
-                            </div>  
+                <div class="row align-items-center mb-4">
+                    <!-- Input -->
+                    <div class="col-12 col-md-3 mb-3 mb-md-0">
+                        <label for="numberPersonFormControlInput2" class="form-label fw-semibold">
+                            Nombre de personnes
+                        </label>
+                        <div class="input-group">
+                            <input type="number" class="form-control text-center"
+                                id="numberPersonFormControlInput2" placeholder="5">
+                            <span class="input-group-text">
+                                <i class="bi bi-person-arms-up"></i>
+                            </span>
                         </div>
                     </div>
+                    <!-- Info -->
+                    <div class="col-12 col-md-9">
+                        <div class="alert alert-info mb-0">
+                            Une réduction de <strong>10%</strong> est appliquée pour toute commande
+                            ayant <strong>5 personnes de plus</strong> que le minimum indiqué dans le menu.
+                        </div>
+                    </div>
+                </div>
+                <!-- Prix -->
+                <div class="text-center border rounded p-4 bg-light">
+                    <h5 class="text-primary mb-3">Prix du menu</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="fs-6">Prix de base : <strong>60 €</strong></li>
+                        <li class="text-success fs-5 mt-2">
+                            Après réduction : <strong>54 €</strong>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <!--Composition du menu-->
@@ -393,27 +414,39 @@
       <form action="">
         <div class="modal-body text-center align-items-center">
             <!--Choix du menu-->
-            <h5>Nom du menu</h5>
-            <!--Composition du menu-->
-            <h5 class="text-primary my-4">Composition du menu</h5>
-            <h6>Entrée</h6>
-            <p>Entrée 1</p>
-            <hr/>
-            <h6>Plat</h6>
-            <p>Plat 1</p>
-            <hr/>
-            <h6>Dessert</h6>
-            <p>Dessert 1</p>
-            <button type="button" class="btn btn-primary my-4" data-bs-toggle="modal" data-bs-target="#commandModal">Modifier le menu</button>
+            <div>
+                <h5>Nom du menu</h5>
+                <!--Composition du menu-->
+                <h5 class="text-primary my-4">Composition du menu</h5>
+                <h6>Entrée</h6>
+                <p>Entrée 1</p>
+                <hr/>
+                <h6>Plat</h6>
+                <p>Plat 1</p>
+                <hr/>
+                <h6>Dessert</h6>
+                <p>Dessert 1</p>
+                <button type="button" class="btn btn-primary my-4" data-bs-toggle="modal" data-bs-target="#commandModal">Modifier le menu</button>
+            </div> 
             <!--coordonées-->
-            <h5 class="text-primary my-4">Coordonées de livraison</h5>
-            <p>Prénom Name</p>
-            <p>Adresse</p>
-            <p>Code postal</p>
-            <p>Ville</p>
-            <p>Email</p>
-            <p>Gsm</p>
-            <button type="button" class="btn btn-primary my-4" data-bs-toggle="modal" data-bs-target="#coordoneesModal">Modifier vos coordonées</button>
+            <div>
+                <h5 class="text-primary my-4">Coordonées de livraison</h5>
+                <p>Prénom Name</p>
+                <p>Adresse</p>
+                <p>Code postal</p>
+                <p>Ville</p>
+                <p>Email</p>
+                <p>Gsm</p>
+                <button type="button" class="btn btn-primary my-4" data-bs-toggle="modal" data-bs-target="#coordoneesModal">Modifier vos coordonées</button>
+            </div>
+            <!--Prix-->
+            <div>
+                <h5 class="text-primary my-4">Facturation</h5>
+                <p>Coût du menu : 60€</p>
+                <p class="text-info">Réduction de 10% : -6€</p>
+                <p class="text-info">Frais de livraison : 5€</p>
+                <strong class="text-success">Total : 59€</strong>
+            </div>
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Commander</button>

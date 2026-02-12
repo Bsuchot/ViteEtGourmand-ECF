@@ -5,6 +5,9 @@
 </div>
 <div class="container">
     <form>
+        <div class="text-center text-primary my-4">
+            <h5>Vos Information personnel</h5>
+        </div>
         <div class="mb-3">
             <label for="NomInput" class="form-label">Nom</label>
             <input type="text" class="form-control" id="NomInput" placeholder="Votre nom" name="Nom"> 
@@ -20,10 +23,28 @@
             </div>
         </div>
         <div class="mb-3">
-            <label for="AdresseInput" class="form-label">Adresse postal</label>
+            <label for="GsmInput" class="form-label">Gsm</label>
+            <input type="text" class="form-control" id="GsmInput" placeholder="Votre Gsm" name="0655555555"> 
+            <div class="invalid-feedback">
+                Le gsm est requis.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="EmailInput" class="form-label">Email</label>
+            <input type="email" class="form-control" id="EmailInput" placeholder="test@mail.fr" name="Email"> 
+            <div class="invalid-feedback">
+                L'adresse email n'est pas valide.
+            </div>
+        </div>
+        <hr class="mt-5">
+        <div class="text-center text-primary my-4">
+            <h5>Votre adresse postal</h5>
+        </div>
+        <div class="mb-3">
+            <label for="AdresseInput" class="form-label">Adresse</label>
             <input type="text" class="form-control" id="AdressInput" name="adress" placeholder="Votre Adresse">
             <div class="invalid-feedback">
-                L'adresse postal est requis.
+                L'adresse est requis.
             </div>
         </div>
         <div class="mb-3">
@@ -40,19 +61,9 @@
                 La ville est requis.
             </div>
         </div>
-        <div class="mb-3">
-            <label for="GsmInput" class="form-label">Gsm</label>
-            <input type="text" class="form-control" id="GsmInput" placeholder="Votre Gsm" name="0655555555"> 
-            <div class="invalid-feedback">
-                Le gsm est requis.
-            </div>
-        </div>
-        <div class="mb-3">
-            <label for="EmailInput" class="form-label">Email</label>
-            <input type="email" class="form-control" id="EmailInput" placeholder="test@mail.fr" name="Email"> 
-            <div class="invalid-feedback">
-                L'adresse email n'est pas valide.
-            </div>
+        <hr class="mt-5">
+        <div class="text-center text-primary my-4">
+            <h5>Choisir un mot de passe</h5>
         </div>
         <div class="mb-3">
             <label for="PasswordInput" class="form-label">Mot de passe</label>

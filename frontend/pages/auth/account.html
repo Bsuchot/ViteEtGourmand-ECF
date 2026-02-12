@@ -1,42 +1,570 @@
 <div class="hero-scene text-center text-white">
     <div class="hero-scene-content">
         <h1>Votre Compte</h1>
-        <strong class="text-primary">Admin</strong>
-        <strong class="text-primary">Employé</strong>
+        <strong class="text-primary">**Admin**</strong>
+        <strong class="text-primary">*Employé*</strong>
     </div> 
 </div>
 <div class="accordion" id="accordionAccount">
+  <!--Données personnel-->
   <div class="accordion-item">
+    <!--Données personnel-->
     <h2 class="accordion-header">
-      <button class="accordion-button  text-center bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePersonalData" aria-expanded="true" aria-controls="collapsePersonalData">
+      <button class="accordion-button  text-center bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePersonalData" aria-expanded="false" aria-controls="collapsePersonalData">
         <span class="flex-grow-1 text-center">Mes Données Personnel</span>
       </button>
     </h2>
-    <div id="collapsePersonalData" class="accordion-collapse collapse show" data-bs-parent="#accordionAccount">
+    <div id="collapsePersonalData" class="accordion-collapse collapse" data-bs-parent="#accordionAccount">
       <div class="accordion-body">
+        <div class="container">
+          <!--Coordonées-->
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-6 text-center">
+              <h4 class="text-primary my-3">Vos coordonées</h4>
+              <form action="">
+                <div class="mb-3">
+                  <label for="NomInput" class="form-label">Nom</label>
+                  <input type="text" class="form-control" id="NomInput" placeholder="Votre nom" name="Nom"> 
+                </div>
+                <div class="mb-3">
+                    <label for="PrenomInput" class="form-label">Prénom</label>
+                    <input type="text" class="form-control" id="PrenomInput" placeholder="Votre prénom" name="Prenom"> 
+                </div>
+                <div class="mb-3">
+                  <label for="GsmInput" class="form-label">Gsm</label>
+                  <input type="text" class="form-control" id="GsmInput" placeholder="Votre Gsm" name="0655555555"> 
+                    <div class="invalid-feedback">
+                        Le gsm est requis.
+                    </div>
+                </div>
+                <div class="mb-3">
+                  <label for="EmailInput" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="EmailInput" placeholder="test@mail.fr" name="Email"> 
+                  <div class="invalid-feedback">
+                      L'adresse email n'est pas valide.
+                  </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="NewCoordonesBtn">Valider</button>
+              </form>
+            </div>
+          </div>
+          <hr> 
+          <!--mot de passe-->
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-6 text-center">
+              <h4 class="text-primary my-3">Changer de mot de passe</h4>
+              <form action="">
+                <div class="mb-3">
+                  <label for="PasswordInput" class="form-label">Mot de passe actuel</label>
+                  <input type="password" class="form-control" id="PasswordInput" name="Password">
+                </div>
+                <div class="mb-3">
+                  <label for="NewPasswordInput" class="form-label">Nouveau mot de passe</label>
+                  <input type="password" class="form-control" id="NewPasswordInput" name="NewPassword">
+                </div>
+                <button type="button" class="btn btn-primary" id="NewPasswordBtn">Valider</button>
+              </form>
+            </div>
+          </div> 
+        </div>
+      </div>
     </div>
   </div>
+  <!--Mes commandes-->
   <div class="accordion-item">
     <h2 class="accordion-header">
       <button class="accordion-button collapsed bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-        <span class="flex-grow-1 text-center">Mes Commande</span>
+        <span class="flex-grow-1 text-center">Mes Commandes</span>
       </button>
     </h2>
     <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionAccount">
       <div class="accordion-body">
+        <div class="container">
+          <div class="table-responsive">
+            <table class="table table-info table-striped-columns align-middle">
+              <thead>
+                <tr>
+                  <th>Date de commande</th>
+                  <th>Menu</th>
+                  <th>Pers.</th>
+                  <th class="d-none d-md-table-cell">Pour</th>
+                  <th class="d-none d-md-table-cell">Adresse</th>
+                  <th>Livraison</th>
+                  <th>Prix</th>
+                  <th>Statut</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>12/12/2026</td>
+                  <td>Nom du menu</td>
+                  <td>10</td>
+                  <td class="d-none d-md-table-cell">Jean de la Fontaine</td>
+                  <td class="d-none d-md-table-cell">9 rue du soleil 33000 Bordeaux</td>
+                  <td>15/12/2026 à 11:50</td>
+                  <td class="text-success fw-semibold text-nowrap">120 €</td>
+                  <td><span class="badge bg-success">Acceptée</span></td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#detailCommandeModal">Détails</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>12/12/2026</td>
+                  <td>Nom du menu</td>
+                  <td>10</td>
+                  <td class="d-none d-md-table-cell">Jean de la Fontaine</td>
+                  <td class="d-none d-md-table-cell">9 rue du soleil 33000 Bordeaux</td>
+                  <td>15/12/2026 à 11:50</td>
+                  <td class="text-success fw-semibold text-nowrap">120 €</td>
+                  <td><span class="badge bg-dark">Commande reçu</span></td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#detailCommandeModal">Détails</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>12/12/2026</td>
+                  <td>Nom du menu</td>
+                  <td>10</td>
+                  <td class="d-none d-md-table-cell">Jean de la Fontaine</td>
+                  <td class="d-none d-md-table-cell">9 rue du soleil 33000 Bordeaux</td>
+                  <td>15/12/2026 à 11:50</td>
+                  <td class="text-success fw-semibold text-nowrap">120 €</td>
+                  <td><span class="badge bg-success">Acceptée</span></td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#detailCommandeModal">Détails</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+  <!--Commande en cours (admin & employé)-->
   <div class="accordion-item">
     <h2 class="accordion-header">
       <button class="accordion-button collapsed bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-        <span class="flex-grow-1 text-center">Mon Adresse</span>
+        <span class="flex-grow-1 text-center">Commande en cours</span>
       </button>
     </h2>
     <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionAccount">
       <div class="accordion-body">
-
+        <div class="container">
+          <!--Filtres commandes-->
+          <form action="">
+            <div class="row my-3">
+              <div class="col-6">
+                <select class="form-select" aria-label="staut Command Filter" name="statut_command_filter" id="statutCommandFilter">
+                  <option value="">Statut de la commande</option>
+                  <option value="1">Commande reçue</option>
+                  <option value="2">Acceptée</option>
+                  <option value="3">En préparartion</option>
+                  <option value="4">En cours de livraison</option>
+                  <option value="5">Livré</option>
+                  <option value="6">En attente retour matériel</option>
+                  <option value="7">Terminée</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <select class="form-select" aria-label="client Command Filter" name="client_command_filter" id="clientCommandFilter">
+                  <option value="">Choisir un client</option>
+                </select>
+              </div>
+            </div>
+          </form>
+          <!--tables des commandes-->
+          <div class="table-responsive">
+            <table class="table table-info table-striped-columns align-middle">
+              <thead>
+                <tr>
+                  <th>Date de commande</th>
+                  <th>Menu</th>
+                  <th>Pers.</th>
+                  <th class="d-none d-md-table-cell">Pour</th>
+                  <th class="d-none d-sd-table-cell">Adresse</th>
+                  <th>Livraison</th>
+                  <th>Prix</th>
+                  <th>Statut</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>12/12/2026</td>
+                  <td>Nom du menu</td>
+                  <td>10</td>
+                  <td class="d-none d-md-table-cell">Jean de la Fontaine</td>
+                  <td class="d-none d-sd-table-cell">9 rue du soleil 33000 Bordeaux</td>
+                  <td>15/12/2026 à 11:50</td>
+                  <td class="text-success fw-semibold text-nowrap">120 €</td>
+                  <td>
+                    <span class="badge bg-dark">Commande reçus</span>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#detailCommandeAdminModal">Détails</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>12/12/2026</td>
+                  <td>Nom du menu</td>
+                  <td>10</td>
+                  <td class="d-none d-md-table-cell">Jean de la Fontaine</td>
+                  <td class="d-none d-sd-table-cell">9 rue du soleil 33000 Bordeaux</td>
+                  <td>15/12/2026 à 11:50</td>
+                  <td class="text-success fw-semibold text-nowrap">120 €</td>
+                  <td><span class="badge bg-dark">Commande reçu</span></td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#detailCommandeAdminModal">Détails</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>12/12/2026</td>
+                  <td>Nom du menu</td>
+                  <td>10</td>
+                  <td class="d-none d-md-table-cell">Jean de la Fontaine</td>
+                  <td class="d-none d-sd-table-cell">9 rue du soleil 33000 Bordeaux</td>
+                  <td>15/12/2026 à 11:50</td>
+                  <td class="text-success fw-semibold text-nowrap">120 €</td>
+                  <td><span class="badge bg-success">Acceptée</span></td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#detailCommandeAdminModal">Détails</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal détail commande-->
+<div class="modal fade" id="detailCommandeModal" tabindex="-1" aria-labelledby="detailCommandeModalLabel" data-bs-focus="true" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="detailCommandeModalLabel">Détail de votre commande</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <h5 class="text-center text-primary my-4">Titre du menu</h5>
+            <!--statut-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>statut :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <span class="badge bg-dark">Commande reçus</span>
+               </div>
+            </div>
+            <!--date de commande-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>commande passée le :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <p>JJ/MM/AAAA</p>
+               </div>
+            </div>
+            <!--Nombre de personne-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>Pour :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <div class="input-group">
+                  <input type="number" class="form-control text-center" id="commandeDetailNumberPersonFormControlInput" placeholder="5">
+                    <span class="input-group-text">
+                      <i class="bi bi-person-arms-up"></i>
+                    </span>
+                </div>
+               </div>
+            </div>
+            <!--Date et heure de livraison-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>A livrer le :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <input type="date" class="form-control" name="commande_detail_delivery_date" id="commandeDetailDeliveryDateFormControlInput3">
+               </div>
+            </div>
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>A :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <select class="form-select" aria-label="Delivery select time" name="commande_detail_delivery_time" id="commandeDetailDeliveryTime">
+                    <option value="">Choisir une heure</option>
+                </select>
+               </div>
+            </div>
+            <!--Pour qui et où-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>A livrer à :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <p><span class="text-uppercase">nom</span> Prénom</p>
+                <div class="mb-3">
+                  <input type="text" class="form-control" id="commandeDetailAdressFormControlInput" name="adress" placeholder="Adresse">
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="commandeDetailPostalCodeFormControlInput" name="postal_code" placeholder="Code postal">
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="commandeDetailCityFormControlInput" name="city" placeholder="Ville">
+                </div>
+               </div>
+            </div>
+              <!--GSM-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>GSM :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <input type="text" class="form-control" id="commandeDetailGsmFormControlInput" name="gsm" placeholder="numéro de GSM">
+               </div>
+            </div>
+            <hr>
+            <h5 class="text-center text-primary my-4">Récapitulatif du menu</h5>
+            <div class="row">
+              <div class="col">
+                <h6 class="text-center">Entrée</h6>
+                <select class="form-select" aria-label="Menu select entree" name="command_detail_menu_entree" id="commandeDetailMenuEntree">
+                  <option value="">Choisir une Entrée</option>
+                </select>
+                <br>
+                <h6 class="text-center">Plat</h6>
+                <select class="form-select" aria-label="Menu select plat" name="command_detail_menu_plat" id="commandeDetailMenuPlat">
+                  <option value="">Choisir un Plat</option>
+                </select>
+                <br>
+                <h6 class="text-center">Dessert</h6>
+                <select class="form-select" aria-label="Menu select entree" name="command_detail_menu_dessert" id="commandeDetailMenuDessert">
+                  <option value="">Choisir un Dessert</option>
+                </select>
+              </div>
+            </div>
+            <hr>
+            <h5 class="text-center text-primary my-4">Détail du prix</h5>
+            <!--Prix du menu-->
+            <div class="col-12 col-md-8 mx-auto">
+              <ul class="list-unstyled mb-0">
+                <li class="d-flex justify-content-between py-1">
+                  <span>Prix du menu</span>
+                  <span class="price text-end">
+                    <span class="menuPrice">60</span> €
+                  </span>
+                </li>
+                <li class="d-flex justify-content-between py-1 text-success">
+                  <span>Réduction (10%)</span>
+                  <span class="price text-end">
+                    -<span class="promoPrice">6</span> €
+                  </span>
+                </li>
+                <li class="d-flex justify-content-between py-1">
+                  <span>Frais de livraison</span>
+                  <span class="price text-end">
+                    <span class="deliveryCost">5</span> €
+                  </span>
+                </li>
+                <li class="d-flex justify-content-between border-top pt-2 mt-2 fs-5">
+                  <strong>Total TTC</strong>
+                  <strong class="price text-end">
+                    <span class="ttcPrice">59</span> €
+                  </strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Valider les changements</button>
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#annulationCommandModal">Annuler la commande</button>
+        </div>
+      </form> 
+    </div>
+  </div>
+</div>
+<!-- Modal annulation commande -->
+<div class="modal fade" id="annulationCommandModal" tabindex="-1" aria-labelledby="annulationCommandModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="annulationCommandModalLabel">Annulation de commande</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!--message user-->
+        <p>Étes-vous sur de vouloir annuler votre commande ?</p>
+        <!--message admin et emplyé-->
+        <p>Avez-vous contacter le client avant d'annuler la commande ?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger">Oui</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Non</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Modal détail commande amin-->
+<div class="modal fade" id="detailCommandeAdminModal" tabindex="-1" aria-labelledby="detailCommandeAdminModalLabel" data-bs-focus="true" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="detailCommandeAdminModalLabel">Détail de votre commande</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <h5 class="text-center text-primary my-4">Titre du menu</h5>
+            <!--statut-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>statut :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <select class="form-select" aria-label="Delivery select time" name="delivery_time" id="deliveryTime">
+                    <option value="1">Commande reçus</option>
+                    <option value="2">Acceptée</option>
+                    <option value="3">En préparartion</option>
+                    <option value="4">En cours de livraison</option>
+                    <option value="5">Livré</option>
+                    <option value="6">En attente retour matériel</option>
+                    <option value="7">Terminée</option>
+                </select>
+               </div>
+            </div>
+            <!--date de commande-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>commande passée le :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <p>JJ/MM/AAAA</p>
+               </div>
+            </div>
+            <!--Nombre de personne-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>Pour :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <div class="input-group">
+                  <input type="number" class="form-control text-center" id="commandeDetailNumberPersonFormControlInput1" placeholder="5">
+                    <span class="input-group-text">
+                      <i class="bi bi-person-arms-up"></i>
+                    </span>
+                </div>
+               </div>
+            </div>
+            <!--Date et heure de livraison-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>A livrer le :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <input type="date" class="form-control" name="commande_detail_delivery_date" id="commandeDetailDeliveryDateFormControlInput1">
+               </div>
+            </div>
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>A :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <select class="form-select" aria-label="Delivery select time" name="commande_detail_delivery_time" id="commandeDetaildeliveryTime1">
+                    <option value="">Choisir une heure</option>
+                </select>
+               </div>
+            </div>
+            <!--Pour qui et où-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>A livrer à :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <ul class="list-unstyled">
+                  <li><span class="text-uppercase">nom</span> Prénom</li>
+                  <li class="text-uppercase">adresse</li>
+                  <li class="text-uppercase">code postal</li>
+                  <li class="text-uppercase">ville</li>
+                </ul>
+               </div>
+            </div>
+              <!--GSM-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>GSM :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <input type="text" class="form-control" id="commandeDetailGsmFormControlInput1" name="gsm" placeholder="numéro de GSM">
+               </div>
+            </div>
+            <hr>
+            <h5 class="text-center text-primary my-4">Récapitulatif du menu</h5>
+            <div class="row">
+              <div class="col">
+                <h6 class="text-center">Entrée</h6>
+                <select class="form-select" aria-label="Menu select entree" name="command_detail_menu_entree" id="commandeDetailMenuEntree1">
+                  <option value="">Choisir une Entrée</option>
+                </select>
+                <br>
+                <h6 class="text-center">Plat</h6>
+                <select class="form-select" aria-label="Menu select plat" name="command_detail_menu_plat" id="commandeDetailMenuPlat1">
+                  <option value="">Choisir un Plat</option>
+                </select>
+                <br>
+                <h6 class="text-center">Dessert</h6>
+                <select class="form-select" aria-label="Menu select entree" name="command_detail_menu_dessert" id="commandeDetailMenuDessert1">
+                  <option value="">Choisir un Dessert</option>
+                </select>
+              </div>
+            </div>
+            <hr>
+            <h5 class="text-center text-primary my-4">Détail du prix</h5>
+            <!--Prix du menu-->
+            <div class="col-12 col-md-8 mx-auto">
+              <ul class="list-unstyled mb-0">
+                <li class="d-flex justify-content-between py-1">
+                  <span>Prix du menu</span>
+                  <span class="price text-end">
+                    <span class="menuPrice">60</span> €
+                  </span>
+                </li>
+                <li class="d-flex justify-content-between py-1 text-success">
+                  <span>Réduction (10%)</span>
+                  <span class="price text-end">
+                    -<span class="promoPrice">6</span> €
+                  </span>
+                </li>
+                <li class="d-flex justify-content-between py-1">
+                  <span>Frais de livraison</span>
+                  <span class="price text-end">
+                    <span class="deliveryCost">5</span> €
+                  </span>
+                </li>
+                <li class="d-flex justify-content-between border-top pt-2 mt-2 fs-5">
+                  <strong>Total TTC</strong>
+                  <strong class="price text-end">
+                    <span class="ttcPrice">59</span> €
+                  </strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Valider les changements</button>
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#annulationCommandModal">Annuler la commande</button>
+        </div>
+      </form> 
     </div>
   </div>
 </div>
