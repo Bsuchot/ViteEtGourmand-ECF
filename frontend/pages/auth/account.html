@@ -1,8 +1,8 @@
 <div class="hero-scene text-center text-white">
     <div class="hero-scene-content">
         <h1>Votre Compte</h1>
-        <span class="badge bg-primary">Admin</span>
-        <span class="badge bg-dark">Employé</span>
+        <span class="badge bg-primary" data-show="admin">Admin</span>
+        <span class="badge bg-dark" data-show="employe">Employé</span>
     </div> 
 </div>
 <div class="accordion" id="accordionAccount">
@@ -249,7 +249,7 @@
     </div>
   </div>
   <!--Commande en cours (admin & employé)-->
-  <div class="accordion-item">
+  <div class="accordion-item" data-show="employe">
     <h2 class="accordion-header">
       <button class="accordion-button collapsed bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCommandAdmin" aria-expanded="false" aria-controls="collapseCommandAdmin">
         <span class="flex-grow-1 text-center">Commande en cours</span>
@@ -356,7 +356,7 @@
     </div>
   </div>
   <!--Chiffres d'affaire (admin)-->
-  <div class="accordion-item">
+  <div class="accordion-item" data-show="admin">
     <h2 class="accordion-header">
       <button class="accordion-button collapsed bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBudget" aria-expanded="false" aria-controls="collapseBudget">
         <span class="flex-grow-1 text-center">Chiffres d'affaire</span>
@@ -371,7 +371,7 @@
     </div>
   </div>
   <!--Modifier Horaires (admin/employé)-->
-  <div class="accordion-item">
+  <div class="accordion-item" data-show="employe admin">
     <h2 class="accordion-header">
       <button class="accordion-button collapsed bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHourly" aria-expanded="false" aria-controls="collapseHourly">
         <span class="flex-grow-1 text-center">Modifier les horaires</span>
@@ -733,7 +733,7 @@
     </div>
   </div>
   <!--Gérer les menus (admin/employé)-->
-  <div class="accordion-item">
+  <div class="accordion-item" data-show="employe admin">
     <h2 class="accordion-header">
       <button class="accordion-button collapsed bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMenuManagement" aria-expanded="false" aria-controls="collapseMenuManagement">
         <span class="flex-grow-1 text-center">Gérer les menus</span>
@@ -782,7 +782,10 @@
                       </select>
                     </td>
                     <td>
-                      <input type="number" class="form-control" id="MenuPriceInput" placeholder="Prix" name="price">€
+                      <div class="input-group">
+                        <input type="number" class="form-control" id="MenuPriceInput" placeholder="Prix" name="price">
+                        <span class="input-group-text">€</span>
+                      </div> 
                     </td>
                     <td>
                       <select class="form-select" aria-label="Menu diet select" id="MenuDietSelect">
@@ -791,7 +794,7 @@
                         <option value="3">Végé et Végan</option>
                       </select>
                     </td>
-                    <td>10</td>
+                    <td><input type="number" class="form-control" id="MenuStockInput" placeholder="stock" name="stock"></td>
                     <td>
                       <select class="form-select" aria-label="Statut employee select" id="StatutMenuSelect">
                         <option value="1" selected>Actif</option>
@@ -813,7 +816,7 @@
     </div>
   </div>
   <!--Gérer les avis (admin/employé)-->
-  <div class="accordion-item">
+  <div class="accordion-item" data-show="employe admin">
     <h2 class="accordion-header">
       <button class="accordion-button collapsed bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReviewManagement" aria-expanded="false" aria-controls="collapseReviewManagement">
         <span class="flex-grow-1 text-center">Gérer les avis</span>
@@ -872,7 +875,7 @@
     </div>
   </div>
   <!--Gérer les employés (admin)-->
-  <div class="accordion-item">
+  <div class="accordion-item" data-show="admin">
     <h2 class="accordion-header">
       <button class="accordion-button collapsed bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEmployeeManagement" aria-expanded="false" aria-controls="collapseEmployeeManagement">
         <span class="flex-grow-1 text-center">Gérer les employés</span>
@@ -1310,292 +1313,199 @@
         </div>
         <div class="modal-body">
           <div class="container">
-            <h5 class="text-center text-primary my-4">Titre du menu</h5>
-            <!--statut-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>statut :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <span class="badge bg-dark">Commande reçue</span>
-               </div>
+            <h5 class="text-center text-primary my-4">Information du menu</h5>
+            <div class="mb-3">
+              <label for="editMenuTitleInput" class="form-label">Titre du menu</label>
+              <input type="text" class="form-control" id="editMenuTitleInput" placeholder="titre du menu">
             </div>
-            <!--date de commande-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>commande passée le :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <p>JJ/MM/AAAA</p>
-               </div>
+            <div class="mb-3">
+              <label for="editmenuDescriptionTextarea" class="form-label">Description du menu</label>
+              <textarea class="form-control" id="editMenuDescriptionTextarea" rows="3"></textarea>
             </div>
-            <!--Nombre de personne-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>Pour :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <div class="input-group">
-                  <input type="number" class="form-control text-center" id="commandeDetailNumberPersonFormControlInput" placeholder="5">
-                    <span class="input-group-text">
-                      <i class="bi bi-person-arms-up"></i>
-                    </span>
-                </div>
-               </div>
-            </div>
-            <!--Date et heure de livraison-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>A livrer le :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <input type="date" class="form-control" name="commande_detail_delivery_date" id="commandeDetailDeliveryDateFormControlInput3">
-               </div>
-            </div>
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>A :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <select class="form-select" aria-label="Delivery select time" name="commande_detail_delivery_time" id="commandeDetailDeliveryTime">
-                    <option value="">Choisir une heure</option>
-                </select>
-               </div>
-            </div>
-            <!--Pour qui et où-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>A livrer à :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <p><span class="text-uppercase">nom</span> Prénom</p>
-                <div class="mb-3">
-                  <input type="text" class="form-control" id="commandeDetailAdressFormControlInput" name="adress" placeholder="Adresse">
-                </div>
-                <div class="mb-3">
-                    <input type="text" class="form-control" id="commandeDetailPostalCodeFormControlInput" name="postal_code" placeholder="Code postal">
-                </div>
-                <div class="mb-3">
-                    <input type="text" class="form-control" id="commandeDetailCityFormControlInput" name="city" placeholder="Ville">
-                </div>
-               </div>
-            </div>
-              <!--GSM-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>GSM :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <input type="text" class="form-control" id="commandeDetailGsmFormControlInput" name="gsm" placeholder="numéro de GSM">
-               </div>
-            </div>
-            <hr>
-            <h5 class="text-center text-primary my-4">Récapitulatif du menu</h5>
             <div class="row">
               <div class="col">
-                <h6 class="text-center">Entrée</h6>
-                <select class="form-select" aria-label="Menu select entree" name="command_detail_menu_entree" id="commandeDetailMenuEntree">
-                  <option value="">Choisir une Entrée</option>
+                <div class="mb-3">
+                  <label for="editMenuPriceInput" class="form-label">Prix du menu</label>
+                  <div class="input-group mb-3"> 
+                    <input type="number" class="form-control" id="editMenuPriceInput" placeholder="50">
+                    <span class="input-group-text">€</span>
+                  </div>
+                </div> 
+              </div>
+              <div class="col">
+                <div class="mb-3">
+                  <label for="editMenuMinPersInput" class="form-label">Pers. min</label>
+                  <div class="input-group mb-3">
+                    <input type="number" class="form-control" id="editMenuMinPersInput" placeholder="5">
+                    <span class="input-group-text"><i class="bi bi-person-arms-up"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <label for="serviceEditMenuSelect" class="form-label">Service</label>
+                <select class="form-select" aria-label="service edit menu select" id="serviceEditMenuSelect">
+                  <option value="1" selected>Entrée/Plat/dessert</option>
+                  <option value="2">Entrée/Plat-Plat/dessert</option>
+                  <option value="3">Entrée/Plat</option>
+                  <option value="4">Plat/dessert</option>
                 </select>
-                <br>
-                <h6 class="text-center">Plat</h6>
-                <select class="form-select" aria-label="Menu select plat" name="command_detail_menu_plat" id="commandeDetailMenuPlat">
-                  <option value="">Choisir un Plat</option>
+              </div>
+              <div class="col">
+                <label for="themeEditMenuSelect" class="form-label">Thème</label>
+                <select class="form-select" aria-label="theme edit menu select" id="themeEditMenuSelect">
+                  <option value="1" selected>-</option>
                 </select>
-                <br>
-                <h6 class="text-center">Dessert</h6>
-                <select class="form-select" aria-label="Menu select entree" name="command_detail_menu_dessert" id="commandeDetailMenuDessert">
-                  <option value="">Choisir un Dessert</option>
+              </div>
+              <div class="col">
+                <label for="dietEditMenuSelect" class="form-label">Régime</label>
+                <select class="form-select" aria-label="diet edit menu select" id="dietEditMenuSelect">
+                  <option value="1" selected>-</option>
+                  <option value="2" selected>Végé</option>
+                  <option value="1" selected>Végé et végan</option>
                 </select>
               </div>
             </div>
-            <hr>
-            <h5 class="text-center text-primary my-4">Détail du prix</h5>
-            <!--Prix du menu-->
-            <div class="col-12 col-md-8 mx-auto">
-              <ul class="list-unstyled mb-0">
-                <li class="d-flex justify-content-between py-1">
-                  <span>Prix du menu</span>
-                  <span class="price text-end">
-                    <span class="menuPrice">60</span> €
-                  </span>
-                </li>
-                <li class="d-flex justify-content-between py-1 text-success">
-                  <span>Réduction (10%)</span>
-                  <span class="price text-end">
-                    -<span class="promoPrice">6</span> €
-                  </span>
-                </li>
-                <li class="d-flex justify-content-between py-1">
-                  <span>Frais de livraison</span>
-                  <span class="price text-end">
-                    <span class="deliveryCost">5</span> €
-                  </span>
-                </li>
-                <li class="d-flex justify-content-between border-top pt-2 mt-2 fs-5">
-                  <strong>Total TTC</strong>
-                  <strong class="price text-end">
-                    <span class="ttcPrice">59</span> €
-                  </strong>
-                </li>
-              </ul>
+            <div class="mb-3">
+              <label for="formFile" class="form-label">Image de fond</label>
+              <input class="form-control" type="file" id="editMenuBackgroundformFile">
             </div>
+            <hr>
+            <!--entrée-->
+            <h5 class="text-center text-primary my-4">Entrées</h5>
+            <div class="mb-3">
+              <select class="form-select" aria-label="entree edit menu select" id="entreeEditMenuSelect">
+                <option value="1" selected>-</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="addEntreeEditMenu">Ajouter une entrée</i></button>
+            <!--Plats-->
+            <h5 class="text-center text-primary my-4">Plats</h5>
+            <div class="mb-3">
+              <select class="form-select" aria-label="plat edit menu select" id="platEditMenuSelect">
+                <option value="1" selected>-</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="addPlatEditMenu">ajouter un plat</i></button>
+            <!--Desserts-->
+            <h5 class="text-center text-primary my-4">Desserts</h5>
+            <div class="mb-3">
+              <select class="form-select" aria-label="dessert edit menu select" id="dessertEditMenuSelect">
+                <option value="1" selected>-</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="addDessertEditMenu">Ajouter un dessert</i></button>
           </div>
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Valider les changements</button>
-          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#annulationCommandModal">Annuler la commande</button>
+          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationDeleteModal">Supprimer le menu</button>
         </div>
       </form> 
     </div>
   </div>
 </div>
-<!--Modal création menu-->
+<!--Modal création  menu-->
 <div class="modal fade" id="newMenuModal" tabindex="-1" aria-labelledby="newMenuModalLabel" data-bs-focus="true" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form action="">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="newMenuModalLabel">Détail du menu</h1>
+          <h1 class="modal-title fs-5" id="newMenuModalLabel">Création nouveau menu</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="container">
-            <h5 class="text-center text-primary my-4">Titre du menu</h5>
-            <!--statut-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>statut :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <span class="badge bg-dark">Commande reçue</span>
-               </div>
+            <h5 class="text-center text-primary my-4">Information du menu</h5>
+            <div class="mb-3">
+              <label for="newMenuTitleInput" class="form-label">Titre du menu</label>
+              <input type="text" class="form-control" id="newMenuTitleInput" placeholder="titre du menu">
             </div>
-            <!--date de commande-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>commande passée le :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <p>JJ/MM/AAAA</p>
-               </div>
+            <div class="mb-3">
+              <label for="newMenuDescriptionTextarea" class="form-label">Description du menu</label>
+              <textarea class="form-control" id="newMenuDescriptionTextarea" rows="3"></textarea>
             </div>
-            <!--Nombre de personne-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>Pour :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <div class="input-group">
-                  <input type="number" class="form-control text-center" id="commandeDetailNumberPersonFormControlInput" placeholder="5">
-                    <span class="input-group-text">
-                      <i class="bi bi-person-arms-up"></i>
-                    </span>
-                </div>
-               </div>
-            </div>
-            <!--Date et heure de livraison-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>A livrer le :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <input type="date" class="form-control" name="commande_detail_delivery_date" id="commandeDetailDeliveryDateFormControlInput3">
-               </div>
-            </div>
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>A :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <select class="form-select" aria-label="Delivery select time" name="commande_detail_delivery_time" id="commandeDetailDeliveryTime">
-                    <option value="">Choisir une heure</option>
-                </select>
-               </div>
-            </div>
-            <!--Pour qui et où-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>A livrer à :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <p><span class="text-uppercase">nom</span> Prénom</p>
-                <div class="mb-3">
-                  <input type="text" class="form-control" id="commandeDetailAdressFormControlInput" name="adress" placeholder="Adresse">
-                </div>
-                <div class="mb-3">
-                    <input type="text" class="form-control" id="commandeDetailPostalCodeFormControlInput" name="postal_code" placeholder="Code postal">
-                </div>
-                <div class="mb-3">
-                    <input type="text" class="form-control" id="commandeDetailCityFormControlInput" name="city" placeholder="Ville">
-                </div>
-               </div>
-            </div>
-              <!--GSM-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>GSM :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <input type="text" class="form-control" id="commandeDetailGsmFormControlInput" name="gsm" placeholder="numéro de GSM">
-               </div>
-            </div>
-            <hr>
-            <h5 class="text-center text-primary my-4">Récapitulatif du menu</h5>
             <div class="row">
               <div class="col">
-                <h6 class="text-center">Entrée</h6>
-                <select class="form-select" aria-label="Menu select entree" name="command_detail_menu_entree" id="commandeDetailMenuEntree">
-                  <option value="">Choisir une Entrée</option>
+                <div class="mb-3">
+                  <label for="newMenuPriceInput" class="form-label">Prix du menu</label>
+                  <div class="input-group mb-3"> 
+                    <input type="number" class="form-control" id="newMenuPriceInput" placeholder="50">
+                    <span class="input-group-text">€</span>
+                  </div>
+                </div> 
+              </div>
+              <div class="col">
+                <div class="mb-3">
+                  <label for="newMenuMinPersInput" class="form-label">Pers. min</label>
+                  <div class="input-group mb-3">
+                    <input type="number" class="form-control" id="newMenuMinPersInput" placeholder="5">
+                    <span class="input-group-text"><i class="bi bi-person-arms-up"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <label for="serviceNewMenuSelect" class="form-label">Service</label>
+                <select class="form-select" aria-label="service new menu select" id="serviceNewMenuSelect">
+                  <option value="1" selected>Entrée/Plat/dessert</option>
+                  <option value="2">Entrée/Plat-Plat/dessert</option>
+                  <option value="3">Entrée/Plat</option>
+                  <option value="4">Plat/dessert</option>
                 </select>
-                <br>
-                <h6 class="text-center">Plat</h6>
-                <select class="form-select" aria-label="Menu select plat" name="command_detail_menu_plat" id="commandeDetailMenuPlat">
-                  <option value="">Choisir un Plat</option>
+              </div>
+              <div class="col">
+                <label for="themeNewMenuSelect" class="form-label">Thème</label>
+                <select class="form-select" aria-label="theme new menu select" id="themeNewMenuSelect">
+                  <option value="1" selected>-</option>
                 </select>
-                <br>
-                <h6 class="text-center">Dessert</h6>
-                <select class="form-select" aria-label="Menu select entree" name="command_detail_menu_dessert" id="commandeDetailMenuDessert">
-                  <option value="">Choisir un Dessert</option>
+              </div>
+              <div class="col">
+                <label for="dietNewMenuSelect" class="form-label">Régime</label>
+                <select class="form-select" aria-label="diet new menu select" id="dietNewMenuSelect">
+                  <option value="1" selected>-</option>
+                  <option value="2" selected>Végé</option>
+                  <option value="1" selected>Végé et végan</option>
                 </select>
               </div>
             </div>
-            <hr>
-            <h5 class="text-center text-primary my-4">Détail du prix</h5>
-            <!--Prix du menu-->
-            <div class="col-12 col-md-8 mx-auto">
-              <ul class="list-unstyled mb-0">
-                <li class="d-flex justify-content-between py-1">
-                  <span>Prix du menu</span>
-                  <span class="price text-end">
-                    <span class="menuPrice">60</span> €
-                  </span>
-                </li>
-                <li class="d-flex justify-content-between py-1 text-success">
-                  <span>Réduction (10%)</span>
-                  <span class="price text-end">
-                    -<span class="promoPrice">6</span> €
-                  </span>
-                </li>
-                <li class="d-flex justify-content-between py-1">
-                  <span>Frais de livraison</span>
-                  <span class="price text-end">
-                    <span class="deliveryCost">5</span> €
-                  </span>
-                </li>
-                <li class="d-flex justify-content-between border-top pt-2 mt-2 fs-5">
-                  <strong>Total TTC</strong>
-                  <strong class="price text-end">
-                    <span class="ttcPrice">59</span> €
-                  </strong>
-                </li>
-              </ul>
+            <div class="mb-3">
+              <label for="formFile" class="form-label">Image de fond</label>
+              <input class="form-control" type="file" id="newMenuBackgroundformFile">
             </div>
+            <hr>
+            <!--entrée-->
+            <h5 class="text-center text-primary my-4">Entrées</h5>
+            <div class="mb-3">
+              <select class="form-select" aria-label="entree new menu select" id="entreeNewMenuSelect">
+                <option value="1" selected>-</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="addEntreeNewMenu">Ajouter une entrée</i></button>
+            <!--Plats-->
+            <h5 class="text-center text-primary my-4">Plats</h5>
+            <div class="mb-3">
+              <select class="form-select" aria-label="plat new menu select" id="platNewMenuSelect">
+                <option value="1" selected>-</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="addPlatNewMenu">ajouter un plat</i></button>
+            <!--Desserts-->
+            <h5 class="text-center text-primary my-4">Desserts</h5>
+            <div class="mb-3">
+              <select class="form-select" aria-label="dessert new menu select" id="dessertNewMenuSelect">
+                <option value="1" selected>-</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="addDessertNewMenu">Ajouter un dessert</i></button>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Valider les changements</button>
-          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#annulationCommandModal">Annuler la commande</button>
+          <button type="submit" class="btn btn-primary">Valider</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
         </div>
       </form> 
     </div>
