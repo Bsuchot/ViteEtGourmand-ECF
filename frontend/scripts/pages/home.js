@@ -2,6 +2,7 @@ const inputNom = document.getElementById("nameReviewInput");
 const inputPrenom = document.getElementById("firstnameReviwInput");
 const selectMenu = document.getElementById("menuReviewFormSelect");
 const textareaReview = document.getElementById("reviewTextarea");
+const starRating = document.querySelector(".star-rating");
 const btnValidation = document.getElementById("btn-validate-review");
 
 inputNom.addEventListener("keyup", validateForm);
@@ -10,7 +11,7 @@ selectMenu.addEventListener("change", validateForm);
 textareaReview.addEventListener("keyup", validateForm);
 
 
-// Note par étoiles
+// Notation par étoiles
 document.querySelectorAll('.star-rating:not(.readonly) label').forEach(star => {
     star.addEventListener('click', function() {
         this.style.transform = 'scale(1.2)';
@@ -27,9 +28,9 @@ function validateForm() {
 
     const nomOk = validateRequired(inputNom);
     const prenomOk = validateRequired(inputPrenom);
-    const menuOk = selectMenu.value !== "1";
+    const menuOk = validateSelected(selectMenu);
     const reviewOk = validateRequired(textareaReview);
-    const ratingOk = isRatingSelected();
+    const ratingOk = validateRating();
 
     if (nomOk && prenomOk && menuOk && reviewOk && ratingOk) {
         btnValidation.disabled = false;
@@ -49,7 +50,28 @@ function validateRequired(input){
         return false;
     }
 }
+function validateSelected(select){
+    if(select.value != ""){
+        select.classList.add("is-valid");
+        select.classList.remove("is-invalid");
+        return true;
+    }else{
+        select.classList.add("is-invalid");
+        select.classList.remove("is-valid");
+        return false;
+    }
+}
+function validateRating() {
+    const checked = document.querySelector('input[name="rating"]:checked');
+    const feedback = starRating.querySelector(".invalid-feedback");
 
-function isRatingSelected() {
-    return document.querySelector('.star-rating input:checked') !== null;
+    if (checked) {
+        starRating.classList.remove("is-invalid");
+        feedback.style.display = "none";
+        return true;
+    } else {
+        starRating.classList.add("is-invalid");
+        feedback.style.display = "block";
+        return false;
+    }
 }

@@ -156,7 +156,7 @@
                     </div>
                     <div>
                         <select class="form-select" id="menuReviewFormSelect" aria-label="Default select avisMenus">
-                            <option selected>Pour quel menu ?</option>
+                            <option value="" selected>Pour quel menu ?</option>
                             <option value="1">Menu 1</option>
                             <option value="2">Menu 2</option>
                             <option value="3">Menu 3</option>
@@ -178,12 +178,12 @@
                                 <label for="star2" class="bi bi-star-fill"></label>
                                 <input type="radio" id="star1" name="rating" value="1">
                                 <label for="star1" class="bi bi-star-fill"></label>
+                                <div class="invalid-feedback">
+                                    Veuillez laissez une note.
+                                </div>
                             </div>
                             <p class="text-muted mt-2">Cliquer pour noter</p>
-                        </div>
-                        <div class="invalid-feedback">
-                            Veuillez laissez une note.
-                        </div>
+                        </div>    
                     </div>
                     <div class="mb-3">
                         <textarea class="form-control" id="reviewTextarea" rows="3" placeholder="Laisser votre avis ici !"></textarea>

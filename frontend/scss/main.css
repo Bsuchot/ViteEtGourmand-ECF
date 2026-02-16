@@ -12070,12 +12070,14 @@ footer.footer {
   color: #ffc107;
 }
 
-#accordionMenu {
-  /* Header sold out */
-  /* Texte “Victime de son succès” */
-  /* Bandeau diagonal responsive */
-  /* Assombrir le contenu derrière le bandeau */
+.star-rating .invalid-feedback {
+  display: none;
 }
+
+.star-rating.is-invalid .invalid-feedback {
+  display: block;
+}
+
 #accordionMenu .menuOne {
   position: relative;
 }
@@ -12162,17 +12164,26 @@ footer.footer {
   display: block;
   transition: all 0.3s;
 }
+#accordionMenu {
+  /* Header sold out */
+}
 #accordionMenu .accordion-item.soldout .accordion-button {
   position: relative; /* nécessaire pour le pseudo-élément */
   color: #fff; /* texte blanc */
   pointer-events: none; /* désactiver le clic */
   overflow: hidden; /* pour le bandeau */
 }
+#accordionMenu {
+  /* Texte “Victime de son succès” */
+}
 #accordionMenu .accordion-item.soldout .soldout-text {
   font-weight: bold;
   font-size: 0.9rem;
   display: block;
   margin-top: 0.3rem;
+}
+#accordionMenu {
+  /* Bandeau diagonal responsive */
 }
 #accordionMenu .accordion-item.soldout .accordion-button::before {
   content: "Indisponible";
@@ -12190,6 +12201,9 @@ footer.footer {
   z-index: 2;
   pointer-events: none;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* pour lisibilité */
+}
+#accordionMenu {
+  /* Assombrir le contenu derrière le bandeau */
 }
 #accordionMenu .accordion-item.soldout .accordion-button > * {
   opacity: 0.4;

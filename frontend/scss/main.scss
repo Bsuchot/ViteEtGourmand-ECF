@@ -96,6 +96,13 @@ footer.footer {
   color: #ffc107;
 }
 
+.star-rating .invalid-feedback {
+    display: none;
+}
+
+.star-rating.is-invalid .invalid-feedback {
+    display: block;
+}
 //style page menu
 
 //accordéon choix menu

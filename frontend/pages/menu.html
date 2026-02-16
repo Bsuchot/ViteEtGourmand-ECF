@@ -279,37 +279,37 @@
             <!--Information client-->
             <h6 class="text-primary text-center">Informations Client</h6>
             <div class="mb-3">
-                <input type="text" class="form-control" id="nameFormControlInput2" name="name" placeholder="Nom">
+                <input type="text" class="form-control" id="nameOrderInput" name="name" placeholder="Nom">
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="firstnameFormControlInput2" name="firstname" placeholder="Prénom">
+                <input type="text" class="form-control" id="firstnameOrderInput" name="firstname" placeholder="Prénom">
             </div>
             <div class="mb-3">
-                <input type="email" class="form-control" id="mailFormControlInput2" name="email" placeholder="Email">
+                <input type="email" class="form-control" id="mailOrderInput" name="email" placeholder="Email">
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="gsmFormControlInput2" name="gsm" placeholder="numéro de GSM">
+                <input type="text" class="form-control" id="gsmOrderInput" name="gsm" placeholder="numéro de GSM">
             </div>
             <!--Adresse livraison-->
             <h6 class="text-primary text-center">Adresse de livraison</h6>
             <div class="mb-3">
-                <input type="text" class="form-control" id="adressFormControlInput2" name="adress" placeholder="Adresse">
+                <input type="text" class="form-control" id="adressOrderInput" name="adress" placeholder="Adresse">
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="postalCodeFormControlInput2" name="postal_code" placeholder="Code postal">
+                <input type="text" class="form-control" id="postalCodeOrderInput" name="postal_code" placeholder="Code postal">
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="cityFormControlInput2" name="city" placeholder="Ville">
+                <input type="text" class="form-control" id="cityOrderInput" name="city" placeholder="Ville">
             </div>
             <p class="text-secondary text-justify">(facturation de 5 euros (majoré de 59 centimes par kilomètre parcouru) si la livraison n’est pas dans la ville de bordeaux).</p>
             <!--date et heure de livraison-->
             <h6 class="text-primary text-center">Date et heure de livraison</h6>
             <div class="mb-3">
                 <label for="deliveryDateFormControlInput2">Date de livraison</label>
-                <input type="date" class="form-control" name="delivery_date" id="deliveryDateFormControlInput2">
+                <input type="date" class="form-control" name="delivery_date" id="deliveryDateOrderInput">
             </div>
             <div class="mb-3">
-                <select class="form-select" aria-label="Delivery select time" name="delivery_time" id="deliveryTime">
+                <select class="form-select" aria-label="Delivery select time" name="delivery_time" id="deliveryTimeOrderSelect">
                     <option value="">Choisir une heure</option>
                 </select>
                 <small class="text-muted">
@@ -339,7 +339,7 @@
             <!--Choix du menu-->
             <h5 class="text-primary text-center">Choix du menu</h5>
             <div class="mb-3">
-                <select class="form-select" aria-label="Menu select" name="command_choice_menu" id="commandeChoiceMenu">
+                <select class="form-select" aria-label="Menu select" name="order_choice_menu" id="orderChoiceMenu">
                     <option value="">Choisir un menu</option>
                 </select>
             </div>
@@ -360,7 +360,7 @@
                     </div>
                     <!-- Info -->
                     <div class="col-12 col-md-9">
-                        <div class="alert alert-info mb-0">
+                        <div class="alert alert-info mb-0" id="reduction">
                             Une réduction de <strong>10%</strong> est appliquée pour toute commande
                             ayant <strong>5 personnes de plus</strong> que le minimum indiqué dans le menu.
                         </div>
