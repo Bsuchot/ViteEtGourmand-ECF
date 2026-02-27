@@ -1,36 +1,31 @@
 <?php
+
 namespace App\Core;
 
-class Router
-{
-    private array $routes = [];
+class Router {
 
-    // Enregistrer une route
-    public function add(string $method, string $path, callable $callback): void
-    {
-        $this->routes[] = [
-            'method' => strtoupper($method),
-            'path' => $path,
-            'callback' => $callback
-        ];
-    }
+    public static function dispatch(): void {
 
-    // Traiter la requête
-    public function run(): void
-    {
-        $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $requestMethod = $_SERVER['REQUEST_METHOD'];
+        $url = $_GET['url'] ?? '';
+        $url = explode('/', trim($url, '/'));
 
-        foreach ($this->routes as $route) {
-            if ($route['method'] === $requestMethod && $route['path'] === $requestUri) {
-                call_user_func($route['callback']);
+        $controllerName = !empty($url[0])
+            ? "App\\Controllers\\" . ucfirst($url[0]) . "Controller"
+            : "App\\Controllers\\UserController";
+
+        $method = $url[1] ?? "index";
+
+        if (class_exists($controllerName)) {
+
+            $controller = new $controllerName();
+
+            if (method_exists($controller, $method)) {
+                $controller->$method();
                 return;
             }
         }
 
-        // Route non trouvée
         http_response_code(404);
-        echo json_encode(['message' => 'Not Found']);
+        echo json_encode(["error" => "Route non trouvée"]);
     }
 }
-
