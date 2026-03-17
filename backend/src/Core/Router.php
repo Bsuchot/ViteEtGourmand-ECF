@@ -2,30 +2,77 @@
 
 namespace App\Core;
 
-class Router {
 
-    public static function dispatch(): void {
+class Router
+{
+    private array $routes = [];
 
-        $url = $_GET['url'] ?? '';
-        $url = explode('/', trim($url, '/'));
+    public function __construct(private string $method, private string $uri)
+    {
+        $this->uri = parse_url($uri, PHP_URL_PATH);
+    }
 
-        $controllerName = !empty($url[0])
-            ? "App\\Controllers\\" . ucfirst($url[0]) . "Controller"
-            : "App\\Controllers\\UserController";
+    public function register(string|array $method, string $uri, string $controller, string $action)
+    {
+        if (!is_array($method)) {
+            $method = [$method];
+        }
 
-        $method = $url[1] ?? "index";
+        $this->routes[] = [
+            'method'     => $method,
+            'uri'        => $uri,
+            'controller' => $controller,
+            'action'     => $action
+        ];
+    }
 
-        if (class_exists($controllerName)) {
+    private function match(string $routeUri, string $requestUri): bool
+    {
+        return $routeUri === $requestUri;
+    }
 
-            $controller = new $controllerName();
+    public function run()
+    {
+        $uriMatched = false;
 
-            if (method_exists($controller, $method)) {
-                $controller->$method();
-                return;
+        foreach ($this->routes as $route) {
+            if (!$this->match($route['uri'], $this->uri)) {
+                continue;
             }
+
+            $uriMatched = true;
+
+            if (!in_array($this->method, $route['method'])) {
+                continue;
+            }
+
+            $controller = $route['controller'];
+            $action     = $route['action'];
+
+            if (!class_exists($controller)) {
+                throw new \LogicException('Le controller ' . $controller . ' n\'existe pas');
+            }
+
+            $controller = new $controller();
+
+            if (!method_exists($controller, $action)) {
+                throw new \LogicException('La méthode ' . $action . ' n\'existe pas dans le controller ' . $controller::class);
+            }
+
+            return $controller->$action();
+        }
+
+        if ($uriMatched) {
+            http_response_code(405);
+            throw new \RuntimeException($this->method . ' n\'est pas autorisée pour cette URL');
         }
 
         http_response_code(404);
-        echo json_encode(["error" => "Route non trouvée"]);
+        throw new \RuntimeException('La route "' . $this->uri . '" n\'existe pas');
+    }
+
+    public function getRoutes(): array
+    {
+        return $this->routes;
     }
 }

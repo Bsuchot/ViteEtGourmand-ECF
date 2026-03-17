@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
-class Regime
-{
-    public function __construct(
-        private string $libelle
-    )
-    {
-    }
+use App\Core\Model;
 
+class Regime extends Model
+{
+    private ?int $id = null;
+    private string $libelle;
+
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
     public function getLibelle(): string
     {
         return $this->libelle;

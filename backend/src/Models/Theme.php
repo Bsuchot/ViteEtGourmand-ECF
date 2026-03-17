@@ -2,14 +2,22 @@
 
 namespace App\Models;
 
-class Theme
-{
-    public function __construct(
-        private  string $libelle
-    )
-    {
-    }
+use App\Core\Model;
 
+class Theme extends Model
+{
+    private ?int $themeId = null;
+    private  string $libelle;
+
+
+    public function getThemeId(): ?int
+    {
+        return $this->themeId;
+    }
+    public function setThemeId(int $themeId): void
+    {
+        $this->themeId = $themeId;
+    }
     public function getLibelle(): string
     {
         return $this->libelle;
@@ -19,5 +27,7 @@ class Theme
     {
         $this->libelle = $libelle;
     }
+
+
 
 }

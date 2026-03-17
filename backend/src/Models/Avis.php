@@ -2,19 +2,29 @@
 
 namespace App\Models;
 
-class Avis
+use App\Core\Model;
+
+class Avis extends Model
 {
-    public function __construct(
-        private string $titre,
-        private string $description,
-        private int $note,
-        private string $statut,
-        private \DateTimeImmutable $date,
-        private int $utilisateurId
-    )
+
+    private ?int $id = null;
+    private string $titre;
+    private string $description;
+    private int $note;
+    private string $statut;
+    private \DateTimeImmutable $date;
+    private Utilisateur $utilisateur;
+
+
+    public function getId(): ?int
     {
+    return $this->id;
     }
 
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
     public function getTitre(): string
     {
         return $this->titre;
@@ -50,7 +60,7 @@ class Avis
         return $this->statut;
     }
 
-    public function setStatut(string $statut): void
+    public function setStatus(string $statut): void
     {
         $this->statut = $statut;
     }
@@ -65,14 +75,14 @@ class Avis
         $this->date = $date;
     }
 
-    public function getUtilisateurId(): int
+    public function getUtilisateur(): Utilisateur
     {
-        return $this->utilisateurId;
+        return $this->utilisateur;
     }
 
-    public function setUtilisateurId(int $utilisateurId): void
+    public function setUtilisateur(Utilisateur $utilisateur): void
     {
-        $this->utilisateurId = $utilisateurId;
+        $this->utilisateur = $utilisateur;
     }
 
 }

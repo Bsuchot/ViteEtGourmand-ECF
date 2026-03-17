@@ -2,12 +2,22 @@
 
 namespace App\Models;
 
-class Allergene
+use App\Core\Model;
+
+class Allergene extends Model
 {
-    public function __construct(
-        private string $libelle
-    )
+
+    private ?int $id = null;
+    private string $libelle;
+
+
+    public function getId(): ?int
     {
+        return $this->id;
+    }
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getLibelle(): string{

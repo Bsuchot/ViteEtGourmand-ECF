@@ -2,12 +2,21 @@
 
 namespace App\Models;
 
-class Role
+use App\Core\Model;
+
+class Role extends Model
 {
-    public function __construct(
-        public string $libelle
-    )
+    private ?int $roleId= null;
+    private string $libelle;
+
+
+    public function getRoleId(): ?int
     {
+        return $this->roleId;
+    }
+    public function setRoleId(?int $roleId): void
+    {
+        $this->roleId = $roleId;
     }
 
     public function getLibelle(): string
@@ -19,5 +28,12 @@ class Role
     {
         $this->libelle = $libelle;
     }
+    public static function from(int $id): self
+    {
+        $role = new self();
+        $role->setRoleId($id);
+        return $role;
+    }
+
 
 }

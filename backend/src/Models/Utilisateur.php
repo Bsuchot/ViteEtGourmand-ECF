@@ -2,21 +2,30 @@
 
 namespace App\Models;
 
-class Utilisateur
+use App\Core\Model;
+
+class Utilisateur extends Model
 {
-    public function __construct(
-        private string $nom,
-        private string $prenom,
-        private string $email,
-        private string $password,
-        private string $telephone,
-        private string $adresse,
-        private string $ville,
-        private string $pays,
-        private Role $role,
-        private string $apiToken
-    )
+
+    private ?int $utilisateurId = null;
+    private string $nom ='';
+    private string $prenom ='';
+    private string $email ='';
+    private string $password ='';
+    private string $telephone ='';
+    private string $adresse ='';
+    private string $ville ='';
+    private string $pays ='';
+    private ?Role $role = null;
+
+    public function getUtilisateurId(): ?int
     {
+        return $this->utilisateurId;
+    }
+
+    public function setUtilisateurId(?int $utilisateurId): void
+    {
+        $this->utilisateurId = $utilisateurId;
     }
 
     public function getNom(): string
@@ -57,6 +66,10 @@ class Utilisateur
     public function setPassword(string $password): void
     {
         $this->password = $password;
+    }
+    public function hashPassword(string $password): void
+    {
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
     }
 
     public function getTelephone(): string
@@ -99,7 +112,7 @@ class Utilisateur
         $this->pays = $pays;
     }
 
-    public function getRole(): Role
+    public function getRole(): ?Role
     {
         return $this->role;
     }
@@ -108,6 +121,5 @@ class Utilisateur
     {
         $this->role = $role;
     }
-
 
 }

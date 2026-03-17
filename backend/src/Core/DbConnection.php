@@ -12,11 +12,7 @@ class DbConnection {
 
     private function __construct()
     {
-        $dbhost = $_ENV['DB_HOST'];
-        $dbname = $_ENV['DB_NAME'];
-        $dbuser = $_ENV['DB_USER'];
-        $dbpass = $_ENV['DB_PASS'];
-        $this->pdo = new \PDO("mysql:host=$dbhost;dbname=$dbname;port=3306;charset=utf8", $dbuser, $dbpass);
+        $this->pdo = new \PDO($_ENV['DB_DSN'], $_ENV['DB_USER'], $_ENV['DB_PASS']);
     }
 
     public static function getInstance()
