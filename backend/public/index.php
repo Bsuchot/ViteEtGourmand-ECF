@@ -10,6 +10,7 @@ use App\Controllers\RoleController;
 use App\Controllers\ThemeController;
 use App\Controllers\AvisController;
 
+session_start();
 
 require_once __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv::createImmutable(__DIR__.'/..');
@@ -39,34 +40,35 @@ $router->register('DELETE', '/api/horaire/delete', HoraireController::class, 'de
 
 // Route Allergene
 $router->register('POST',   '/api/allergene/create', AllergeneController::class, 'create');
-$router->register('GET',      '/api/allergene/read',   AllergeneController::class, 'read');
-$router->register('PUT',    '/api/allergene/update', AllergeneController::class, 'update');
-$router->register('DELETE', '/api/allergene/delete', AllergeneController::class, 'delete');
+$router->register('GET',      '/api/allergene/{id}',   AllergeneController::class, 'read');
+$router->register('PUT',    '/api/allergene/{id}', AllergeneController::class, 'update');
+$router->register('DELETE', '/api/allergene/{id}', AllergeneController::class, 'delete');
 
 // Route Role
 $router->register('POST',   '/api/role/create', RoleController::class, 'create');
-$router->register('GET',      '/api/role/read',   RoleController::class, 'read');
-$router->register('PUT',    '/api/role/update', RoleController::class, 'update');
-$router->register('DELETE', '/api/role/delete', RoleController::class, 'delete');
+$router->register('GET',      '/api/role/{id}',   RoleController::class, 'read');
+$router->register('PUT',    '/api/role/{id}', RoleController::class, 'update');
+$router->register('DELETE', '/api/role/{id}', RoleController::class, 'delete');
 
 // Route Theme
 $router->register('POST',   '/api/theme/create', ThemeController::class, 'create');
-$router->register('GET',      '/api/theme/read',   ThemeController::class, 'read');
-$router->register('PUT',    '/api/theme/update', ThemeController::class, 'update');
-$router->register('DELETE', '/api/theme/delete', ThemeController::class, 'delete');
+$router->register('GET',      '/api/theme/{id}',   ThemeController::class, 'read');
+$router->register('PUT',    '/api/theme/{id}', ThemeController::class, 'update');
+$router->register('DELETE', '/api/theme/{id}', ThemeController::class, 'delete');
 
 // Route Utilisateur
 $router->register('POST',   '/api/utilisateur/registration', SecurityController::class, 'registration');
 $router->register('POST',   '/api/utilisateur/login', SecurityController::class, 'login');
-$router->register('GET',      '/api/utilisateur/read',   SecurityController::class, 'read');
-$router->register('PUT',    '/api/utilisateur/update', SecurityController::class, 'update');
-$router->register('DELETE', '/api/utilisateur/delete', SecurityController::class, 'delete');
+$router->register('POST',   '/api/utilisateur/logout', SecurityController::class, 'logout');
+$router->register('GET',      '/api/utilisateur/{id}',   SecurityController::class, 'read');
+$router->register('PUT',    '/api/utilisateur/{id}', SecurityController::class, 'update');
+$router->register('DELETE', '/api/utilisateur/{id}', SecurityController::class, 'delete');
 
 // Route Avis
 $router->register('POST',   '/api/avis/create', AvisController::class, 'create');
-$router->register('GET',      '/api/avis/read',   AvisController::class, 'read');
-$router->register('PUT',    '/api/avis/update', AvisController::class, 'update');
-$router->register('DELETE', '/api/avis/delete', AvisController::class, 'delete');
+$router->register('GET',      '/api/avis/{id}',   AvisController::class, 'read');
+$router->register('PUT',    '/api/avis/{id}', AvisController::class, 'update');
+$router->register('DELETE', '/api/avis/{id}', AvisController::class, 'delete');
 
 try {
     $router->run();

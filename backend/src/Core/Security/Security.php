@@ -23,6 +23,7 @@ class Security
         return isset($_SESSION['user']) && $_SESSION['user']['role'] === $role;
     }
 
+
     public static function isUser(): bool    { return self::hasRole('user'); }
     public static function isEmploye(): bool { return self::hasRole('employe'); }
     public static function isAdmin(): bool   { return self::hasRole('admin'); }

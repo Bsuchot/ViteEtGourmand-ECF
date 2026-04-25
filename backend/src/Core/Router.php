@@ -26,9 +26,21 @@ class Router
         ];
     }
 
-    private function match(string $routeUri, string $requestUri): bool
+    private function match(string $routeUri, string $requestUri, &$params = []): bool
     {
-        return $routeUri === $requestUri;
+        $pattern = preg_replace('#\{(\w+)\}#', '(?P<$1>[^/]+)', $routeUri);
+        $pattern = '#^' . $pattern . '$#';
+
+        if (preg_match($pattern, $requestUri, $matches)) {
+            $params = array_filter(
+                $matches,
+                fn($key) => is_string($key),
+                ARRAY_FILTER_USE_KEY
+            );
+            return true;
+        }
+
+        return false;
     }
 
     public function run()
@@ -36,7 +48,8 @@ class Router
         $uriMatched = false;
 
         foreach ($this->routes as $route) {
-            if (!$this->match($route['uri'], $this->uri)) {
+            $params = [];
+            if (!$this->match($route['uri'], $this->uri, $params)) {
                 continue;
             }
 
@@ -59,7 +72,7 @@ class Router
                 throw new \LogicException('La méthode ' . $action . ' n\'existe pas dans le controller ' . $controller::class);
             }
 
-            return $controller->$action();
+            return $controller->$action(...array_values($params));
         }
 
         if ($uriMatched) {
@@ -70,7 +83,6 @@ class Router
         http_response_code(404);
         throw new \RuntimeException('La route "' . $this->uri . '" n\'existe pas');
     }
-
     public function getRoutes(): array
     {
         return $this->routes;

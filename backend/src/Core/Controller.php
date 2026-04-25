@@ -2,6 +2,9 @@
 
 namespace App\Core;
 
+use App\Core\Security\Security;
+use App\Repository\UtilisateurRepository;
+
 class Controller
 {
     protected function json(mixed $data, int $status = 200): void
@@ -18,5 +21,29 @@ class Controller
     protected function error(string $message, int $status = 400): void
     {
         $this->json(['success' => false, 'error' => $message], $status);
+    }
+    protected function requireLogin(): bool
+    {
+        if (!Security::isLogged()) {
+            $this->error('Non autorisé', 401);
+            return false;
+        }
+        return true;
+    }
+    protected function getUtilisateurOrFail(int $id): ?array
+    {
+        if (!$this->requireLogin()) {
+            return null;
+        }
+
+        $repository = new UtilisateurRepository();
+        $utilisateur = $repository->findById($id);
+
+        if (!$utilisateur) {
+            $this->error('Utilisateur introuvable', 404);
+            return null;
+        }
+
+        return $utilisateur;
     }
 }

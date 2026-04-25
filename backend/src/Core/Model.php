@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use ReflectionClass;
+
 class Model
 {
 
@@ -22,6 +24,17 @@ class Model
                 $this->{$methodName}($value);
             }
         }
+    }
+    public function toArray(): array
+    {
+        $array = [];
+
+        $reflection = new ReflectionClass($this);
+        foreach ($reflection->getProperties() as $property) {
+            $property->setAccessible(true);
+            $array[$property->getName()] = $property->getValue($this);
+        }
+        return $array;
     }
 
 }

@@ -7,25 +7,25 @@ use App\Core\Model;
 class Utilisateur extends Model
 {
 
-    private ?int $utilisateurId = null;
-    private string $nom ='';
-    private string $prenom ='';
-    private string $email ='';
-    private string $password ='';
-    private string $telephone ='';
-    private string $adresse ='';
-    private string $ville ='';
-    private string $pays ='';
-    private ?Role $role = null;
+    private ?int $id = null;
+    private string $nom;
+    private string $prenom;
+    private string $email;
+    private string $password;
+    private string $telephone;
+    private string $adresse;
+    private string $ville;
+    private string $pays;
+    private int $roleId;
 
-    public function getUtilisateurId(): ?int
+    public function getId(): ?int
     {
-        return $this->utilisateurId;
+        return $this->id;
     }
 
-    public function setUtilisateurId(?int $utilisateurId): void
+    public function setId(?int $id): void
     {
-        $this->utilisateurId = $utilisateurId;
+        $this->id = $id;
     }
 
     public function getNom(): string
@@ -112,14 +112,13 @@ class Utilisateur extends Model
         $this->pays = $pays;
     }
 
-    public function getRole(): ?Role
+    public function getRoleId(): int
     {
-        return $this->role;
+        return $this->roleId;
     }
 
-    public function setRole(Role $role): void
+    public function setRoleId(int $roleId): void
     {
-        $this->role = $role;
+        $this->roleId = $roleId;
     }
-
 }

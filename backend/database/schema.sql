@@ -128,3 +128,18 @@ INSERT INTO role (libelle) VALUES
     ('ROLE_EMPLOYE'),
     ('ROLE_USER');
 
+INSERT INTO utilisateur (email, password, prenom, nom, telephone, ville, pays, adresse, role_id) VALUES
+    (
+     'admin@mail.fr',
+     '$2y$10$6W.7FUTUvRXWGQbaXp9Wlu51aNNigZ9VXxCX5vouW8QIxcLyN2EG2',
+     'prenom',
+     'nom',
+     'telephone',
+     'ville',
+     'pays',
+     'adresse',
+     1
+     );
+
+
+
