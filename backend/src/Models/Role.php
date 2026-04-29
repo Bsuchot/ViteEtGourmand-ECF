@@ -6,17 +6,17 @@ use App\Core\Model;
 
 class Role extends Model
 {
-    private ?int $roleId= null;
+    private ?int $id= null;
     private string $libelle;
 
 
-    public function getRoleId(): ?int
+    public function getId(): ?int
     {
-        return $this->roleId;
+        return $this->id;
     }
-    public function setRoleId(?int $roleId): void
+    public function setId(?int $id): void
     {
-        $this->roleId = $roleId;
+        $this->id = $id;
     }
 
     public function getLibelle(): string
@@ -31,7 +31,7 @@ class Role extends Model
     public static function from(int $id): self
     {
         $role = new self();
-        $role->setRoleId($id);
+        $role->setId($id);
         return $role;
     }
 

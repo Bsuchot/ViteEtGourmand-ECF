@@ -6,9 +6,8 @@ use App\Core\Controller;
 use App\Core\Security\Security;
 use App\Core\Security\UtilisateurValidator;
 use App\Models\Utilisateur;
+use App\Repository\RoleRepository;
 use App\Repository\UtilisateurRepository;
-use App\Models\Role;
-use PDO;
 
 class SecurityController extends Controller
 {
@@ -50,7 +49,14 @@ class SecurityController extends Controller
 
         Security::hashPassword($utilisateur, $data['password']);
 
-        $utilisateur->setRoleId(3);
+        $roleRepository = new RoleRepository();
+        $role = $roleRepository->findByLibelle('ROLE_USER');
+
+        if (!$role) {
+            $this->error('Rôle introuvable', 500);
+            return;
+        }
+        $utilisateur->setRoleId($role['id']);
 
         $repository->create($utilisateur);
 
@@ -110,15 +116,7 @@ class SecurityController extends Controller
 
     public function read(int $id): void
     {
-        if(!Security::isLogged()){
-            $this->error('Non autorisé', 401);
-            return;
-        }
-        $currentUserId = Security::getCurrentUserId();
-        if ($currentUserId !== $id) {
-            $this->error('Accés interdit', 403);
-            return;
-        }
+        if(!$this->requireSelf($id)) return;
 
         $repository = new UtilisateurRepository();
         $utilisateur = $repository->findById($id);
@@ -132,13 +130,10 @@ class SecurityController extends Controller
 
     public function update(int $id): void
     {
+        if(!$this->requireSelf($id)) return;
+
         $utilisateurData = $this->getUtilisateurOrFail($id);
         if (!$utilisateurData) return;
-
-        if ($_SESSION['user']['id'] !== $id) {
-            $this->error('Accès interdit', 403);
-            return;
-        }
 
         $data = json_decode(file_get_contents("php://input"), true);
         if (!$data) {
@@ -161,12 +156,51 @@ class SecurityController extends Controller
 
         $this->success(['message' => 'Utilisateur mis à jour'], 200);
     }
+    public function updatePassword(int $id): void
+    {
+        if (!$this->requireSelf($id)) return;
+
+        $utilisateurData = $this->getUtilisateurOrFail($id);
+        if (!$utilisateurData) return;
+
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (!$data) {
+            $this->error('Données invalides', 400);
+            return;
+        }
+
+        if (empty($data['currentPassword']) || empty($data['newPassword'])) {
+            $this->error('Mot de passe actuel et nouveau mot de passe requis', 400);
+            return;
+        }
+
+        $utilisateur = Utilisateur::createAndHydrate($utilisateurData);
+
+        if (!Security::verifyPassword($data['currentPassword'], $utilisateur->getPassword())) {
+            $this->error('Mot de passe actuel incorrect', 401);
+            return;
+        }
+
+        Security::hashPassword($utilisateur, $data['newPassword']);
+
+        $repository = new UtilisateurRepository();
+        $repository->updatePassword($utilisateur);
+
+        $this->success(['message' => 'Mot de passe mis à jour'], 200);
+    }
 
     public function delete(int $id): void
     {
-        $utilisateur = $this->getUtilisateurOrFail($id);
-        if (!$utilisateur) return;
+        if (!$this->requireSelf($id)) return;
 
-        $this->success($utilisateur);
+        $utilisateurData = $this->getUtilisateurOrFail($id);
+        if (!$utilisateurData) return;
+
+        $repository = new UtilisateurRepository();
+        $repository->delete($id);
+
+        session_destroy();
+
+        $this->success(['message' => 'Compte supprimé avec succès']);
     }
 }

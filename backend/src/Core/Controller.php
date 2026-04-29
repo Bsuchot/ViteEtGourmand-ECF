@@ -30,6 +30,15 @@ class Controller
         }
         return true;
     }
+
+    protected function requireSelf(int $id): bool
+    {
+        if (!Security::canAccessUser($id)) {
+            $this->error('Accès interdit', 403);
+            return false;
+        }
+        return true;
+    }
     protected function getUtilisateurOrFail(int $id): ?array
     {
         if (!$this->requireLogin()) {
@@ -46,4 +55,5 @@ class Controller
 
         return $utilisateur;
     }
+
 }

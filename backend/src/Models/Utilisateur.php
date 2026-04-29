@@ -67,10 +67,6 @@ class Utilisateur extends Model
     {
         $this->password = $password;
     }
-    public function hashPassword(string $password): void
-    {
-        $this->password = password_hash($password, PASSWORD_BCRYPT);
-    }
 
     public function getTelephone(): string
     {

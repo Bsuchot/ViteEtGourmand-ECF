@@ -18,7 +18,6 @@ class UtilisateurRepository extends Repository
         $utilisateursArray = [];
         if ($utilisateurs) {
             foreach ($utilisateurs as $utilisateurArray) {
-                // On hydrate le modèle puis on convertit directement en tableau
                 $utilisateur = Utilisateur::createAndHydrate($utilisateurArray);
                 $utilisateursArray[] = $utilisateur->toArray();
             }
@@ -90,5 +89,22 @@ class UtilisateurRepository extends Repository
             'pays'      => $utilisateur->getPays(),
             'id'        => $utilisateur->getId(),
         ]);
+    }
+    public function updatePassword(Utilisateur $utilisateur): void
+    {
+        $stmt = $this->pdo->prepare("
+        UPDATE utilisateur SET password = :password WHERE id = :id
+    ");
+
+        $stmt->execute([
+            'password' => $utilisateur->getPassword(),
+            'id'       => $utilisateur->getId(),
+        ]);
+    }
+    public function delete(int $id): void
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM utilisateur WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+
     }
 }

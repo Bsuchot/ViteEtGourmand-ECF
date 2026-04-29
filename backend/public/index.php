@@ -62,6 +62,7 @@ $router->register('POST',   '/api/utilisateur/login', SecurityController::class,
 $router->register('POST',   '/api/utilisateur/logout', SecurityController::class, 'logout');
 $router->register('GET',      '/api/utilisateur/{id}',   SecurityController::class, 'read');
 $router->register('PUT',    '/api/utilisateur/{id}', SecurityController::class, 'update');
+$router->register('PUT', '/utilisateur/{id}/password', SecurityController::class, 'updatePassword');
 $router->register('DELETE', '/api/utilisateur/{id}', SecurityController::class, 'delete');
 
 // Route Avis
