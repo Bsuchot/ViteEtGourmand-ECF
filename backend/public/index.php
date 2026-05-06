@@ -54,6 +54,7 @@ $router->register('DELETE', '/api/role/{id}', RoleController::class, 'delete');
 // Route Theme
 $router->register('POST',   '/api/theme/create', ThemeController::class, 'create');
 $router->register('GET',      '/api/theme/{id}',   ThemeController::class, 'read');
+$router->register('GET',      '/api/theme/readAll',   ThemeController::class, 'readAll');
 $router->register('PUT',    '/api/theme/{id}', ThemeController::class, 'update');
 $router->register('DELETE', '/api/theme/{id}', ThemeController::class, 'delete');
 

@@ -3,100 +3,94 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Repository\ThemeRepository;
-use App\Models\Theme;
+use App\Models\Horaire;
+use App\Repository\HoraireRepository;
 
-class ThemeController extends Controller
+
+class HoraireController extends Controller
 {
-    public function create(): void
+
+    public function create(Horaire $horaire): void
     {
         if (!$this->requireAdminOrEmploye()) return;
 
         $data = json_decode(file_get_contents("php://input"), true);
-        if (!$data || !isset($data['libelle'])) {
-            $this->error('Données manquantes', 400);
+        if (!$data) {
+            $this->error('Données invalides', 400);
             return;
         }
 
-        $repository = new ThemeRepository();
-        $existing = $repository->findByLibelle($data['libelle']);
+        $repository = new HoraireRepository();
+        $existing = $repository->findByJour($data['jour']);
         if ($existing) {
-            $this->error('Ce thème existe déjà', 409);
+            $this->error('Cet horaire existe déjà', 409);
             return;
         }
 
-        $theme = new Theme();
-        $theme->setLibelle($data['libelle']);
-        $repository->create($theme);
+        $horaire = new Horaire();
+        $horaire->setJour($data['jour']);
+        $horaire->setHeureOuverture($data['heureOuverture']);
+        $horaire->setHeureFermeture($data['heureFermeture']);
+        $horaire->setStatut($data['statut']);
+        $repository->create($horaire);
 
-        $this->success(['message' => 'Thème créé avec succès'], 201);
-    }
-
-    public function read(int $id): void
-    {
-        $repository = new ThemeRepository();
-        $theme = $repository->findById($id);
-
-        if (!$theme) {
-            $this->error('Thème introuvable', 404);
-            return;
-        }
-
-        $this->success($theme);
+        $this->success(['message' => 'Horaire créé avec succès'], 201);
     }
 
     public function readAll(): void
     {
-        $repository = new ThemeRepository();
-        $themes = $repository->findAll();
+        $horaireRepository = new HoraireRepository();
+        $horaires = $horaireRepository->findAll();
 
-        $this->success($themes);
+        $this->success($horaires);
+
     }
 
-    public function update(int $id): void
+    public function update(): void
     {
         if (!$this->requireAdminOrEmploye()) return;
-
-        $repository = new ThemeRepository();
-        $theme = $repository->findById($id);
-
-        if (!$theme) {
-            $this->error('Thème introuvable', 404);
-            return;
-        }
-
         $data = json_decode(file_get_contents("php://input"), true);
-        if (!$data || !isset($data['libelle'])) {
-            $this->error('Données manquantes', 400);
+        if (!$data || !is_array($data)) {
+            $this->error('Données invalides', 400);
             return;
         }
 
-        $existing = $repository->findByLibelle($data['libelle']);
-        if ($existing && $existing['id'] !== $id) {
-            $this->error('Ce thème existe déjà', 409);
-            return;
+        $repository = new HoraireRepository();
+
+        foreach ($data as $item) {
+            if (empty($item['id'])) continue;
+
+            $horaireData = $repository->findById($item['id']);
+            if (!$horaireData) continue;
+
+
+            $horaire = Horaire::createAndHydrate($horaireData);
+
+            if (isset($item['jour']))       $horaire->setJour($item['jour']);
+            if (isset($item['heureOuverture']))    $horaire->setHeureOuverture($item['heureOuverture']);
+            if (isset($item['heureFermeture'])) $horaire->setHeureFermeture($item['heureFermeture']);
+            if (isset($item['statut']))    $horaire->setStatut($item['statut']);
+
+            $repository->update($horaire);
         }
 
-        $themeModel = Theme::createAndHydrate($theme);
-        $themeModel->setLibelle($data['libelle']);
-        $repository->update($themeModel);
-
-        $this->success(['message' => 'Thème mis à jour avec succès']);
+        $this->success(['message' => 'Horaires mis à jour'], 200);
     }
 
     public function delete(int $id): void
     {
         if (!$this->requireAdminOrEmploye()) return;
 
-        $repository = new ThemeRepository();
-        $theme = $repository->findById($id);
+        $repository = new HoraireRepository();
+        $horaire = $repository->findById($id);
 
-        if (!$theme) {
-            $this->error('Thème introuvable', 404);
+        if (!$horaire) {
+            $this->error('Horaire introuvable', 404);
             return;
         }
 
         $repository->delete($id);
-        $this->success(['message' => 'Thème supprimé avec succès']);
+        $this->success(['message' => 'Horaire supprimé avec succès']);
+
     }
 }

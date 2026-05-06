@@ -6,7 +6,6 @@ use App\Core\Controller;
 use App\Repository\ThemeRepository;
 use App\Models\Theme;
 
-
 class ThemeController extends Controller
 {
     public function create(): void
@@ -14,8 +13,8 @@ class ThemeController extends Controller
         if (!$this->requireAdminOrEmploye()) return;
 
         $data = json_decode(file_get_contents("php://input"), true);
-        if (!$data) {
-            $this->error('Données invalides', 400);
+        if (!$data || !isset($data['libelle'])) {
+            $this->error('Données manquantes', 400);
             return;
         }
 
@@ -33,13 +32,56 @@ class ThemeController extends Controller
         $this->success(['message' => 'Thème créé avec succès'], 201);
     }
 
-    public function read(): void
+    public function read(int $id): void
     {
+        $repository = new ThemeRepository();
+        $theme = $repository->findById($id);
+
+        if (!$theme) {
+            $this->error('Thème introuvable', 404);
+            return;
+        }
+
+        $this->success($theme);
     }
 
-    public function update(): void
+    public function readAll(): void
+    {
+        $repository = new ThemeRepository();
+        $themes = $repository->findAll();
+
+        $this->success($themes);
+    }
+
+    public function update(int $id): void
     {
         if (!$this->requireAdminOrEmploye()) return;
+
+        $repository = new ThemeRepository();
+        $theme = $repository->findById($id);
+
+        if (!$theme) {
+            $this->error('Thème introuvable', 404);
+            return;
+        }
+
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (!$data || !isset($data['libelle'])) {
+            $this->error('Données manquantes', 400);
+            return;
+        }
+
+        $existing = $repository->findByLibelle($data['libelle']);
+        if ($existing && $existing['id'] !== $id) {
+            $this->error('Ce thème existe déjà', 409);
+            return;
+        }
+
+        $themeModel = Theme::createAndHydrate($theme);
+        $themeModel->setLibelle($data['libelle']);
+        $repository->update($themeModel);
+
+        $this->success(['message' => 'Thème mis à jour avec succès']);
     }
 
     public function delete(int $id): void
@@ -56,6 +98,5 @@ class ThemeController extends Controller
 
         $repository->delete($id);
         $this->success(['message' => 'Thème supprimé avec succès']);
-
     }
 }
