@@ -3,99 +3,100 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Core\DbConnection;
-use App\Models\Horaire;
-use App\Repository\HoraireRepository;
-use PDO;
+use App\Repository\ThemeRepository;
+use App\Models\Theme;
 
-class HoraireController extends Controller
+class ThemeController extends Controller
 {
-    private PDO $pdo;
-
-    public function __construct()
-    {
-        $this->pdo = DbConnection::getPDO();
-    }
-
-
     public function create(): void
     {
-        $data  = json_decode(file_get_contents("php://input"), true);
-        $items = isset($data[0]) ? $data : [$data];
+        if (!$this->requireAdminOrEmploye()) return;
 
-        $stmt = $this->pdo->prepare('
-            INSERT INTO horaire (jour, heure_ouverture, heure_fermeture, statut)
-            VALUES (:jour, :heureOuverture, :heureFermeture, :statut)
-        ');
-
-        $created = [];
-
-        foreach ($items as $item) {
-            if (empty($item['jour']) || empty($item['heureOuverture']) || empty($item['heureFermeture']) || empty($item['statut'])) {
-                $this->error('Données manquantes pour un des horaires', 400);
-                return;
-            }
-
-            $horaire = new Horaire();
-            $horaire->setJour($item['jour']);
-            $horaire->setHeureOuverture($item['heureOuverture']);
-            $horaire->setHeureFermeture($item['heureFermeture']);
-            $horaire->setStatut($item['statut']);
-
-            $stmt->execute([
-                'jour'           => $horaire->getJour(),
-                'heureOuverture' => $horaire->getHeureOuverture(),
-                'heureFermeture' => $horaire->getHeureFermeture(),
-                'statut'         => $horaire->getStatut()
-            ]);
-
-            $created[] = $this->pdo->lastInsertId();
-        }
-
-        $this->success([
-            'message' => count($created) . ' Horaire(s) créé(s) avec succès',
-            'ids'     => $created
-        ], 201);
-    }
-
-    public function read(): void
-    {
-        $horaireRepository = new HoraireRepository();
-        $horaires = $horaireRepository->findAll();
-        var_dump($horaires);
-
-        $horaire = $horaireRepository->findById(1);
-
-
-
-    }
-
-    public function update(): void
-    {
-    }
-
-    public function delete(): void
-    {
         $data = json_decode(file_get_contents("php://input"), true);
-        $id   = $data['horaire_id'] ?? null;
-
-        if (!$id) {
-            $this->error('ID manquant', 400);
+        if (!$data || !isset($data['libelle'])) {
+            $this->error('Données manquantes', 400);
             return;
         }
 
-        $stmt = $this->pdo->prepare('SELECT * FROM horaire WHERE horaire_id = :id');
-        $stmt->execute(['id' => $id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$row) {
-            $this->error('Horaire introuvable', 404);
+        $repository = new ThemeRepository();
+        $existing = $repository->findByLibelle($data['libelle']);
+        if ($existing) {
+            $this->error('Ce thème existe déjà', 409);
             return;
         }
 
-        $stmt = $this->pdo->prepare('DELETE FROM horaire WHERE horaire_id = :id');
-        $stmt->execute(['id' => $id]);
+        $theme = new Theme();
+        $theme->setLibelle($data['libelle']);
+        $repository->create($theme);
 
-        $this->success(['message' => 'Horaire supprimé avec succès']);
+        $this->success(['message' => 'Thème créé avec succès'], 201);
+    }
+
+    public function read(int $id): void
+    {
+        $repository = new ThemeRepository();
+        $theme = $repository->findById($id);
+
+        if (!$theme) {
+            $this->error('Thème introuvable', 404);
+            return;
+        }
+
+        $this->success($theme);
+    }
+
+    public function readAll(): void
+    {
+        $repository = new ThemeRepository();
+        $themes = $repository->findAll();
+
+        $this->success($themes);
+    }
+
+    public function update(int $id): void
+    {
+        if (!$this->requireAdminOrEmploye()) return;
+
+        $repository = new ThemeRepository();
+        $theme = $repository->findById($id);
+
+        if (!$theme) {
+            $this->error('Thème introuvable', 404);
+            return;
+        }
+
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (!$data || !isset($data['libelle'])) {
+            $this->error('Données manquantes', 400);
+            return;
+        }
+
+        $existing = $repository->findByLibelle($data['libelle']);
+        if ($existing && $existing['id'] !== $id) {
+            $this->error('Ce thème existe déjà', 409);
+            return;
+        }
+
+        $themeModel = Theme::createAndHydrate($theme);
+        $themeModel->setLibelle($data['libelle']);
+        $repository->update($themeModel);
+
+        $this->success(['message' => 'Thème mis à jour avec succès']);
+    }
+
+    public function delete(int $id): void
+    {
+        if (!$this->requireAdminOrEmploye()) return;
+
+        $repository = new ThemeRepository();
+        $theme = $repository->findById($id);
+
+        if (!$theme) {
+            $this->error('Thème introuvable', 404);
+            return;
+        }
+
+        $repository->delete($id);
+        $this->success(['message' => 'Thème supprimé avec succès']);
     }
 }

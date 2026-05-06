@@ -22,6 +22,7 @@ class Controller
     {
         $this->json(['success' => false, 'error' => $message], $status);
     }
+
     protected function requireLogin(): bool
     {
         if (!Security::isLogged()) {
@@ -34,6 +35,31 @@ class Controller
     protected function requireSelf(int $id): bool
     {
         if (!Security::canAccessUser($id)) {
+            $this->error('Accès interdit', 403);
+            return false;
+        }
+        return true;
+    }
+
+    protected function requireAdmin(): bool
+    {
+        if (!Security::isAdmin()) {
+            $this->error('Accès interdit', 403);
+            return false;
+        }
+        return true;
+    }
+    protected function requireAdminOrEmploye(): bool
+    {
+        if (!Security::isAdmin() || !Security::isEmploye()) {
+            $this->error('Accès interdit', 403);
+            return false;
+        }
+        return true;
+    }
+    protected function requireUser(): bool
+    {
+        if (!Security::isUser()) {
             $this->error('Accès interdit', 403);
             return false;
         }

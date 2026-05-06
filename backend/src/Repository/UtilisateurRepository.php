@@ -41,14 +41,17 @@ class UtilisateurRepository extends Repository
 
         return $utilisateur->toArray();
     }
-    public function findByEmail(string $email)
+    public function findByEmail(string $email): ?array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM utilisateur WHERE email = :email");
         $stmt->execute(['email' => $email]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $stmt->fetch();
+        if (!$row) return null;
+
+        return Utilisateur::createAndHydrate($row)->toArray();
     }
-    public function create(Utilisateur $utilisateur)
+    public function create(Utilisateur $utilisateur): void
     {
         $stmt = $this->pdo->prepare("
         INSERT INTO utilisateur (email, password, nom, prenom, telephone, adresse, ville, pays, statut, role_id)

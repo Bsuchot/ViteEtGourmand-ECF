@@ -148,9 +148,18 @@ class SecurityController extends Controller
             return;
         }
 
+        $repository = new UtilisateurRepository(); // ← remonté ici
+
         $utilisateur = Utilisateur::createAndHydrate($utilisateurData);
 
-        if (isset($data['email']))       $utilisateur->setEmail($data['email']);
+        if (isset($data['email'])) {
+            if (!$this->checkEmailUnique($repository, $data['email'], $id)) {
+                $this->error('Cet email est déjà utilisé', 409);
+                return;
+            }
+            $utilisateur->setEmail($data['email']);
+        }
+
         if (isset($data['nom']))       $utilisateur->setNom($data['nom']);
         if (isset($data['prenom']))    $utilisateur->setPrenom($data['prenom']);
         if (isset($data['telephone'])) $utilisateur->setTelephone($data['telephone']);
@@ -158,7 +167,6 @@ class SecurityController extends Controller
         if (isset($data['ville']))     $utilisateur->setVille($data['ville']);
         if (isset($data['pays']))      $utilisateur->setPays($data['pays']);
 
-        $repository = new UtilisateurRepository();
         $repository->update($utilisateur);
 
         $this->success(['message' => 'Utilisateur mis à jour'], 200);
@@ -201,20 +209,21 @@ class SecurityController extends Controller
     // Route : DELETE /api/utilisateur/{id}
     public function delete(int $id): void
     {
-        if (!Security::isUser()) {
-            $this->error('Accès interdit', 403);
-            return;
-        }
+        if (!$this->requireUser()) return;
         if (!$this->requireSelf($id)) return;
 
         $utilisateurData = $this->getUtilisateurOrFail($id);
         if (!$utilisateurData) return;
 
         $roleRepository = new RoleRepository();
-        $role = $roleRepository->findById($utilisateurData['id']);
+        $role = $roleRepository->findById($utilisateurData['roleId']);
 
         if ($role && $role['libelle'] === 'ROLE_ADMIN') {
             $this->error('Un compte administrateur ne peut pas être supprimé', 403);
+            return;
+        }
+        if ($role && $role['libelle'] === 'ROLE_EMPLOYE') {
+            $this->error('Accés interdit', 403);
             return;
         }
 

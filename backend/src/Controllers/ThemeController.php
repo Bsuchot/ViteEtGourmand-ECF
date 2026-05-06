@@ -3,46 +3,34 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Core\DbConnection;
-use PDO;
+use App\Repository\ThemeRepository;
 use App\Models\Theme;
 
 
 class ThemeController extends Controller
 {
-    private PDO $pdo;
-
-    public function __construct()
-    {
-        $this->pdo = DbConnection::getPDO();
-    }
-
-
     public function create(): void
     {
-        $data  = json_decode(file_get_contents("php://input"), true);
-        if (!$data || !isset($data['libelle'])) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Données manquantes']);
+        if (!$this->requireAdminOrEmploye()) return;
+
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (!$data) {
+            $this->error('Données invalides', 400);
             return;
         }
 
-        $stmt = $this->pdo->prepare('
-            INSERT INTO theme (libelle)
-            VALUES (:libelle)
-        ');
+        $repository = new ThemeRepository();
+        $existing = $repository->findByLibelle($data['libelle']);
+        if ($existing) {
+            $this->error('Ce thème existe déjà', 409);
+            return;
+        }
 
         $theme = new Theme();
         $theme->setLibelle($data['libelle']);
+        $repository->create($theme);
 
-        $stmt->execute([
-            'libelle' => $theme->getLibelle()
-        ]);
-
-        $this->success([
-            'message' => ' Thème créé avec succès',
-            'id'     => $this->pdo->lastInsertId()
-        ], 201);
+        $this->success(['message' => 'Thème créé avec succès'], 201);
     }
 
     public function read(): void
@@ -51,30 +39,23 @@ class ThemeController extends Controller
 
     public function update(): void
     {
+        if (!$this->requireAdminOrEmploye()) return;
     }
 
-    public function delete(): void
+    public function delete(int $id): void
     {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $id   = $data['theme_id'] ?? null;
+        if (!$this->requireAdminOrEmploye()) return;
 
-        if (!$id) {
-            $this->error('ID manquant', 400);
-            return;
-        }
+        $repository = new ThemeRepository();
+        $theme = $repository->findById($id);
 
-        $stmt = $this->pdo->prepare('SELECT * FROM theme WHERE theme_id = :id');
-        $stmt->execute(['id' => $id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$row) {
+        if (!$theme) {
             $this->error('Thème introuvable', 404);
             return;
         }
 
-        $stmt = $this->pdo->prepare('DELETE FROM theme WHERE theme_id = :id');
-        $stmt->execute(['id' => $id]);
-
+        $repository->delete($id);
         $this->success(['message' => 'Thème supprimé avec succès']);
+
     }
 }

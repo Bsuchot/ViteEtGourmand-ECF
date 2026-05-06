@@ -11,13 +11,10 @@ use App\Models\Utilisateur;
 
 class EmployeController extends Controller
 {
-    // Route : PUT /api/admin/employe/create
+    // Route : POST /api/admin/employe/creation
     public function create(): void
     {
-        if (!Security::isAdmin()) {
-            $this->error('Accès interdit', 403);
-            return;
-        }
+        if (!$this->requireAdmin()) return;
 
         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -72,13 +69,10 @@ class EmployeController extends Controller
             'password' => $plainPassword // à envoyer par email en production
         ], 201);
     }
-    // Route : PUT /api/admin/employe/read
+    // Route : GET /api/admin/employe/read
     public function read(int $id): void
     {
-        if (!Security::isAdmin()) {
-            $this->error('Accès interdit', 403);
-            return;
-        }
+        if (!$this->requireAdmin()) return;
 
         $repository = new UtilisateurRepository();
         $utilisateur = $repository->findEmployeById($id);
@@ -90,13 +84,10 @@ class EmployeController extends Controller
 
         $this->success($utilisateur);
     }
-    // Route : PUT /api/admin/employe/readAll
+    // Route : GET /api/admin/employe/readAll
     public function readAll(): void
     {
-        if (!Security::isAdmin()) {
-            $this->error('Accès interdit', 403);
-            return;
-        }
+        if (!$this->requireAdmin()) return;
 
         $repository = new UtilisateurRepository();
         $employes = $repository->findAllEmployes();
@@ -106,10 +97,7 @@ class EmployeController extends Controller
     // Route : PUT /api/admin/employe/update
     public function update(): void
     {
-        if (!Security::isAdmin()) {
-            $this->error('Accès interdit', 403);
-            return;
-        }
+        if (!$this->requireAdmin()) return;
 
         $data = json_decode(file_get_contents("php://input"), true);
         if (!$data || !is_array($data)) {
@@ -118,15 +106,26 @@ class EmployeController extends Controller
         }
 
         $repository = new UtilisateurRepository();
+        $roleRepository = new RoleRepository();
 
         foreach ($data as $item) {
             if (empty($item['id'])) continue;
+
             $utilisateurData = $repository->findById($item['id']);
             if (!$utilisateurData) continue;
 
+            $role = $roleRepository->findById($utilisateurData['role_id']);
+            if (!$role || $role['libelle'] !== 'ROLE_EMPLOYE') continue;
+
             $utilisateur = Utilisateur::createAndHydrate($utilisateurData);
 
-            if (isset($item['email']))     $utilisateur->setEmail($item['email']);
+            if (isset($item['email'])) { // ← $item au lieu de $data
+                if (!$this->checkEmailUnique($repository, $item['email'], $item['id'])) { // ← $item['id'] au lieu de $id
+                    $this->error('Cet email est déjà utilisé', 409);
+                    return;
+                }
+                $utilisateur->setEmail($item['email']);
+            }
             if (isset($item['nom']))       $utilisateur->setNom($item['nom']);
             if (isset($item['prenom']))    $utilisateur->setPrenom($item['prenom']);
             if (isset($item['telephone'])) $utilisateur->setTelephone($item['telephone']);
@@ -143,10 +142,7 @@ class EmployeController extends Controller
     // Route : PUT /api/admin/employe/update/{id}/password
     public function updatePassword(int $id): void
     {
-        if (!Security::isAdmin()) {
-            $this->error('Accès interdit', 403);
-            return;
-        }
+        if (!$this->requireAdmin()) return;
 
         $utilisateurData = $this->getUtilisateurOrFail($id);
         if (!$utilisateurData) return;
@@ -175,10 +171,7 @@ class EmployeController extends Controller
     // Route : DELETE /api/admin/employe/{id}/
     public function delete(int $id): void
     {
-        if (!Security::isAdmin()) {
-            $this->error('Accès interdit', 403);
-            return;
-        }
+        if (!$this->requireAdmin()) return;
 
         $utilisateurData = $this->getUtilisateurOrFail($id);
         if (!$utilisateurData) return;

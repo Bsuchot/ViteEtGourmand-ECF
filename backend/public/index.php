@@ -35,9 +35,9 @@ $router = new Router($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
 // Route Horaire
 $router->register('POST',   '/api/horaire/create', HoraireController::class, 'create');
-$router->register('GET',      '/api/horaire/read',   HoraireController::class, 'read');
+$router->register('GET',      '/api/horaire/readAll',   HoraireController::class, 'readAll');
 $router->register('PUT',    '/api/horaire/update', HoraireController::class, 'update');
-$router->register('DELETE', '/api/horaire/delete', HoraireController::class, 'delete');
+$router->register('DELETE', '/api/horaire/delete/{id}', HoraireController::class, 'delete');
 
 // Route Allergene
 $router->register('POST',   '/api/allergene/create', AllergeneController::class, 'create');
