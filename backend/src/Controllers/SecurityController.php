@@ -11,7 +11,7 @@ use App\Repository\UtilisateurRepository;
 
 class SecurityController extends Controller
 {
-
+    // Route : POST /api/utilisateur/registration
     public function registration(): void
     {
         $data = json_decode(file_get_contents("php://input"), true);
@@ -66,6 +66,7 @@ class SecurityController extends Controller
 
     }
 
+    // Route : POST /api/utilisateur/login
     public function login(): void
     {
         $data = json_decode(file_get_contents("php://input"), true);
@@ -95,15 +96,23 @@ class SecurityController extends Controller
             return;
         }
 
+        $roleRepository = new RoleRepository();
+        $role = $roleRepository->findById($utilisateur->getRoleId());
+        if (!$role) {
+            $this->error('Rôle introuvable', 500);
+            return;
+        }
+
         $_SESSION['user'] = [
-            'id' => $utilisateur->getid(),
+            'id'    => $utilisateur->getId(),
             'email' => $utilisateur->getEmail(),
-            'role' => $utilisateur->getRoleId(),
+            'role'  => $role['libelle'], // 'ROLE_ADMIN', 'ROLE_EMPLOYE', 'ROLE_USER'
         ];
 
         $this->success(['message' => 'Connexion réussie'], 200);
     }
 
+    // Route : POST /api/utilisateur/logout
     public function logout(): void
     {
         if (!Security::isLogged()) {
@@ -118,16 +127,14 @@ class SecurityController extends Controller
     {
         if(!$this->requireSelf($id)) return;
 
-        $repository = new UtilisateurRepository();
-        $utilisateur = $repository->findById($id);
-        if (!$utilisateur) {
-            $this->error('Utilisateur introuvable', 404);
-            return;
-        }
+        $utilisateur = $this->getUtilisateurOrFail($id);
+        if (!$utilisateur) return;
+
         $this->success($utilisateur);
     }
 
 
+    // Route : PUT /api/utilisateur/{id}
     public function update(int $id): void
     {
         if(!$this->requireSelf($id)) return;
@@ -156,6 +163,8 @@ class SecurityController extends Controller
 
         $this->success(['message' => 'Utilisateur mis à jour'], 200);
     }
+
+    // Route : PUT /api/utilisateur/{id}/password
     public function updatePassword(int $id): void
     {
         if (!$this->requireSelf($id)) return;
@@ -189,12 +198,25 @@ class SecurityController extends Controller
         $this->success(['message' => 'Mot de passe mis à jour'], 200);
     }
 
+    // Route : DELETE /api/utilisateur/{id}
     public function delete(int $id): void
     {
+        if (!Security::isUser()) {
+            $this->error('Accès interdit', 403);
+            return;
+        }
         if (!$this->requireSelf($id)) return;
 
         $utilisateurData = $this->getUtilisateurOrFail($id);
         if (!$utilisateurData) return;
+
+        $roleRepository = new RoleRepository();
+        $role = $roleRepository->findById($utilisateurData['id']);
+
+        if ($role && $role['libelle'] === 'ROLE_ADMIN') {
+            $this->error('Un compte administrateur ne peut pas être supprimé', 403);
+            return;
+        }
 
         $repository = new UtilisateurRepository();
         $repository->delete($id);

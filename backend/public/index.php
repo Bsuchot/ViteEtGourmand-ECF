@@ -9,6 +9,7 @@ use App\Controllers\AllergeneController;
 use App\Controllers\RoleController;
 use App\Controllers\ThemeController;
 use App\Controllers\AvisController;
+use App\Controllers\EmployeController;
 
 session_start();
 
@@ -64,6 +65,14 @@ $router->register('GET',      '/api/utilisateur/{id}',   SecurityController::cla
 $router->register('PUT',    '/api/utilisateur/{id}', SecurityController::class, 'update');
 $router->register('PUT', '/utilisateur/{id}/password', SecurityController::class, 'updatePassword');
 $router->register('DELETE', '/api/utilisateur/{id}', SecurityController::class, 'delete');
+
+//Route Admin
+$router->register('POST',   '/api/admin/employe/creation', EmployeController::class, 'create');
+$router->register('GET',   '/api/admin/employe/readAll', EmployeController::class, 'readAll');
+$router->register('GET',   '/api/admin/employe/read/{id}', EmployeController::class, 'read');
+$router->register('PUT',   '/api/admin/employe/update', EmployeController::class, 'update');
+$router->register('PUT',   '/api/admin/employe/update/{id}/password', EmployeController::class, 'updatePassword');
+$router->register('DELETE', '/api/admin/employe/{id}', EmployeController::class, 'delete');
 
 // Route Avis
 $router->register('POST',   '/api/avis/create', AvisController::class, 'create');

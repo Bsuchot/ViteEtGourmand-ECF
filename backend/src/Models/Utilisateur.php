@@ -16,6 +16,7 @@ class Utilisateur extends Model
     private string $adresse;
     private string $ville;
     private string $pays;
+    private ?string $statut = 'actif';
     private int $roleId;
 
     public function getId(): ?int
@@ -106,6 +107,16 @@ class Utilisateur extends Model
     public function setPays(string $pays): void
     {
         $this->pays = $pays;
+    }
+
+    public function getStatut(): string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?string $statut): void
+    {
+        $this->statut = $statut;
     }
 
     public function getRoleId(): int

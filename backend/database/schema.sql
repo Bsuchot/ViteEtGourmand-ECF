@@ -20,6 +20,7 @@ CREATE TABLE utilisateur
     ville VARCHAR(100) NOT NULL,
     pays VARCHAR(100) NOT NULL,
     adresse VARCHAR(255) NOT NULL,
+    statut VARCHAR(12),
     role_id INT NOT NULL,
     FOREIGN KEY (role_id) REFERENCES role(id)
 );

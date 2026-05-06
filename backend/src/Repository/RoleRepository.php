@@ -8,6 +8,12 @@ use PDO;
 
 class RoleRepository extends Repository
 {
+    public function findById(int $id): ?array
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM role WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
     public function findByLibelle(string $libelle): ?array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM role WHERE libelle = :libelle");
