@@ -13,7 +13,7 @@ class Avis extends Model
     private int $note;
     private string $statut;
     private \DateTimeImmutable $date;
-    private Utilisateur $utilisateur;
+    private int $utilisateurId;
 
 
     public function getId(): ?int
@@ -60,7 +60,7 @@ class Avis extends Model
         return $this->statut;
     }
 
-    public function setStatus(string $statut): void
+    public function setStatut(string $statut): void
     {
         $this->statut = $statut;
     }
@@ -75,14 +75,14 @@ class Avis extends Model
         $this->date = $date;
     }
 
-    public function getUtilisateur(): Utilisateur
+    public function getUtilisateurID(): int
     {
-        return $this->utilisateur;
+        return $this->utilisateurId;
     }
 
-    public function setUtilisateur(Utilisateur $utilisateur): void
+    public function setUtilisateurId(int $utilisateurId): void
     {
-        $this->utilisateur = $utilisateur;
+        $this->utilisateurId = $utilisateurId;
     }
 
 }

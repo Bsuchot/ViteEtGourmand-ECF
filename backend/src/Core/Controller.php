@@ -81,6 +81,13 @@ class Controller
 
         return $utilisateur;
     }
-
+    protected function requireAvisOwner(array $avis): bool
+    {
+        if ($avis['utilisateurId'] !== $_SESSION['user']['id']) {
+            $this->error('Accès interdit', 403);
+            return false;
+        }
+        return true;
+    }
 
 }

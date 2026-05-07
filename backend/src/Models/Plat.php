@@ -7,14 +7,18 @@ use App\Core\Model;
 class Plat extends Model
 {
     private ?int $id = null;
-    private string $titre;
-    private string $category;
-    private string $photo;
-    private array $allergenes;
+    private ?string $titre = null;
+    private ?string $category = null;
+    private ?string $photo  = null;
+    private array $allergenes = [];
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getPhoto(): string
@@ -52,10 +56,9 @@ class Plat extends Model
         return $this->allergenes;
     }
 
-    public function addAllergenes(Allergene $allergene): void
+    public function setAllergenes(array $allergenes): void
     {
-        $this->allergenes[] = $allergene;
+        $this->allergenes = $allergenes;
     }
-
 
 }

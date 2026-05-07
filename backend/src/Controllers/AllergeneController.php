@@ -3,76 +3,100 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Core\DbConnection;
 use App\Models\Allergene;
-use PDO;
+use App\Repository\AllergeneRepository;
 
 class AllergeneController extends Controller
 {
-    private PDO $pdo;
-
-    public function __construct()
-    {
-        $this->pdo = DbConnection::getPDO();
-    }
-
     public function create(): void
     {
-        $data  = json_decode(file_get_contents("php://input"), true);
+        if (!$this->requireAdminOrEmploye()) return;
+
+        $data = json_decode(file_get_contents("php://input"), true);
         if (!$data || !isset($data['libelle'])) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Données manquantes']);
+            $this->error('Données manquantes', 400);
             return;
         }
 
-        $stmt = $this->pdo->prepare('
-            INSERT INTO allergene (libelle)
-            VALUES (:libelle)
-        ');
+        $repository = new AllergeneRepository();
+        $existing = $repository->findByLibelle($data['libelle']);
+        if ($existing) {
+            $this->error('Cet allergène existe déjà', 409);
+            return;
+        }
 
         $allergene = new Allergene();
         $allergene->setLibelle($data['libelle']);
+        $repository->create($allergene);
 
-        $stmt->execute([
-            'libelle' => $allergene->getLibelle()
-        ]);
-
-        $this->success([
-            'message' => ' Allergène créé avec succès',
-            'id'     => $this->pdo->lastInsertId()
-        ], 201);
+        $this->success(['message' => 'Allergène créé avec succès'], 201);
     }
 
-    public function read(): void
+    public function read(int $id): void
     {
-    }
+        $repository = new AllergeneRepository();
+        $allergene = $repository->findById($id);
 
-    public function update(): void
-    {
-    }
-
-    public function delete(): void
-    {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $id   = $data['allergene_id'] ?? null;
-
-        if (!$id) {
-            $this->error('ID manquant', 400);
-            return;
-        }
-
-        $stmt = $this->pdo->prepare('SELECT * FROM allergene WHERE allergene_id = :id');
-        $stmt->execute(['id' => $id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$row) {
+        if (!$allergene) {
             $this->error('Allergène introuvable', 404);
             return;
         }
 
-        $stmt = $this->pdo->prepare('DELETE FROM allergene WHERE allergene_id = :id');
-        $stmt->execute(['id' => $id]);
+        $this->success($allergene);
+    }
 
+    public function readAll(): void
+    {
+        $repository = new AllergeneRepository();
+        $allergenes = $repository->findAll();
+
+        $this->success($allergenes);
+    }
+
+    public function update(int $id): void
+    {
+        if (!$this->requireAdminOrEmploye()) return;
+
+        $repository = new AllergeneRepository();
+        $allergene = $repository->findById($id);
+
+        if (!$allergene) {
+            $this->error('Allergène introuvable', 404);
+            return;
+        }
+
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (!$data || !isset($data['libelle'])) {
+            $this->error('Données manquantes', 400);
+            return;
+        }
+
+        $existing = $repository->findByLibelle($data['libelle']);
+        if ($existing && $existing['id'] !== $id) {
+            $this->error('Cet allergène existe déjà', 409);
+            return;
+        }
+
+        $allergeneModel = Allergene::createAndHydrate($allergene);
+        $allergeneModel->setLibelle($data['libelle']);
+        $repository->update($allergeneModel);
+
+        $this->success(['message' => 'Allergène mis à jour avec succès']);
+    }
+
+    public function delete(int $id): void
+    {
+        if (!$this->requireAdminOrEmploye()) return;
+
+        $repository = new AllergeneRepository();
+        $allergene = $repository->findById($id);
+
+        if (!$allergene) {
+            $this->error('Allergène introuvable', 404);
+            return;
+        }
+
+        $repository->delete($id);
         $this->success(['message' => 'Allergène supprimé avec succès']);
     }
 }

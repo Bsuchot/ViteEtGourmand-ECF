@@ -53,7 +53,6 @@ class ThemeRepository extends Repository
             'id'      => $theme->getId()
         ]);
     }
-
     public function delete(int $id): void
     {
         $stmt = $this->pdo->prepare("DELETE FROM theme WHERE id = :id");

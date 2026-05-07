@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Controllers\RegimeController;
 use App\Core\Router;
 use Dotenv\Dotenv;
 use App\Controllers\SecurityController;
@@ -45,6 +46,13 @@ $router->register('GET',      '/api/allergene/{id}',   AllergeneController::clas
 $router->register('PUT',    '/api/allergene/{id}', AllergeneController::class, 'update');
 $router->register('DELETE', '/api/allergene/{id}', AllergeneController::class, 'delete');
 
+// Route Regime
+$router->register('POST',   '/api/regime/create', RegimeController::class, 'create');
+$router->register('GET',      '/api/regime/{id}',   RegimeController::class, 'read');
+$router->register('GET',      '/api/regime/readAll',   RegimeController::class, 'readAll');
+$router->register('PUT',    '/api/regime/{id}', RegimeController::class, 'update');
+$router->register('DELETE', '/api/regime/{id}', RegimeController::class, 'delete');
+
 // Route Role
 $router->register('POST',   '/api/role/create', RoleController::class, 'create');
 $router->register('GET',      '/api/role/{id}',   RoleController::class, 'read');
@@ -79,7 +87,9 @@ $router->register('DELETE', '/api/admin/employe/{id}', EmployeController::class,
 $router->register('POST',   '/api/avis/create', AvisController::class, 'create');
 $router->register('GET',      '/api/avis/{id}',   AvisController::class, 'read');
 $router->register('PUT',    '/api/avis/{id}', AvisController::class, 'update');
+$router->register('PUT',    '/api/employe/avis/{id}/statut', AvisController::class, 'updateStatut');
 $router->register('DELETE', '/api/avis/{id}', AvisController::class, 'delete');
+$router->register('DELETE', '/api/employe/avis/{id}', AvisController::class, 'employeDelete');
 
 try {
     $router->run();

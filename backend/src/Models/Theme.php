@@ -6,17 +6,17 @@ use App\Core\Model;
 
 class Theme extends Model
 {
-    private ?int $themeId = null;
+    private ?int $id = null;
     private  string $libelle;
 
 
-    public function getThemeId(): ?int
+    public function getId(): ?int
     {
-        return $this->themeId;
+        return $this->id;
     }
-    public function setThemeId(int $themeId): void
+    public function setThemeId(int $id): void
     {
-        $this->themeId = $themeId;
+        $this->id = $id;
     }
     public function getLibelle(): string
     {
