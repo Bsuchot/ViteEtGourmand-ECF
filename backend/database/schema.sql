@@ -87,7 +87,7 @@ CREATE TABLE menu_plat
     FOREIGN KEY (plat_id) REFERENCES plat(id)
 );
 
-CREATE TABLE allergene_plat
+CREATE TABLE plat_allergene
 (
     allergene_id INT NOT NULL,
     plat_id INT NOT NULL,

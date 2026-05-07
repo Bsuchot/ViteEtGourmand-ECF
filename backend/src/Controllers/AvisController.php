@@ -125,4 +125,19 @@ class AvisController extends Controller
         $repository->delete($id);
         $this->success(['message' => 'Avis supprimé avec succès']);
     }
+    public function employeDelete(int $id): void
+    {
+        if (!$this->requireAdminOrEmploye()) return;
+
+        $repository = new AvisRepository();
+        $avis = $repository->findById($id);
+
+        if (!$avis) {
+            $this->error('Avis introuvable', 404);
+            return;
+        }
+
+        $repository->delete($id);
+        $this->success(['message' => 'Avis supprimé avec succès']);
+    }
 }
