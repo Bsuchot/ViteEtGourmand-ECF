@@ -7,97 +7,103 @@ use App\Core\Model;
 class Menu extends Model
 {
     private ?int $id = null;
-    private string $titre;
-    private int $nbPersMin;
-    private float $prixParPers;
-    private string $description;
-    private int $quantiteRestante;
-    private Regime $regime;
-    private Theme $theme;
-    private string $image;
-    private array $plats;
+    private ?string $titre  = null;
+    private ?int $nbPersMin  = null;
+    private ?float $prixParPers  = null;
+    private ?string $description = null;
+    private ?int $quantiteRestante = null;
+    private ?int $regimeId = null;
+    private ?int $themeId = null;
+    private ?string $image = null;
+    private array $plats =[];
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitre(): string
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
+
+    public function getTitre(): ?string
     {
         return $this->titre;
     }
 
-    public function setTitre(string $titre): void
+    public function setTitre(?string $titre): void
     {
         $this->titre = $titre;
     }
 
-    public function getNbPersMin(): int
+    public function getNbPersMin(): ?int
     {
         return $this->nbPersMin;
     }
 
-    public function setNbPersMin(int $nbPersMin): void
+    public function setNbPersMin(?int $nbPersMin): void
     {
         $this->nbPersMin = $nbPersMin;
     }
 
-    public function getPrixParPers(): float
+    public function getPrixParPers(): ?float
     {
         return $this->prixParPers;
     }
 
-    public function setPrixParPers(float $prixParPers): void
+    public function setPrixParPers(?float $prixParPers): void
     {
         $this->prixParPers = $prixParPers;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(string $description): void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
 
-    public function getQuantiteRestante(): int
+    public function getQuantiteRestante(): ?int
     {
         return $this->quantiteRestante;
     }
 
-    public function setQuantiteRestante(int $quantiteRestante): void
+    public function setQuantiteRestante(?int $quantiteRestante): void
     {
         $this->quantiteRestante = $quantiteRestante;
     }
 
-    public function getRegime(): Regime
+    public function getRegimeId(): ?int
     {
-        return $this->regime;
+        return $this->regimeId;
     }
 
-    public function setRegime(Regime $regime): void
+    public function setRegimeId(?int $regimeId): void
     {
-        $this->regime = $regime;
+        $this->regimeId = $regimeId;
     }
 
-    public function getTheme(): Theme
+    public function getThemeId(): ?int
     {
-        return $this->theme;
+        return $this->themeId;
     }
 
-    public function setTheme(Theme $theme): void
+    public function setThemeId(?int $themeId): void
     {
-        $this->theme = $theme;
+        $this->themeId = $themeId;
     }
 
-    public function getImage(): string
+    public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function setImage(string $image): void
+    public function setImage(?string $image): void
     {
         $this->image = $image;
     }
@@ -106,11 +112,14 @@ class Menu extends Model
         return $this->plats;
     }
 
-    public function addPlat(Plat $plat): void
+    public function setPlats(array $plats): void
     {
-        $this->plats[] = $plat;
+        $this->plats = $plats;
     }
 
-
+    public function addPlat(Plat $plat): void
+    {
+        $this->plats[] = $plat->toArray();
+    }
 
 }

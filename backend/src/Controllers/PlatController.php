@@ -49,9 +49,9 @@ class PlatController extends Controller
     public function readAll(): void
     {
         $repository = new PlatRepository();
-        $plat = $repository->findAll();
+        $plats = $repository->findAll();
 
-        $this->success($plat);
+        $this->success($plats);
     }
     public function update(int $id): void
     {
@@ -76,6 +76,7 @@ class PlatController extends Controller
         $platModel->setTitre($data['titre']);
         $platModel->setCategory($data['category']);
         $platModel->setPhoto($data['photo']);
+        $platModel->setAllergenes([]);
         foreach ($data['allergenes'] as $allergene) {
             $platModel->addAllergene(Allergene::createAndHydrate($allergene));
         }
