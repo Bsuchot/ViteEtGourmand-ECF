@@ -6,7 +6,7 @@ use App\Core\Repository;
 use App\Models\Regime;
 use PDO;
 
-class RegimeRepository extends Repository
+class RegimeRepository extends Repository implements LibelleRepository
 {
     public function findById(int $id): ?array
     {

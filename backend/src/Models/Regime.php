@@ -14,6 +14,12 @@ class Regime extends Model
     {
         return $this->id;
     }
+
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getLibelle(): string
     {
         return $this->libelle;

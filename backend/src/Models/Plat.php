@@ -64,5 +64,10 @@ class Plat extends Model
     {
         $this->allergenes[] = $allergene->toArray();
     }
+    public function addAllergeneId(int $id): void
+    {
+        $this->allergenes[] = ['id' => $id];
+    }
+
 
 }

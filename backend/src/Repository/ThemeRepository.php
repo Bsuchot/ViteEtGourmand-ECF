@@ -6,7 +6,7 @@ use App\Core\Repository;
 use App\Models\Theme;
 use PDO;
 
-class ThemeRepository extends Repository
+class ThemeRepository extends Repository implements LibelleRepository
 {
     public function findById(int $id): ?array
     {

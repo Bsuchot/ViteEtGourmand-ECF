@@ -2,101 +2,88 @@
 
 namespace App\Controllers;
 
-use App\Core\Controller;
-use App\Repository\ThemeRepository;
+use App\Core\AbstractController;
+use App\Core\Security\Validator\LibelleValidator;
 use App\Models\Theme;
+use App\Repository\ThemeRepository;
 
-class ThemeController extends Controller
+class ThemeController extends AbstractController
 {
+    private LibelleValidator $validator;
+    private ThemeRepository $repository;
+
+    public function __construct()
+    {
+        $this->repository = new ThemeRepository();
+        $this->validator  = new LibelleValidator($this->repository, 'Ce thème');
+    }
+
     public function create(): void
     {
         if (!$this->requireAdminOrEmploye()) return;
 
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!$data || !isset($data['libelle'])) {
-            $this->error('Données manquantes', 400);
-            return;
-        }
+        $this->tryCatch(function () {
+            $data = json_decode(file_get_contents("php://input"), true);
+            if (!$data) { $this->error('Données invalides', 400); return; }
 
-        $repository = new ThemeRepository();
-        $existing = $repository->findByLibelle($data['libelle']);
-        if ($existing) {
-            $this->error('Ce thème existe déjà', 409);
-            return;
-        }
+            $errors = $this->validator->validate($data);
+            if ($errors) { $this->error($errors, 422); return; }
 
-        $theme = new Theme();
-        $theme->setLibelle($data['libelle']);
-        $repository->create($theme);
+            $theme = new Theme();
+            $theme->setLibelle($data['libelle']);
+            $this->repository->create($theme);
 
-        $this->success(['message' => 'Thème créé avec succès'], 201);
+            $this->success(['message' => 'Thème créé avec succès'], 201);
+        });
     }
 
     public function read(int $id): void
     {
-        $repository = new ThemeRepository();
-        $theme = $repository->findById($id);
+        $this->tryCatch(function () use ($id) {
+            $theme = $this->repository->findById($id);
+            if (!$theme) { $this->error('Thème introuvable', 404); return; }
 
-        if (!$theme) {
-            $this->error('Thème introuvable', 404);
-            return;
-        }
-
-        $this->success($theme);
+            $this->success($theme);
+        });
     }
 
     public function readAll(): void
     {
-        $repository = new ThemeRepository();
-        $themes = $repository->findAll();
-
-        $this->success($themes);
+        $this->tryCatch(fn () => $this->success($this->repository->findAll()));
     }
 
     public function update(int $id): void
     {
         if (!$this->requireAdminOrEmploye()) return;
 
-        $repository = new ThemeRepository();
-        $theme = $repository->findById($id);
+        $this->tryCatch(function () use ($id) {
+            $theme = $this->repository->findById($id);
+            if (!$theme) { $this->error('Thème introuvable', 404); return; }
 
-        if (!$theme) {
-            $this->error('Thème introuvable', 404);
-            return;
-        }
+            $data = json_decode(file_get_contents("php://input"), true);
+            if (!$data) { $this->error('Données invalides', 400); return; }
 
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!$data || !isset($data['libelle'])) {
-            $this->error('Données manquantes', 400);
-            return;
-        }
+            $errors = $this->validator->validateUpdate($data, $id);
+            if ($errors) { $this->error($errors, 422); return; }
 
-        $existing = $repository->findByLibelle($data['libelle']);
-        if ($existing && $existing['id'] !== $id) {
-            $this->error('Ce thème existe déjà', 409);
-            return;
-        }
+            $themeModel = Theme::createAndHydrate($theme);
+            $themeModel->setLibelle($data['libelle']);
+            $this->repository->update($themeModel);
 
-        $themeModel = Theme::createAndHydrate($theme);
-        $themeModel->setLibelle($data['libelle']);
-        $repository->update($themeModel);
-
-        $this->success(['message' => 'Thème mis à jour avec succès']);
+            $this->success(['message' => 'Thème mis à jour avec succès']);
+        });
     }
 
     public function delete(int $id): void
     {
         if (!$this->requireAdminOrEmploye()) return;
 
-        $repository = new ThemeRepository();
-        $theme = $repository->findById($id);
+        $this->tryCatch(function () use ($id) {
+            $theme = $this->repository->findById($id);
+            if (!$theme) { $this->error('Thème introuvable', 404); return; }
 
-        if (!$theme) {
-            $this->error('Thème introuvable', 404);
-            return;
-        }
-
-        $repository->delete($id);
-        $this->success(['message' => 'Thème supprimé avec succès']);
+            $this->repository->delete($id);
+            $this->success(['message' => 'Thème supprimé avec succès']);
+        });
     }
 }

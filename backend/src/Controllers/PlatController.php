@@ -2,103 +2,99 @@
 
 namespace App\Controllers;
 
-use App\Core\Controller;
-use App\Models\Allergene;
+use App\Core\AbstractController;
+use App\Core\Security\Validator\PlatValidator;
 use App\Models\Plat;
 use App\Repository\PlatRepository;
 
-class PlatController extends Controller
+class PlatController extends AbstractController
 {
+    private PlatValidator $validator;
+    private PlatRepository $repository;
+
+    public function __construct()
+    {
+        $this->repository = new PlatRepository();
+        $this->validator  = new PlatValidator();
+    }
+
     public function create(): void
     {
         if (!$this->requireAdminOrEmploye()) return;
 
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!$data) {
-            $this->error('Données invalides', 400);
-            return;
-        }
+        $this->tryCatch(function () {
+            $data = json_decode(file_get_contents("php://input"), true);
+            if (!$data) { $this->error('Données invalides', 400); return; }
 
-        $repository = new PlatRepository();
+            $errors = $this->validator->validate($data);
+            if ($errors) { $this->error($errors, 422); return; }
 
-        $plat = new Plat();
-        $plat->setTitre($data['titre']);
-        $plat->setCategory($data['category']);
-        $plat->setPhoto($data['photo']);
-        foreach ($data['allergenes'] as $allergene) {
-            $plat->addAllergene(Allergene::createAndHydrate($allergene));
-        }
-        $repository->create($plat);
+            $plat = new Plat();
+            $plat->setTitre($data['titre']);
+            $plat->setCategory($data['category']);
+            $plat->setPhoto($data['photo']);
+            foreach ($data['allergenes'] ?? [] as $allergeneId) {
+                $plat->addAllergeneId((int) $allergeneId);
+            }
+            $this->repository->create($plat);
 
-        $this->success(['message' => 'Plat créé avec succès'], 201);
+            $this->success(['message' => 'Plat créé avec succès'], 201);
+        });
     }
 
     public function read(int $id): void
     {
-        $repository = new PlatRepository();
-        $plat = $repository->findById($id);
+        $this->tryCatch(function () use ($id) {
+            $plat = $this->repository->findById($id);
+            if (!$plat) { $this->error('Plat introuvable', 404); return; }
 
-        if (!$plat) {
-            $this->error('Plat introuvable', 404);
-            return;
-        }
-
-        $this->success($plat);
+            $this->success($plat);
+        });
     }
 
     public function readAll(): void
     {
-        $repository = new PlatRepository();
-        $plats = $repository->findAll();
-
-        $this->success($plats);
+        $this->tryCatch(fn () => $this->success($this->repository->findAll()));
     }
+
     public function update(int $id): void
     {
         if (!$this->requireAdminOrEmploye()) return;
 
-        $repository = new PlatRepository();
-        $plat = $repository->findById($id);
+        $this->tryCatch(function () use ($id) {
+            $plat = $this->repository->findById($id);
+            if (!$plat) { $this->error('Plat introuvable', 404); return; }
 
-        if (!$plat) {
-            $this->error('Plat introuvable', 404);
-            return;
-        }
+            $data = json_decode(file_get_contents("php://input"), true);
+            if (!$data) { $this->error('Données invalides', 400); return; }
 
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!$data) {
-            $this->error('Données invalides', 400);
-            return;
-        }
+            $errors = $this->validator->validateUpdate($data);
+            if ($errors) { $this->error($errors, 422); return; }
 
+            $platModel = Plat::createAndHydrate($plat);
+            $platModel->setTitre($data['titre']);
+            $platModel->setCategory($data['category']);
+            $platModel->setPhoto($data['photo']);
+            $platModel->setAllergenes([]);
+            foreach ($data['allergenes'] ?? [] as $allergeneId) {
+                $platModel->addAllergeneId((int) $allergeneId);
+            }
+            $this->repository->update($platModel);
 
-        $platModel = Plat::createAndHydrate($plat);
-        $platModel->setTitre($data['titre']);
-        $platModel->setCategory($data['category']);
-        $platModel->setPhoto($data['photo']);
-        $platModel->setAllergenes([]);
-        foreach ($data['allergenes'] as $allergene) {
-            $platModel->addAllergene(Allergene::createAndHydrate($allergene));
-        }
-        $repository->update($platModel);
-
-        $this->success(['message' => "Plat mis à jour avec succès"]);
+            $this->success(['message' => 'Plat mis à jour avec succès']);
+        });
     }
-
 
     public function delete(int $id): void
     {
         if (!$this->requireAdminOrEmploye()) return;
 
-        $repository = new PlatRepository();
-        $plat = $repository->findById($id);
+        $this->tryCatch(function () use ($id) {
+            $plat = $this->repository->findById($id);
+            if (!$plat) { $this->error('Plat introuvable', 404); return; }
 
-        if (!$plat) {
-            $this->error('Plat introuvable', 404);
-            return;
-        }
-
-        $repository->delete($id);
-        $this->success(['message' => 'Plat supprimé avec succès']);
+            $this->repository->delete($id);
+            $this->success(['message' => 'Plat supprimé avec succès']);
+        });
     }
 }

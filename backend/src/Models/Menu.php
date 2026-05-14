@@ -8,8 +8,8 @@ class Menu extends Model
 {
     private ?int $id = null;
     private ?string $titre  = null;
-    private ?int $nbPersMin  = null;
-    private ?float $prixParPers  = null;
+    private ?int $nombrePersonneMinimum  = null;
+    private ?float $prixParPersonne  = null;
     private ?string $description = null;
     private ?int $quantiteRestante = null;
     private ?int $regimeId = null;
@@ -38,24 +38,24 @@ class Menu extends Model
         $this->titre = $titre;
     }
 
-    public function getNbPersMin(): ?int
+    public function getNombrePersonneMinimum(): ?int
     {
-        return $this->nbPersMin;
+        return $this->nombrePersonneMinimum;
     }
 
-    public function setNbPersMin(?int $nbPersMin): void
+    public function setNombrePersonneMinimum(?int $nombrePersonneMinimum): void
     {
-        $this->nbPersMin = $nbPersMin;
+        $this->nombrePersonneMinimum = $nombrePersonneMinimum;
     }
 
-    public function getPrixParPers(): ?float
+    public function getPrixParPersonne(): ?float
     {
-        return $this->prixParPers;
+        return $this->prixParPersonne;
     }
 
-    public function setPrixParPers(?float $prixParPers): void
+    public function setPrixParPersonne(?float $prixParPersonne): void
     {
-        $this->prixParPers = $prixParPers;
+        $this->prixParPersonne = $prixParPersonne;
     }
 
     public function getDescription(): ?string
@@ -121,5 +121,10 @@ class Menu extends Model
     {
         $this->plats[] = $plat->toArray();
     }
+    public function addPlatId(int $id): void
+    {
+        $this->plats[] = ['id' => $id];
+    }
+
 
 }

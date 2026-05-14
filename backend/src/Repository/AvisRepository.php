@@ -32,14 +32,16 @@ class AvisRepository extends Repository
     public function create(Avis $avis): void
     {
         $stmt = $this->pdo->prepare("
-            INSERT INTO avis (titre, description, note, statut, date, utilisateurId)
-            VALUES (:titre, :description, :note, :statut, :date, :utilisateurId)");
+        INSERT INTO avis (titre, description, note, statut, date, utilisateur_id)
+        VALUES (:titre, :description, :note, :statut, :date, :utilisateurId)
+    ");
+
         $stmt->execute([
             'titre' => $avis->getTitre(),
             'description' => $avis->getDescription(),
             'note' => $avis->getNote(),
             'statut' => $avis->getStatut(),
-            'date' => $avis->getDate(),
+            'date' => $avis->getDate()->format('Y-m-d'),
             'utilisateurId' => $avis->getUtilisateurId()
         ]);
     }

@@ -14,7 +14,7 @@ class Theme extends Model
     {
         return $this->id;
     }
-    public function setThemeId(int $id): void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }

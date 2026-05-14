@@ -70,12 +70,14 @@ class Avis extends Model
         return $this->date;
     }
 
-    public function setDate(\DateTimeImmutable $date): void
+    public function setDate(\DateTimeImmutable|string $date): void
     {
-        $this->date = $date;
+        $this->date = is_string($date)
+            ? new \DateTimeImmutable($date)
+            : $date;
     }
 
-    public function getUtilisateurID(): int
+    public function getUtilisateurId(): int
     {
         return $this->utilisateurId;
     }

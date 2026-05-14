@@ -6,7 +6,7 @@ use App\Core\Repository;
 use App\Models\Allergene;
 use PDO;
 
-class AllergeneRepository extends Repository
+class AllergeneRepository extends Repository implements LibelleRepository
 {
     public function findById(int $id): ?array
     {

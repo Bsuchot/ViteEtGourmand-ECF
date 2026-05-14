@@ -11,10 +11,11 @@ class Commande extends Model
     private ?\DateTimeImmutable $dateCommande  = null;
     private ?\DateTimeImmutable $datePrestation  = null;
     private ?string $heureLivraison = null;
+    private ?string $adresseLivraison = null;
     private ?float $prixMenu = null;
-    private ?int $nombrePers = null;
+    private ?int $nombrePersonne = null;
     private ?float $prixLivraison = null;
-    private ?string $status  = null;
+    private ?string $statut  = null;
     private ?bool $pretMateriel = null;
     private ?bool $restitutionMateriel = null;
     private ?int $utilisateurId = null;
@@ -75,6 +76,17 @@ class Commande extends Model
         $this->heureLivraison = $heureLivraison;
     }
 
+    public function getAdresseLivraison(): ?string
+    {
+        return $this->adresseLivraison;
+    }
+
+    public function setAdresseLivraison(?string $adresseLivraison): void
+    {
+        $this->adresseLivraison = $adresseLivraison;
+    }
+
+
     public function getPrixMenu(): ?float
     {
         return $this->prixMenu;
@@ -85,14 +97,14 @@ class Commande extends Model
         $this->prixMenu = $prixMenu;
     }
 
-    public function getNombrePers(): ?int
+    public function getNombrePersonne(): ?int
     {
-        return $this->nombrePers;
+        return $this->nombrePersonne;
     }
 
-    public function setNombrePers(?int $nombrePers): void
+    public function setNombrePersonne(?int $nombrePersonne): void
     {
-        $this->nombrePers = $nombrePers;
+        $this->nombrePersonne = $nombrePersonne;
     }
 
     public function getPrixLivraison(): ?float
@@ -115,15 +127,16 @@ class Commande extends Model
         $this->pretMateriel = $pretMateriel;
     }
 
-    public function getStatus(): ?string
+    public function getStatut(): ?string
     {
-        return $this->status;
+        return $this->statut;
     }
 
-    public function setStatus(?string $status): void
+    public function setStatut(?string $statut): void
     {
-        $this->status = $status;
+        $this->statut = $statut;
     }
+
 
     public function getRestitutionMateriel(): ?bool
     {

@@ -11,13 +11,13 @@ class HoraireRepository extends Repository
     public function create(Horaire $horaire): void
     {
         $stmt = $this->pdo->prepare("
-            INSERT INTO horaire (jour, heureOuverture, heureFermeture, statut)
-            VALUES (:jour, :heureOuverture, :heureFermeture, :statut)
+            INSERT INTO horaire (jour, heure_ouverture, heure_fermeture, statut)
+            VALUES (:jour, :heure_ouverture, :heure_fermeture, :statut)
         ");
         $stmt->execute([
             'jour'           => $horaire->getJour(),
-            'heureOuverture' => $horaire->getHeureOuverture(),
-            'heureFermeture' => $horaire->getHeureFermeture(),
+            'heure_ouverture' => $horaire->getHeureOuverture(),
+            'heure_fermeture' => $horaire->getHeureFermeture(),
             'statut'         => $horaire->getStatut()
         ]);
     }
@@ -59,15 +59,15 @@ class HoraireRepository extends Repository
         $stmt = $this->pdo->prepare("
             UPDATE horaire 
             SET jour = :jour,
-                heureOuverture = :heureOuverture,
-                heureFermeture = :heureFermeture,
+                heure_ouverture = :heure_ouverture,
+                heure_fermeture = :heure_fermeture,
                 statut = :statut
             WHERE id = :id
         ");
         $stmt->execute([
             'jour'           => $horaire->getJour(),
-            'heureOuverture' => $horaire->getHeureOuverture(),
-            'heureFermeture' => $horaire->getHeureFermeture(),
+            'heure_ouverture' => $horaire->getHeureOuverture(),
+            'heure_fermeture' => $horaire->getHeureFermeture(),
             'statut'         => $horaire->getStatut(),
             'id'             => $horaire->getId(),
         ]);

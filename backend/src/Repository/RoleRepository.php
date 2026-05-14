@@ -6,7 +6,7 @@ use App\Core\Repository;
 use App\Models\Role;
 use PDO;
 
-class RoleRepository extends Repository
+class RoleRepository extends Repository implements LibelleRepository
 {
     public function findById(int $id): ?array
     {

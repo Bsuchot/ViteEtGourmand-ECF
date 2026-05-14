@@ -101,7 +101,18 @@ class PlatRepository extends Repository
     }
     public function delete(int $id): void
     {
-        $stmt = $this->pdo->prepare("DELETE FROM plat WHERE id = :id");
-        $stmt->execute(['id' => $id]);
+        $this->pdo->beginTransaction();
+        try {
+            $stmt = $this->pdo->prepare("DELETE FROM plat_allergene WHERE plat_id = :id");
+            $stmt->execute(['id' => $id]);
+
+            $stmt = $this->pdo->prepare("DELETE FROM plat WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+
+            $this->pdo->commit();
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
     }
 }

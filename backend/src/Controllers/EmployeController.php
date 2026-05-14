@@ -2,196 +2,180 @@
 
 namespace App\Controllers;
 
-use App\Core\Controller;
+use App\Core\AbstractController;
 use App\Core\Security\Security;
-use App\Core\Security\EmployeValidator;
+use App\Core\Security\Validator\EmployeValidator;
+use App\Models\Utilisateur;
 use App\Repository\RoleRepository;
 use App\Repository\UtilisateurRepository;
-use App\Models\Utilisateur;
 
-class EmployeController extends Controller
+class EmployeController extends AbstractController
 {
+    private UtilisateurRepository $repository;
+    private RoleRepository $roleRepository;
+    private EmployeValidator $validator;
+
+    public function __construct()
+    {
+        $this->repository     = new UtilisateurRepository();
+        $this->roleRepository = new RoleRepository();
+        $this->validator      = new EmployeValidator($this->repository);
+    }
+
     // Route : POST /api/admin/employe/creation
     public function create(): void
     {
         if (!$this->requireAdmin()) return;
 
-        $data = json_decode(file_get_contents("php://input"), true);
+        $this->tryCatch(function () {
+            $data = json_decode(file_get_contents("php://input"), true);
+            if (!$data) { $this->error('Données invalides', 400); return; }
 
-        if (!$data) {
-            $this->error('Données invalides', 400);
-            return;
-        }
+            $errors = $this->validator->validate($data);
+            if ($errors) { $this->error($errors, 422); return; }
 
-        $validator = new EmployeValidator();
-        $errors = $validator->validate($data);
+            $role = $this->roleRepository->findByLibelle('ROLE_EMPLOYE');
+            if (!$role) { $this->error('Rôle introuvable', 500); return; }
 
-        if (!empty($errors)) {
-            $this->error($errors, 422);
-            return;
-        }
+            $utilisateur = new Utilisateur();
+            $utilisateur->setEmail($data['email']);
+            $utilisateur->setNom('nom');
+            $utilisateur->setPrenom('prenom');
+            $utilisateur->setTelephone('telephone');
+            $utilisateur->setAdresse('adresse');
+            $utilisateur->setVille('ville');
+            $utilisateur->setPays('pays');
+            $utilisateur->setStatut('actif');
+            $utilisateur->setRoleId($role['id']);
 
-        $repository = new UtilisateurRepository();
+            $plainPassword = Security::generatePassword();
+            Security::hashPassword($utilisateur, $plainPassword);
 
-        $existingUtilisateur = $repository->findByEmail($data['email']);
-        if ($existingUtilisateur) {
-            $this->error('Un compte est déjà associé à cet email', 409);
-            return;
-        }
+            $this->repository->create($utilisateur);
 
-        $utilisateur = new Utilisateur();
-        $utilisateur->setEmail($data['email']);
-        $utilisateur->setNom('nom');
-        $utilisateur->setPrenom('prenom');
-        $utilisateur->setTelephone('telephone');
-        $utilisateur->setAdresse('adresse');
-        $utilisateur->setVille('ville');
-        $utilisateur->setPays('pays');
-        $utilisateur->setStatut('actif');
-
-        $plainPassword = Security::generatePassword();
-        Security::hashPassword($utilisateur, $plainPassword);
-
-        $roleRepository = new RoleRepository();
-        $role = $roleRepository->findByLibelle('ROLE_EMPLOYE');
-
-        if (!$role) {
-            $this->error('Rôle introuvable', 500);
-            return;
-        }
-
-        $utilisateur->setRoleId($role['id']);
-
-        $repository->create($utilisateur);
-
-        $this->success([
-            'message'  => 'Employé créé avec succès',
-            'password' => $plainPassword // à envoyer par email en production
-        ], 201);
+            $this->success([
+                'message'  => 'Employé créé avec succès',
+                'password' => $plainPassword // à envoyer par email en production
+            ], 201);
+        });
     }
-    // Route : GET /api/admin/employe/read
+
+    // Route : GET /api/admin/employe/{id}
     public function read(int $id): void
     {
         if (!$this->requireAdmin()) return;
 
-        $repository = new UtilisateurRepository();
-        $utilisateur = $repository->findEmployeById($id);
+        $this->tryCatch(function () use ($id) {
+            $utilisateur = $this->repository->findEmployeById($id);
+            if (!$utilisateur) { $this->error('Employé introuvable', 404); return; }
 
-        if (!$utilisateur) {
-            $this->error('Employé introuvable', 404);
-            return;
-        }
-
-        $this->success($utilisateur);
+            $this->success($utilisateur);
+        });
     }
-    // Route : GET /api/admin/employe/readAll
+
+    // Route : GET /api/admin/employe
     public function readAll(): void
     {
         if (!$this->requireAdmin()) return;
 
-        $repository = new UtilisateurRepository();
-        $employes = $repository->findAllEmployes();
-
-        $this->success($employes);
+        $this->tryCatch(fn () => $this->success($this->repository->findAllEmployes()));
     }
-    // Route : PUT /api/admin/employe/update
+
+    // Route : PUT /api/admin/employe
     public function update(): void
     {
         if (!$this->requireAdmin()) return;
 
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!$data || !is_array($data)) {
-            $this->error('Données invalides', 400);
-            return;
-        }
+        $this->tryCatch(function () {
+            $data = json_decode(file_get_contents("php://input"), true);
+            if (!$data || !is_array($data)) { $this->error('Données invalides', 400); return; }
 
-        $repository = new UtilisateurRepository();
-        $roleRepository = new RoleRepository();
-
-        foreach ($data as $item) {
-            if (empty($item['id'])) continue;
-
-            $utilisateurData = $repository->findById($item['id']);
-            if (!$utilisateurData) continue;
-
-            $role = $roleRepository->findById($utilisateurData['role_id']);
-            if (!$role || $role['libelle'] !== 'ROLE_EMPLOYE') continue;
-
-            $utilisateur = Utilisateur::createAndHydrate($utilisateurData);
-
-            if (isset($item['email'])) { // ← $item au lieu de $data
-                if (!$this->checkEmailUnique($repository, $item['email'], $item['id'])) { // ← $item['id'] au lieu de $id
-                    $this->error('Cet email est déjà utilisé', 409);
-                    return;
-                }
-                $utilisateur->setEmail($item['email']);
+            $allErrors = [];
+            foreach ($data as $index => $item) {
+                if (empty($item['id'])) continue;
+                $errors = $this->validator->validateUpdate($item);
+                if ($errors) $allErrors[$index] = $errors;
             }
-            if (isset($item['nom']))       $utilisateur->setNom($item['nom']);
-            if (isset($item['prenom']))    $utilisateur->setPrenom($item['prenom']);
-            if (isset($item['telephone'])) $utilisateur->setTelephone($item['telephone']);
-            if (isset($item['adresse']))   $utilisateur->setAdresse($item['adresse']);
-            if (isset($item['ville']))     $utilisateur->setVille($item['ville']);
-            if (isset($item['pays']))      $utilisateur->setPays($item['pays']);
-            if (isset($item['statut']))    $utilisateur->setStatut($item['statut']);
+            if ($allErrors) { $this->error($allErrors, 422); return; }
 
-            $repository->update($utilisateur);
-        }
+            foreach ($data as $item) {
+                if (empty($item['id'])) continue;
 
-        $this->success(['message' => 'Employés mis à jour'], 200);
+                $utilisateurData = $this->repository->findById($item['id']);
+                if (!$utilisateurData) continue;
+
+                $role = $this->roleRepository->findById($utilisateurData['role_id']);
+                if (!$role || $role['libelle'] !== 'ROLE_EMPLOYE') continue;
+
+                $utilisateur = Utilisateur::createAndHydrate($utilisateurData);
+
+                if (isset($item['email'])) {
+                    if (!$this->checkEmailUnique($this->repository, $item['email'], $item['id'])) {
+                        $this->error('Cet email est déjà utilisé', 409);
+                        return;
+                    }
+                    $utilisateur->setEmail($item['email']);
+                }
+                if (isset($item['nom']))       $utilisateur->setNom($item['nom']);
+                if (isset($item['prenom']))    $utilisateur->setPrenom($item['prenom']);
+                if (isset($item['telephone'])) $utilisateur->setTelephone($item['telephone']);
+                if (isset($item['adresse']))   $utilisateur->setAdresse($item['adresse']);
+                if (isset($item['ville']))     $utilisateur->setVille($item['ville']);
+                if (isset($item['pays']))      $utilisateur->setPays($item['pays']);
+                if (isset($item['statut']))    $utilisateur->setStatut($item['statut']);
+
+                $this->repository->update($utilisateur);
+            }
+
+            $this->success(['message' => 'Employés mis à jour'], 200);
+        });
     }
-    // Route : PUT /api/admin/employe/update/{id}/password
+
+    // Route : PUT /api/admin/employe/{id}/password
     public function updatePassword(int $id): void
     {
         if (!$this->requireAdmin()) return;
 
-        $utilisateurData = $this->getUtilisateurOrFail($id);
-        if (!$utilisateurData) return;
+        $this->tryCatch(function () use ($id) {
+            $utilisateurData = $this->getUtilisateurOrFail($id);
+            if (!$utilisateurData) return;
 
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!$data) {
-            $this->error('Données invalides', 400);
-            return;
-        }
+            $data = json_decode(file_get_contents("php://input"), true);
+            if (!$data) { $this->error('Données invalides', 400); return; }
 
-        if ( empty($data['newPassword'])) {
-            $this->error('Nouveau mot de passe requis', 400);
-            return;
-        }
+            $errors = $this->validator->validatePassword($data);
+            if ($errors) { $this->error($errors, 422); return; }
 
-        $utilisateur = Utilisateur::createAndHydrate($utilisateurData);
+            $utilisateur = Utilisateur::createAndHydrate($utilisateurData);
+            Security::hashPassword($utilisateur, $data['newPassword']);
+            $this->repository->updatePassword($utilisateur);
 
-
-        Security::hashPassword($utilisateur, $data['newPassword']);
-
-        $repository = new UtilisateurRepository();
-        $repository->updatePassword($utilisateur);
-
-        $this->success(['message' => "Mot de passe de l'employée mis à jour"], 200);
+            $this->success(['message' => "Mot de passe de l'employé mis à jour"], 200);
+        });
     }
-    // Route : DELETE /api/admin/employe/{id}/
+
+    // Route : DELETE /api/admin/employe/{id}
     public function delete(int $id): void
     {
         if (!$this->requireAdmin()) return;
 
-        $utilisateurData = $this->getUtilisateurOrFail($id);
-        if (!$utilisateurData) return;
+        $this->tryCatch(function () use ($id) {
+            $utilisateurData = $this->getUtilisateurOrFail($id);
+            if (!$utilisateurData) return;
 
-        $roleRepository = new RoleRepository();
-        $role = $roleRepository->findById($utilisateurData['roleId']);
+            $role = $this->roleRepository->findById($utilisateurData['roleId']);
 
-        if ($role && $role['libelle'] === 'ROLE_ADMIN') {
-            $this->error('Un compte administrateur ne peut pas être supprimé', 403);
-            return;
-        }
-        if (!$role || $role['libelle'] !== 'ROLE_EMPLOYE') {
-            $this->error('Seuls les employés peuvent être supprimés', 403);
-            return;
-        }
+            if ($role && $role['libelle'] === 'ROLE_ADMIN') {
+                $this->error('Un compte administrateur ne peut pas être supprimé', 403);
+                return;
+            }
+            if (!$role || $role['libelle'] !== 'ROLE_EMPLOYE') {
+                $this->error('Seuls les employés peuvent être supprimés', 403);
+                return;
+            }
 
-        $repository = new UtilisateurRepository();
-        $repository->delete($id);
-
-
-        $this->success(['message' => 'Compte supprimé avec succès']);
+            $this->repository->delete($id);
+            $this->success(['message' => 'Compte supprimé avec succès']);
+        });
     }
 }

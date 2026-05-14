@@ -2,101 +2,88 @@
 
 namespace App\Controllers;
 
-use App\Core\Controller;
+use App\Core\AbstractController;
+use App\Core\Security\Validator\LibelleValidator;
 use App\Models\Allergene;
 use App\Repository\AllergeneRepository;
 
-class AllergeneController extends Controller
+class AllergeneController extends AbstractController
 {
+    private LibelleValidator $validator;
+    private AllergeneRepository $repository;
+
+    public function __construct()
+    {
+        $this->repository = new AllergeneRepository();
+        $this->validator  = new LibelleValidator($this->repository, 'Cet allergène');
+    }
+
     public function create(): void
     {
         if (!$this->requireAdminOrEmploye()) return;
 
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!$data || !isset($data['libelle'])) {
-            $this->error('Données manquantes', 400);
-            return;
-        }
+        $this->tryCatch(function () {
+            $data = json_decode(file_get_contents("php://input"), true);
+            if (!$data) { $this->error('Données invalides', 400); return; }
 
-        $repository = new AllergeneRepository();
-        $existing = $repository->findByLibelle($data['libelle']);
-        if ($existing) {
-            $this->error('Cet allergène existe déjà', 409);
-            return;
-        }
+            $errors = $this->validator->validate($data);
+            if ($errors) { $this->error($errors, 422); return; }
 
-        $allergene = new Allergene();
-        $allergene->setLibelle($data['libelle']);
-        $repository->create($allergene);
+            $allergene = new Allergene();
+            $allergene->setLibelle($data['libelle']);
+            $this->repository->create($allergene);
 
-        $this->success(['message' => 'Allergène créé avec succès'], 201);
+            $this->success(['message' => 'Allergène créé avec succès'], 201);
+        });
     }
 
     public function read(int $id): void
     {
-        $repository = new AllergeneRepository();
-        $allergene = $repository->findById($id);
+        $this->tryCatch(function () use ($id) {
+            $allergene = $this->repository->findById($id);
+            if (!$allergene) { $this->error('Allergène introuvable', 404); return; }
 
-        if (!$allergene) {
-            $this->error('Allergène introuvable', 404);
-            return;
-        }
-
-        $this->success($allergene);
+            $this->success($allergene);
+        });
     }
 
     public function readAll(): void
     {
-        $repository = new AllergeneRepository();
-        $allergenes = $repository->findAll();
-
-        $this->success($allergenes);
+        $this->tryCatch(fn () => $this->success($this->repository->findAll()));
     }
 
     public function update(int $id): void
     {
         if (!$this->requireAdminOrEmploye()) return;
 
-        $repository = new AllergeneRepository();
-        $allergene = $repository->findById($id);
+        $this->tryCatch(function () use ($id) {
+            $allergene = $this->repository->findById($id);
+            if (!$allergene) { $this->error('Allergène introuvable', 404); return; }
 
-        if (!$allergene) {
-            $this->error('Allergène introuvable', 404);
-            return;
-        }
+            $data = json_decode(file_get_contents("php://input"), true);
+            if (!$data) { $this->error('Données invalides', 400); return; }
 
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!$data || !isset($data['libelle'])) {
-            $this->error('Données manquantes', 400);
-            return;
-        }
+            $errors = $this->validator->validateUpdate($data, $id);
+            if ($errors) { $this->error($errors, 422); return; }
 
-        $existing = $repository->findByLibelle($data['libelle']);
-        if ($existing && $existing['id'] !== $id) {
-            $this->error('Cet allergène existe déjà', 409);
-            return;
-        }
+            $allergeneModel = Allergene::createAndHydrate($allergene);
+            $allergeneModel->setLibelle($data['libelle']);
+            $this->repository->update($allergeneModel);
 
-        $allergeneModel = Allergene::createAndHydrate($allergene);
-        $allergeneModel->setLibelle($data['libelle']);
-        $repository->update($allergeneModel);
-
-        $this->success(['message' => 'Allergène mis à jour avec succès']);
+            $this->success(['message' => 'Allergène mis à jour avec succès']);
+        });
     }
 
     public function delete(int $id): void
     {
         if (!$this->requireAdminOrEmploye()) return;
 
-        $repository = new AllergeneRepository();
-        $allergene = $repository->findById($id);
+        $this->tryCatch(function () use ($id) {
+            $allergene = $this->repository->findById($id);
+            if (!$allergene) { $this->error('Allergène introuvable', 404); return; }
 
-        if (!$allergene) {
-            $this->error('Allergène introuvable', 404);
-            return;
-        }
-
-        $repository->delete($id);
-        $this->success(['message' => 'Allergène supprimé avec succès']);
+            $this->repository->delete($id);
+            $this->success(['message' => 'Allergène supprimé avec succès']);
+        });
     }
 }

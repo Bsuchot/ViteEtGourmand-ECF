@@ -67,7 +67,7 @@ CREATE TABLE menu
 CREATE TABLE plat
 (
     id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    titre_plat VARCHAR(50) NOT NULL,
+    titre VARCHAR(50) NOT NULL,
     category VARCHAR(50) NOT NULL,
     photo BLOB NOT NULL
 );
@@ -103,6 +103,7 @@ CREATE TABLE commande
     date_commande DATE,
     date_prestation DATE,
     heure_livraison VARCHAR(50) NOT NULL,
+    adresse_livraison VARCHAR(255) NOT NULL,
     prix_menu DOUBLE NOT NULL,
     nombre_personne INT NOT NULL,
     prix_livraison INT NOT NULL,
