@@ -38,8 +38,8 @@ $router = new Router($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 //Route Admin
 $router->register('POST',   '/api/admin/employe/create', EmployeController::class, 'create');
 $router->register('GET',   '/api/admin/employe/readAll', EmployeController::class, 'readAll');
-$router->register('GET',   '/api/admin/employe/{id}', EmployeController::class, 'read');
 $router->register('PUT',   '/api/admin/employe/update', EmployeController::class, 'update');
+$router->register('GET',   '/api/admin/employe/{id}', EmployeController::class, 'read');
 $router->register('PUT',   '/api/admin/employe/{id}/password', EmployeController::class, 'updatePassword');
 $router->register('DELETE', '/api/admin/employe/{id}', EmployeController::class, 'delete');
 
@@ -61,6 +61,7 @@ $router->register('DELETE', '/api/avis/{id}', AvisController::class, 'delete');
 // Route Commande
 $router->register('POST',   '/api/commande/create', CommandeController::class, 'create');
 $router->register('GET',      '/api/employe/commande/readAll',   CommandeController::class, 'readAll');
+$router->register('GET', '/api/commande/my', CommandeController::class, 'readMyCommandes');
 $router->register('GET',      '/api/commande/{id}',   CommandeController::class, 'read');
 $router->register('PUT',    '/api/commande/{id}', CommandeController::class, 'update');
 $router->register('PUT',    '/api/employe/commande/{id}/statut', CommandeController::class, 'updateStatut');

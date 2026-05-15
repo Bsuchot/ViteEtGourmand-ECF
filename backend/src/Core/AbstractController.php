@@ -81,12 +81,13 @@ abstract class AbstractController
         }
         return true;
     }
-    protected function checkAccess(array $commande): bool
+    protected function checkAccess(callable $userChecks): bool
     {
-        if (!$this->requireAdminOrEmploye()) {
-            if (!$this->requireOwner($commande) || !$this->checkOrderStatut($commande)) return false;
+        if (Security::isAdmin() || Security::isEmploye()) {
+            return true;
         }
-        return true;
+
+        return $userChecks();
     }
     protected function getUtilisateurOrFail(int $id): ?array
     {
@@ -114,7 +115,7 @@ abstract class AbstractController
     }
     protected function checkOrderStatut(array $commande): bool
     {
-        if ($commande['status'] !== 'en_attente') {
+        if ($commande['statut'] !== 'en_attente') {
             $this->error('Cette commande ne peut plus être modifiée', 403);
             return false;
         }

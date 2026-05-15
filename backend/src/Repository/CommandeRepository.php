@@ -29,6 +29,15 @@ class CommandeRepository extends Repository
         return Commande::createAndHydrate($row)->toArray();
     }
 
+    public function findByUtilisateurId(int $utilisateurId): array
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM commande WHERE utilisateur_id = :utilisateur_id");
+        $stmt->execute(['utilisateur_id' => $utilisateurId]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(fn($row) => Commande::createAndHydrate($row)->toArray(), $rows);
+    }
+
     public function create(Commande $commande): void
     {
         $stmt = $this->pdo->prepare("

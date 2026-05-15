@@ -31,8 +31,8 @@ class HoraireController extends AbstractController
 
             $horaire = new Horaire();
             $horaire->setJour($data['jour']);
-            $horaire->setHeureOuverture($data['heure_ouverture']);
-            $horaire->setHeureFermeture($data['heure_fermeture']);
+            $horaire->setHeureOuverture($data['heureOuverture']);
+            $horaire->setHeureFermeture($data['heureFermeture']);
             $horaire->setStatut($data['statut']);
             $this->repository->create($horaire);
 
@@ -70,8 +70,8 @@ class HoraireController extends AbstractController
 
                 $horaire = Horaire::createAndHydrate($horaireData);
                 if (isset($item['jour']))           $horaire->setJour($item['jour']);
-                if (isset($item['heure_ouverture'])) $horaire->setHeureOuverture($item['heure_ouverture']);
-                if (isset($item['heure_fermeture'])) $horaire->setHeureFermeture($item['heure_fermeture']);
+                if (isset($item['heureOuverture'])) $horaire->setHeureOuverture($item['heureOuverture']);
+                if (isset($item['heureFermeture'])) $horaire->setHeureFermeture($item['heureFermeture']);
                 if (isset($item['statut']))         $horaire->setStatut($item['statut']);
                 $this->repository->update($horaire);
             }

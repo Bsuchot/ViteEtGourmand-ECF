@@ -58,9 +58,18 @@ class CommandeController extends AbstractController
         $this->tryCatch(function () use ($id) {
             $commande = $this->repository->findById($id);
             if (!$commande) { $this->error('Commande introuvable', 404); return; }
-            if (!$this->checkAccess($commande)) return;
+            if (!$this->checkAccess(fn() => $this->requireOwner($commande))) return;
 
             $this->success($commande);
+        });
+    }
+    public function readMyCommandes(): void
+    {
+        if (!$this->requireLogin()) return;
+
+        $this->tryCatch(function () {
+            $commandes = $this->repository->findByUtilisateurId($_SESSION['user']['id']);
+            $this->success($commandes);
         });
     }
 
@@ -78,7 +87,7 @@ class CommandeController extends AbstractController
         $this->tryCatch(function () use ($id) {
             $commande = $this->repository->findById($id);
             if (!$commande) { $this->error('Commande introuvable', 404); return; }
-            if (!$this->checkAccess($commande)) return;
+            if (!$this->checkAccess(fn() => $this->requireOwner($commande) && $this->checkOrderStatut($commande))) return;
 
             $data = json_decode(file_get_contents("php://input"), true);
             if (!$data) { $this->error('Données invalides', 400); return; }
@@ -87,13 +96,13 @@ class CommandeController extends AbstractController
             if ($errors) { $this->error($errors, 422); return; }
 
             $commandeModel = Commande::createAndHydrate($commande);
-            $commandeModel->setDatePrestation($data['datePrestation']);
-            $commandeModel->setHeureLivraison($data['heureLivraison']);
-            $commandeModel->setAdresseLivraison($data['adresseLivraison']);
-            $commandeModel->setPrixMenu($data['prixMenu']);
-            $commandeModel->setNombrePersonne($data['nombrePersonne']);
-            $commandeModel->setPrixLivraison($data['prixLivraison']);
-            $commandeModel->setPretMateriel($data['pretMateriel']);
+            if (isset($data['datePrestation']))  $commandeModel->setDatePrestation($data['datePrestation']);
+            if (isset($data['heureLivraison']))  $commandeModel->setHeureLivraison($data['heureLivraison']);
+            if (isset($data['adresseLivraison']))$commandeModel->setAdresseLivraison($data['adresseLivraison']);
+            if (isset($data['prixMenu']))        $commandeModel->setPrixMenu($data['prixMenu']);
+            if (isset($data['nombrePersonne']))  $commandeModel->setNombrePersonne($data['nombrePersonne']);
+            if (isset($data['prixLivraison']))   $commandeModel->setPrixLivraison($data['prixLivraison']);
+            if (isset($data['pretMateriel']))    $commandeModel->setPretMateriel($data['pretMateriel']);
             $this->repository->update($commandeModel);
 
             $this->success(['message' => 'Commande mise à jour avec succès']);
@@ -133,7 +142,7 @@ class CommandeController extends AbstractController
         $this->tryCatch(function () use ($id) {
             $commande = $this->repository->findById($id);
             if (!$commande) { $this->error('Commande introuvable', 404); return; }
-            if (!$this->checkAccess($commande)) return;
+            if (!$this->checkAccess(fn() => $this->requireOwner($commande) && $this->checkOrderStatut($commande))) return;
 
             $this->repository->delete($id);
             $this->success(['message' => 'Commande supprimée avec succès']);

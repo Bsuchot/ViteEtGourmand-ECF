@@ -72,12 +72,14 @@ class PlatController extends AbstractController
             if ($errors) { $this->error($errors, 422); return; }
 
             $platModel = Plat::createAndHydrate($plat);
-            $platModel->setTitre($data['titre']);
-            $platModel->setCategory($data['category']);
-            $platModel->setPhoto($data['photo']);
-            $platModel->setAllergenes([]);
-            foreach ($data['allergenes'] ?? [] as $allergeneId) {
-                $platModel->addAllergeneId((int) $allergeneId);
+            if(isset($data['titre']))  $platModel->setTitre($data['titre']);
+            if(isset($data['category'])) $platModel->setCategory($data['category']);
+            if(isset($data['photo'])) $platModel->setPhoto($data['photo']);
+            if(isset($data['allergenes'])) {
+                $platModel->setAllergenes([]);
+                foreach ($data['allergenes'] as $allergeneId) {
+                    $platModel->addAllergeneId((int) $allergeneId);
+                }
             }
             $this->repository->update($platModel);
 

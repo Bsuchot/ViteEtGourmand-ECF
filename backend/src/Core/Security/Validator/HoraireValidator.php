@@ -14,8 +14,8 @@ class HoraireValidator extends AbstractValidator
 
     private const REQUIRED_FIELDS = [
         'jour'           => 'jour',
-        'heure_ouverture' => 'heure d\'ouverture',
-        'heure_fermeture' => 'heure de fermeture',
+        'heureOuverture' => 'heure d\'ouverture',
+        'heureFermeture' => 'heure de fermeture',
         'statut'         => 'statut',
     ];
 
@@ -75,20 +75,20 @@ class HoraireValidator extends AbstractValidator
 
     private function validateHeures(array $data): void
     {
-        $ouverture  = $data['heure_ouverture']  ?? null;
-        $fermeture  = $data['heure_fermeture']  ?? null;
+        $ouverture  = $data['heureOuverture']  ?? null;
+        $fermeture  = $data['heureFermeture']  ?? null;
 
         if ($ouverture && !$this->isHeureValide($ouverture)) {
-            $this->errors['heure_ouverture'] = "L'heure d'ouverture doit être au format HH:MM";
+            $this->errors['heureOuverture'] = "L'heure d'ouverture doit être au format HH:MM";
         }
         if ($fermeture && !$this->isHeureValide($fermeture)) {
-            $this->errors['heure_fermeture'] = "L'heure de fermeture doit être au format HH:MM";
+            $this->errors['heureFermeture'] = "L'heure de fermeture doit être au format HH:MM";
         }
 
-        if (!isset($this->errors['heure_ouverture']) && !isset($this->errors['heure_fermeture'])
+        if (!isset($this->errors['heureOuverture']) && !isset($this->errors['heureFermeture'])
             && $ouverture && $fermeture && $ouverture >= $fermeture
         ) {
-            $this->errors['heure_fermeture'] = "L'heure de fermeture doit être après l'heure d'ouverture";
+            $this->errors['heureFermeture'] = "L'heure de fermeture doit être après l'heure d'ouverture";
         }
     }
 

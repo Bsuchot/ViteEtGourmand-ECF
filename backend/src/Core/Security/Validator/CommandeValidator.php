@@ -71,12 +71,12 @@ class CommandeValidator extends AbstractValidator
     {
         $this->reset();
 
-        if (empty($data['status'])) {
-            $this->errors['status'] = 'Le champ statut ne doit pas être vide';
-        } elseif (!in_array($data['status'], self::STATUTS_AUTORISES, true)) {
-            $this->errors['status'] = sprintf(
+        if (empty($data['statut'])) {
+            $this->errors['statut'] = 'Le champ statut ne doit pas être vide';
+        } elseif (!in_array($data['statut'], self::STATUTS_AUTORISES, true)) {
+            $this->errors['statut'] = sprintf(
                 'Le statut "%s" est invalide. Valeurs autorisées : %s',
-                $data['status'],
+                $data['statut'],
                 implode(', ', self::STATUTS_AUTORISES)
             );
         }
@@ -92,9 +92,9 @@ class CommandeValidator extends AbstractValidator
             return;
         }
 
-        $date = \DateTimeImmutable::createFromFormat('d-m-Y', $data['datePrestation']);
+        $date = \DateTimeImmutable::createFromFormat('Y-m-d', $data['datePrestation']);
         if (!$date) {
-            $this->errors['datePrestation'] = 'La date de prestation doit être au format JJ-MM-AAAA';
+            $this->errors['datePrestation'] = 'La date de prestation doit être au format AAAA-MM-DD';
             return;
         }
 

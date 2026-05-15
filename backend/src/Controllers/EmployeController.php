@@ -122,7 +122,6 @@ class EmployeController extends AbstractController
                 if (isset($item['adresse']))   $utilisateur->setAdresse($item['adresse']);
                 if (isset($item['ville']))     $utilisateur->setVille($item['ville']);
                 if (isset($item['pays']))      $utilisateur->setPays($item['pays']);
-                if (isset($item['statut']))    $utilisateur->setStatut($item['statut']);
 
                 $this->repository->update($utilisateur);
             }

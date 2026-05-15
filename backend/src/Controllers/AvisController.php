@@ -89,6 +89,7 @@ class AvisController extends AbstractController
         $this->tryCatch(function () use ($id) {
             $avis = $this->repository->findById($id);
             if (!$avis) { $this->error('Avis introuvable', 404); return; }
+            if (!$this->checkAccess(fn() => $this->requireOwner($avis))) return;
 
             $data = json_decode(file_get_contents("php://input"), true);
             if (!$data) { $this->error('Données invalides', 400); return; }
@@ -111,7 +112,7 @@ class AvisController extends AbstractController
         $this->tryCatch(function () use ($id) {
             $avis = $this->repository->findById($id);
             if (!$avis) { $this->error('Avis introuvable', 404); return; }
-            if (!$this->checkAccess($avis)) return;
+            if (!$this->checkAccess(fn() => $this->requireOwner($avis))) return;
 
             $this->repository->delete($id);
             $this->success(['message' => 'Avis supprimé avec succès']);

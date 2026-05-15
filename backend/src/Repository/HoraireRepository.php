@@ -12,7 +12,7 @@ class HoraireRepository extends Repository
     {
         $stmt = $this->pdo->prepare("
             INSERT INTO horaire (jour, heure_ouverture, heure_fermeture, statut)
-            VALUES (:jour, :heure_ouverture, :heure_fermeture, :statut)
+            VALUES (:jour, :heureOuverture, :heureFermeture, :statut)
         ");
         $stmt->execute([
             'jour'           => $horaire->getJour(),
@@ -59,8 +59,8 @@ class HoraireRepository extends Repository
         $stmt = $this->pdo->prepare("
             UPDATE horaire 
             SET jour = :jour,
-                heure_ouverture = :heure_ouverture,
-                heure_fermeture = :heure_fermeture,
+                heure_ouverture = :heureOuverture,
+                heure_fermeture = :heureFermeture,
                 statut = :statut
             WHERE id = :id
         ");
