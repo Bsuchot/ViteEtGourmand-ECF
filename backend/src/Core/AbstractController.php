@@ -7,6 +7,7 @@ use App\Repository\UtilisateurRepository;
 
 abstract class AbstractController
 {
+
     protected function json(mixed $data, int $status = 200): void
     {
         http_response_code($status);
@@ -37,6 +38,18 @@ abstract class AbstractController
     protected function error(string|array $message, int $status = 400): void
     {
         $this->json(['success' => false, 'error' => $message], $status);
+    }
+    protected function requireCsrf(): bool
+    {
+        $headers = getallheaders();
+        $token = $headers['X-CSRF-TOKEN'] ?? null;
+
+        if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
+            $this->error('CSRF invalide', 403);
+            return false;
+        }
+
+        return true;
     }
 
     protected function requireLogin(): bool

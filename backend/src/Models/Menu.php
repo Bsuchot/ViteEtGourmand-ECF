@@ -15,6 +15,9 @@ class Menu extends Model
     private ?int $regimeId = null;
     private ?int $themeId = null;
     private ?string $image = null;
+    private ?string $statut = null;
+    private ?int $delai = null;
+    private ?string $service = null;
     private array $plats =[];
 
     public function getId(): ?int
@@ -107,6 +110,38 @@ class Menu extends Model
     {
         $this->image = $image;
     }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?string $statut): void
+    {
+        $this->statut = $statut;
+    }
+
+    public function getService(): ?string
+    {
+        return $this->service;
+    }
+
+    public function setService(?string $service): void
+    {
+        $this->service = $service;
+    }
+
+    public function getDelai(): ?int
+    {
+        return $this->delai;
+    }
+
+    public function setDelai(?int $delai): void
+    {
+        $this->delai = $delai;
+    }
+
+
     public function getPlats(): array
     {
         return $this->plats;

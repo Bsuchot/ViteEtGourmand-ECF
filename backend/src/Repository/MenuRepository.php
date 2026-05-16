@@ -69,10 +69,10 @@ class MenuRepository extends Repository
         $stmt = $this->pdo->prepare("
             INSERT INTO menu
                 (titre, nombre_personne_minimum, prix_par_personne, description,
-                 quantite_restante, regime_id, theme_id, image)
+                 quantite_restante, regime_id, theme_id, image, statut, delai, service)
             VALUES
                 (:titre, :nombrePersonneMinimum, :prixParPersonne, :description,
-                 :quantiteRestante, :regimeId, :themeId, :image)
+                 :quantiteRestante, :regimeId, :themeId, :image, :statut, :delai, :service)
         ");
         $stmt->execute([
             'titre'             => $menu->getTitre(),
@@ -83,6 +83,9 @@ class MenuRepository extends Repository
             'regimeId'          => $menu->getRegimeId(),
             'themeId'           => $menu->getThemeId(),
             'image'             => $menu->getImage(),
+            'statut'            => $menu->getStatut(),
+            'delai'          => $menu->getDelai(),
+            'service'           => $menu->getService()
         ]);
 
         $menuId = (int) $this->pdo->lastInsertId();
@@ -100,7 +103,10 @@ class MenuRepository extends Repository
                 quantite_restante       = :quantiteRestante,
                 regime_id               = :regimeId,
                 theme_id                = :themeId,
-                image                   = :image
+                image                   = :image,
+                statut                 = :statut,
+                delai                   = :delai,
+                service                 = :service
             WHERE id = :id
         ");
         $stmt->execute([
@@ -112,7 +118,10 @@ class MenuRepository extends Repository
             'regimeId'              => $menu->getRegimeId(),
             'themeId'               => $menu->getThemeId(),
             'image'                 => $menu->getImage(),
-            'id'                    => $menu->getId(),
+            'statut'                => $menu->getStatut(),
+            'delai'                 => $menu->getDelai(),
+            'service'               => $menu->getService(),
+            'id'                    => $menu->getId()
         ]);
 
         $this->syncPlats($menu->getId(), $menu->getPlats());

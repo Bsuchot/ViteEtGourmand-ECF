@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Core;
-
+use OpenApi\Annotations as OA;
 
 class Router
 {
