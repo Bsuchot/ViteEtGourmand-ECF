@@ -11,7 +11,7 @@ function getRole(){
 function signout() {
     eraseCookie(tokenCookieName);
     eraseCookie(RoleCookieName);
-    window.location.reload();
+    window.location.replace('/');
 }
 function setToken(token) {
     setCookie(tokenCookieName, token, 7);
@@ -46,12 +46,22 @@ function eraseCookie(name) {
     document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
 
-function isConnected(){
-    if(getToken() == null || getToken() == undefined){
-        return false;
-    }else{
-        return true;
+async function initSession() {
+    const data = await fetch('/api/utilisateur/me', {
+        credentials: 'include'
+    }).then(r => r.json());
+
+    if (data.success && data.user) {
+        setCookie('role', data.user.role, 1);
+    } else {
+        eraseCookie('role');
     }
+
+    showAndHideElementsForRoles();
+}
+
+function isConnected() {
+    return getCookie('role') !== null;
 }
 
 
@@ -89,3 +99,4 @@ function showAndHideElementsForRoles() {
         }
     });
 }
+export { initSession, setCookie, eraseCookie, getCookie, isConnected, getRole, showAndHideElementsForRoles };

@@ -107,73 +107,79 @@ footer.footer {
 
 //accordéon choix menu
 #accordionMenu {
-  .menuOne {
-  position: relative;
 
-    .accordion-button {
-      position: relative;
-      color: #fff;
-      background-image: url("../assets/images/repasAutomn.jpg");
-      background-size: cover;
-      background-position: center;
-      z-index: 1;
-      align-items: stretch;
-      padding-right: 3rem;
+  .accordion-button {
+    position: relative;
+    color: #fff;
+    background-image: var(--menu-image);
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    align-items: stretch;
+    padding-right: 3rem;
 
-      &::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.7);
-        z-index: -1;
-      }
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: -1;
     }
   }
-  .menuTwo {
-    .accordion-button {
-      position: relative;
-      color: #fff;
-      background-image: url("../assets/images/noel.jpg");
-      background-size: cover;
-      background-position: center;
-      z-index: 1;
-      align-items: stretch;
-      padding-right: 3rem;
 
-      &::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.7);
-        z-index: -1;
-      }
-    }
-  }
+  // ACCORDION
   .accordion-button::after {
     filter: brightness(0) invert(1);
-    position: absolute;
-    right: 1rem;
-    bottom: 1rem;
-    top: auto;
-    transform: none;
   }
 
-  .image-card {
-  position: relative;          // important pour positionner le titre
-  max-width: 200px;
-  aspect-ratio: 4 / 3;         /* force paysage */
-  overflow: hidden;
-  margin: 0 auto;
-  border-radius: 8px;
-    &:hover {
-      img {
-        filter: brightness(0.3);  // assombrir l'image
-      }
+  // SOLD OUT
+  .accordion-item.soldout {
+    .accordion-button {
+      position: relative;
+      color: #fff;
+      pointer-events: none;
+      overflow: hidden;
+    }
 
-      .titre-image,
-      .action-image-buttons {
-        opacity: 1;               // faire apparaître le texte / boutons
-      }
+    .accordion-button::before {
+      content: "Indisponible";
+      position: absolute;
+      top: 50%;
+      left: -30%;
+      width: 160%;
+      transform: rotate(-45deg) translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-weight: bold;
+      font-size: clamp(1rem, 2.5vw, 2rem);
+      text-align: center;
+      padding: 0.3rem 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .container-fluid {
+      opacity: 0.4;
+    }
+  }
+
+  // IMAGE CARD
+  .image-card {
+    position: relative;
+    max-width: 200px;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    margin: 0 auto;
+    border-radius: 8px;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.3s ease;
+      position: relative;
+      z-index: 0;
     }
 
     .titre-image {
@@ -181,10 +187,16 @@ footer.footer {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      text-align: center;
       opacity: 0;
-      transition: opacity 0.3s, transform 0.3s;
-      pointer-events: none;       // pour ne pas gêner le hover
+      transition: 0.3s ease;
+      color: #fff;
+      font-weight: 600;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      padding: 6px 10px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 6px;
+      z-index: 2;
+      pointer-events: none;
     }
 
     .action-image-buttons {
@@ -193,58 +205,33 @@ footer.footer {
       left: 50%;
       transform: translateX(-50%);
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: 0.3s ease;
+      z-index: 2;
+    }
+
+    // overlay correct
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      transition: 0.3s ease;
+      z-index: 1;
+    }
+
+    &:hover::before {
+      background: rgba(0,0,0,0.35);
+    }
+
+    &:hover img {
+      filter: brightness(0.3);
+    }
+
+    &:hover .titre-image,
+    &:hover .action-image-buttons {
+      opacity: 1;
     }
   }
-
-  .image-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: all 0.3s;
-  }
-  /* Header sold out */
-  .accordion-item.soldout .accordion-button {
-    position: relative;     /* nécessaire pour le pseudo-élément */
-    color: #fff;            /* texte blanc */
-    pointer-events: none;   /* désactiver le clic */
-    overflow: hidden;       /* pour le bandeau */
-  }
-
-  /* Texte “Victime de son succès” */
-  .accordion-item.soldout .soldout-text {
-      font-weight: bold;
-      font-size: 0.9rem;
-      display: block;
-      margin-top: 0.3rem;
-  }
-
-  /* Bandeau diagonal responsive */
-  .accordion-item.soldout .accordion-button::before {
-    content: "Indisponible";
-    position: absolute;
-    top: 50%;
-    left: -30%;
-    width: 160%;
-    transform: rotate(-45deg) translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.6); /* bandeau sombre */
-    color: #fff;
-    font-weight: bold;
-    font-size: clamp(1rem, 2.5vw, 2rem); /* responsive selon écran */
-    text-align: center;
-    padding: 0.3rem 0;
-    z-index: 2;
-    pointer-events: none;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7); /* pour lisibilité */
-  }
-
-  /* Assombrir le contenu derrière le bandeau */
-  .accordion-item.soldout .accordion-button > * {
-    opacity: 0.4;  
-    transition: opacity 0.3s;
-  }
-
 }
 
 // style page account

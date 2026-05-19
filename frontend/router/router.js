@@ -1,5 +1,6 @@
 import Route from "./Route.js";
 import { allRoutes, websiteName } from "./allRoutes.js";
+import { showAndHideElementsForRoles, getRole, isConnected, initSession } from "../scripts/main.js";
 
 const route404 = new Route("404", "Page introuvable", "/pages/404.html", []);
 
@@ -7,26 +8,29 @@ const getRouteByUrl = (url) => {
   return allRoutes.find(route => route.url === url) || route404;
 };
 
+const loadedModules = {};
+
 const LoadContentPage = async () => {
   const path = window.location.pathname;
   const actualRoute = getRouteByUrl(path);
 
-  //Vérifier les autorisations d'accès
+  // Vérifier les autorisations d'accès
   const allRolesArray = actualRoute.authorize;
 
-    if(allRolesArray.length > 0){
-      if(allRolesArray.includes("disconnected")){
-        if(isConnected()){
-          window.location.replace("/");
-        }
+  if (allRolesArray.length > 0) {
+    if (allRolesArray.includes("disconnected")) {
+      if (isConnected()) {
+        window.location.replace("/");
+        return;
       }
-      else{
-        const roleUser = getRole();
-        if(!allRolesArray.includes(roleUser)){
-          window.location.replace("/");
-        }
+    } else {
+      const roleUser = getRole();
+      if (!allRolesArray.includes(roleUser)) {
+        window.location.replace("/");
+        return;
       }
     }
+  }
 
   try {
     const response = await fetch(actualRoute.pathHtml);
@@ -43,10 +47,11 @@ const LoadContentPage = async () => {
 
       // Ajoute le JS de la page si nécessaire
       if (actualRoute.pathJS) {
-        const scriptTag = document.createElement("script");
-        scriptTag.type = "text/javascript";
-        scriptTag.src = actualRoute.pathJS;
-        document.body.appendChild(scriptTag);
+        if (!loadedModules[actualRoute.pathJS]) {
+          loadedModules[actualRoute.pathJS] = await import(actualRoute.pathJS);
+        }
+        const module = loadedModules[actualRoute.pathJS];
+        if (module.init) module.init();
       }
 
       // Change le titre de la page
@@ -58,9 +63,8 @@ const LoadContentPage = async () => {
     console.error("Erreur lors du chargement de la page :", error);
   }
 
-  //Afficher et masquer les éléments en fonction du rôle
+  // Afficher et masquer les éléments en fonction du rôle
   showAndHideElementsForRoles();
-  
 };
 
 const routeEvent = (event) => {

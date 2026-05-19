@@ -30,10 +30,10 @@
                     <input type="text" class="form-control" id="PrenomInput" placeholder="Votre prénom" name="Prenom"> 
                 </div>
                 <div class="mb-3">
-                  <label for="GsmInput" class="form-label">Gsm</label>
-                  <input type="text" class="form-control" id="GsmInput" placeholder="Votre Gsm" name="0655555555"> 
+                  <label for="TelephoneInput" class="form-label">Téléphone</label>
+                  <input type="text" class="form-control" id="TelephoneInput" placeholder="Votre téléphone" name="telephone"> 
                     <div class="invalid-feedback">
-                        Le gsm est requis.
+                        Le téléphone est requis.
                     </div>
                 </div>
                 <div class="mb-3">
@@ -42,6 +42,18 @@
                   <div class="invalid-feedback">
                       L'adresse email n'est pas valide.
                   </div>
+                </div>
+                <div class="mb-3">
+                  <label for="changeAdressFormInput" class="form-label">Adresse</label>
+                  <input type="text" class="form-control" id="changeAdressFormInput" name="adress" placeholder="Adresse">
+                </div>
+                <div class="mb-3">
+                  <label for="changeCityFormInput" class="form-label">Ville</label>
+                  <input type="text" class="form-control" id="changeCityFormInput" name="city" placeholder="Ville">
+                </div>
+                <div class="mb-3">
+                  <label for="changecountryFormInput" class="form-label">Pays</label>
+                  <input type="text" class="form-control" id="changecountryFormInput" name="country" placeholder="Pays">
                 </div>
                 <button type="button" class="btn btn-primary" id="NewCoordonesBtn">Valider</button>
               </form>
@@ -218,38 +230,8 @@
       </div>
     </div>
   </div>
-  <!--Mon adresse-->
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdresse" aria-expanded="false" aria-controls="collapseAdresse">
-        <span class="flex-grow-1 text-center">Mon adresse</span>
-      </button>
-    </h2>
-    <div id="collapseAdresse" class="accordion-collapse collapse" data-bs-parent="#accordionAccount">
-      <div class="accordion-body">
-        <form action="">
-          <div class="container">
-            <div class="row justify-content-center">
-               <div class="col-12 col-lg-6 text-center">
-                <div class="mb-3">
-                  <input type="text" class="form-control" id="changeAdressFormInput" name="adress" placeholder="Adresse">
-                </div>
-                <div class="mb-3">
-                    <input type="text" class="form-control" id="changePostalCodeFormInput" name="postal_code" placeholder="Code postal">
-                </div>
-                <div class="mb-3">
-                    <input type="text" class="form-control" id="changeCityFormInput" name="city" placeholder="Ville">
-                </div>
-                <button type="button" class="btn btn-primary" id="NewAdressBtn">Valider</button>
-               </div>
-            </div>
-          </div>
-        </form> 
-      </div>
-    </div>
-  </div>
   <!--Commande en cours (admin & employé)-->
-  <div class="accordion-item" data-show="employe">
+  <div class="accordion-item" data-show="employe admin">
     <h2 class="accordion-header">
       <button class="accordion-button collapsed bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCommandAdmin" aria-expanded="false" aria-controls="collapseCommandAdmin">
         <span class="flex-grow-1 text-center">Commande en cours</span>
@@ -279,13 +261,11 @@
               <div class="col">
                 <select class="form-select" aria-label="staut Command Filter" name="statut_command_filter" id="statutAdminCommandFilter">
                   <option value="">Statut de la commande</option>
-                  <option value="1">Commande reçue</option>
-                  <option value="2">Acceptée</option>
-                  <option value="3">En préparartion</option>
-                  <option value="4">En cours de livraison</option>
-                  <option value="5">Livré</option>
-                  <option value="6">En attente retour matériel</option>
-                  <option value="7">Terminée</option>
+                  <option value="en_attente">En attente</option>
+                  <option value="accepté">Acceptée</option>
+                  <option value="en cours de livraison">En cours de livraison</option>
+                  <option value="en attente du retour de matériel">En attente retour matériel</option>
+                  <option value="terminee">Terminée</option>
                 </select>
               </div>
             </div>
@@ -365,7 +345,23 @@
     <div id="collapseBudget" class="accordion-collapse collapse" data-bs-parent="#accordionAccount">
       <div class="accordion-body">
         <div class="container">
-          ...
+          <div class="container">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="card p-3 text-center">
+                  <h6>Total CA</h6>
+                  <h3 id="totalCa">--</h3>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="card p-3 text-center">
+                  <h6>Commandes</h6>
+                  <h3 id="totalOrders">--</h3>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -379,364 +375,75 @@
     </h2>
     <div id="collapseHourly" class="accordion-collapse collapse" data-bs-parent="#accordionAccount">
       <div class="accordion-body">
-        <form action="">
-          <div class="container">
-            <div class="table-responsive">
-              <table id="edithourlyTable" class="table table-info table-striped-columns align-middle">
-                <thead>
-                  <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Statut</th>
-                    <th scope="col">Ouverture matin</th>
-                    <th scope="col">Fermeture matin</th>
-                    <th scope="col">Ouverture aprés-midi</th>
-                    <th scope="col">Fermeture aprés-midi</th>
-                  </tr>
-                  <!--Lundis-->
-                  <tr>
-                    <th scope="row">Lundis</th>
-                    <!--statut-->
-                    <td>
-                      <select class="form-select" aria-label="Monday statut select">
-                        <option value="1" selected>Ouvert</option>
-                        <option value="2">Fermée</option>
-                      </select>
-                    </td>
-                    <!--Ouverture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox monday am opening time input" id="checkboxMondayAmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="monday am opening time" id="mondayAmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox monday am closing time input" id="checkboxMondayAmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="monday am closing time" id="mondayAmClosingTime">
-                      </div>
-                    </td>
-                    <!--Ouverture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox monday pm opening time input" id="checkboxMondayPmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="monday pm opening time" id="mondayPmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox monday pm closing time input" id="checkboxMondayPmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="monday pm closing time" id="mondayPmClosingTime">
-                      </div>
-                    </td>
-                  </tr>
-                  <!--Mardis-->
-                  <tr>
-                    <th scope="row">Mardis</th>
-                    <!--statut-->
-                    <td>
-                      <select class="form-select" aria-label="Tuesday statut select">
-                        <option value="1" selected>Ouvert</option>
-                        <option value="2">Fermée</option>
-                      </select>
-                    </td>
-                    <!--Ouverture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox tuesday am opening time input" id="checkboxTuesdayAmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="tuesday am opening time" id="tuesdayAmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox tuesday am closing time input" id="checkboxTuesdayAmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="tuesday am closing time" id="tuesdayAmClosingTime">
-                      </div>
-                    </td>
-                    <!--Ouverture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox tuesday pm opening time input" id="checkboxTuesdayPmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="tuesday pm opening time" id="tuesdayPmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox tuesday pm closing time input" id="checkboxTuesdayPmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="tuesday pm closing time" id="tuesdayPmClosingTime">
-                      </div>
-                    </td>
-                  </tr>
-                  <!--Mercredis-->
-                  <tr>
-                    <th scope="row">Mercredis</th>
-                    <!--statut-->
-                    <td>
-                      <select class="form-select" aria-label="Wednesday statut select">
-                        <option value="1" selected>Ouvert</option>
-                        <option value="2">Fermée</option>
-                      </select>
-                    </td>
-                    <!--Ouverture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox wednesday am opening time input" id="checkboxWednesdayAmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="wednesday am opening time" id="wednesdayAmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox wednesday am closing time input" id="checkboxWednesdayAmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="wednesday am closing time" id="wednesdayAmClosingTime">
-                      </div>
-                    </td>
-                    <!--Ouverture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox wednesday pm opening time input" id="checkboxWednesdayPmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="wednesday pm opening time" id="wednesdayPmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox wednesday pm closing time input" id="checkboxWednesdayPmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="wednesday pm closing time" id="wednesdayPmClosingTime">
-                      </div>
-                    </td>
-                  </tr>
-                  <!--Jeudis-->
-                  <tr>
-                    <th scope="row">Jeudis</th>
-                    <!--statut-->
-                    <th>
-                      <select class="form-select" aria-label="Thursday statut select">
-                        <option value="1" selected>Ouvert</option>
-                        <option value="2">Fermée</option>
-                      </select>
-                    </th>
-                    <!--Ouverture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox thursday am opening time input" id="checkboxThursdayAmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="thursday am opening time" id="thursdayAmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox thursday am closing time input" id="checkboxThursdayAmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="thursday am closing time" id="thursdayAmClosingTime">
-                      </div>
-                    </td>
-                    <!--Ouverture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox thursday pm opening time input" id="checkboxThursdayPmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="thursday pm opening time" id="thursdayPmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox thursday pm closing time input" id="checkboxThursdayPmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="thursday pm closing time" id="thursdayPmClosingTime">
-                      </div>
-                    </th>
-                  </td>
-                  <!--Vendredis-->
-                  <tr>
-                    <th scope="row">Vendredis</th>
-                    <!--statut-->
-                    <td>
-                      <select class="form-select" aria-label="Friday statut select">
-                        <option value="1" selected>Ouvert</option>
-                        <option value="2">Fermée</option>
-                      </select>
-                    </td>
-                    <!--Ouverture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox friday am opening time input" id="checkboxFridayAmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="friday am opening time" id="fridayAmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox friday am closing time input" id="checkboxFridayAmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="friday am closing time" id="fridayAmClosingTime">
-                      </div>
-                    </td>
-                    <!--Ouverture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox friday pm opening time input" id="checkboxFridayPmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="friday pm opening time" id="fridayPmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox Friday pm closing time input" id="checkboxFridayPmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="Friday pm closing time" id="fridayPmClosingTime">
-                      </div>
-                    </td>
-                  </tr>
-                  <!--Samedis-->
-                  <tr>
-                    <th scope="row">Samedis</th>
-                    <!--statut-->
-                    <td>
-                      <select class="form-select" aria-label="Saturday statut select">
-                        <option value="1" selected>Ouvert</option>
-                        <option value="2">Fermée</option>
-                      </select>
-                    </td>
-                    <!--Ouverture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox saturday am opening time input" id="checkboxSaturdayAmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="saturday am opening time" id="saturdayAmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox saturday am closing time input" id="checkboxSaturdayAmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="saturday am closing time" id="saturdayAmClosingTime">
-                      </div>
-                    </td>
-                    <!--Ouverture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox saturday pm opening time input" id="checkboxSaturdayPmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="saturday pm opening time" id="saturdayPmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox saturday pm closing time input" id="checkboxSaturdayPmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="saturday pm closing time" id="saturdayPmClosingTime">
-                      </div>
-                    </td>
-                  </tr>
-                  <!--Dimanche-->
-                  <tr>
-                    <th scope="row">Dimanche</th>
-                    <!--statut-->
-                    <td>
-                      <select class="form-select" aria-label="Sunday statut select">
-                        <option value="1" selected>Ouvert</option>
-                        <option value="2">Fermée</option>
-                      </select>
-                    </td>
-                    <!--Ouverture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox sunday am opening time input" id="checkboxSundayAmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="sunday am opening time" id="sundayAmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture matin-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox sunday am closing time input" id="checkboxSundayAmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="sunday am closing time" id="sundayAmClosingTime">
-                      </div>
-                    </td>
-                    <!--Ouverture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox sunday pm opening time input" id="checkboxSundayPmOpeningTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="sunday pm opening time" id="sundayPmOpeningTime">
-                      </div>
-                    </td>
-                    <!--Fermeture aprés-midi-->
-                    <td>
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox sunday pm closing time input" id="checkboxSundayPmClosingTime">
-                        </div>
-                        <input type="time" class="form-control" aria-label="sunday pm closing time" id="sundayPmClosingTime">
-                      </div>
-                    </td>
-                  </tr>
-                </thead>
-              </table>   
-            </div>
-            <div class="text-center my-3">
-              <button type="button" class="btn btn-primary">Valider les changements</button> 
-            </div>  
+        <div class="container">
+          <div class="table-responsive">
+            <table id="edithourlyTable" class="table table-info table-striped-columns align-middle">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Statut</th>
+                  <th scope="col">Horaire ouverture</th>
+                  <th scope="col">Horaire Fermeture</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Lundi</th>
+                  <td><select class="form-select" id="statutLundi"><option value="ouvert">Ouvert</option><option value="fermé">Fermé</option></select></td>
+                  <td><input type="time" class="form-control" id="ouvertureLundi"></td>
+                  <td><input type="time" class="form-control" id="fermetureLundi"></td>
+                </tr>
+                <tr>
+                  <th scope="row">Mardi</th>
+                  <td><select class="form-select" id="statutMardi"><option value="ouvert">Ouvert</option><option value="fermé">Fermé</option></select></td>
+                  <td><input type="time" class="form-control" id="ouvertureMardi"></td>
+                  <td><input type="time" class="form-control" id="fermetureMardi"></td>
+                </tr>
+                <tr>
+                  <th scope="row">Mercredi</th>
+                  <td><select class="form-select" id="statutMercredi"><option value="ouvert">Ouvert</option><option value="fermé">Fermé</option></select></td>
+                  <td><input type="time" class="form-control" id="ouvertureMercredi"></td>
+                  <td><input type="time" class="form-control" id="fermetureMercredi"></td>
+                </tr>
+                <tr>
+                  <th scope="row">Jeudi</th>
+                  <td><select class="form-select" id="statutJeudi"><option value="ouvert">Ouvert</option><option value="fermé">Fermé</option></select></td>
+                  <td><input type="time" class="form-control" id="ouvertureJeudi"></td>
+                  <td><input type="time" class="form-control" id="fermetureJeudi"></td>
+                </tr>
+                <tr>
+                  <th scope="row">Vendredi</th>
+                  <td><select class="form-select" id="statutVendredi"><option value="ouvert">Ouvert</option><option value="fermé">Fermé</option></select></td>
+                  <td><input type="time" class="form-control" id="ouvertureVendredi"></td>
+                  <td><input type="time" class="form-control" id="fermetureVendredi"></td>
+                </tr>
+                <tr>
+                  <th scope="row">Samedi</th>
+                  <td><select class="form-select" id="statutSamedi"><option value="ouvert">Ouvert</option><option value="fermé">Fermé</option></select></td>
+                  <td><input type="time" class="form-control" id="ouvertureSamedi"></td>
+                  <td><input type="time" class="form-control" id="fermetureSamedi"></td>
+                </tr>
+                <tr>
+                  <th scope="row">Dimanche</th>
+                  <td><select class="form-select" id="statutDimanche"><option value="ouvert">Ouvert</option><option value="fermé">Fermé</option></select></td>
+                  <td><input type="time" class="form-control" id="ouvertureDimanche"></td>
+                  <td><input type="time" class="form-control" id="fermetureDimanche"></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </form> 
+          <div class="text-center my-3">
+            <button type="button" class="btn btn-primary" id="btnSaveHoraires">Valider les changements</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <!--Gérer les menus (admin/employé)-->
+  <!--Gérer les menus et les plats (admin/employé)-->
   <div class="accordion-item" data-show="employe admin">
     <h2 class="accordion-header">
       <button class="accordion-button collapsed bg-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMenuManagement" aria-expanded="false" aria-controls="collapseMenuManagement">
-        <span class="flex-grow-1 text-center">Gérer les menus</span>
+        <span class="flex-grow-1 text-center">Gérer les menus et les plats</span>
       </button>
     </h2>
     <div id="collapseMenuManagement" class="accordion-collapse collapse" data-bs-parent="#accordionAccount">
@@ -748,67 +455,28 @@
                 <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Date de création</th>
-                    <th scope="col">Date de modification</th>
                     <th scope="col">Titre du menu</th>
+                    <th scope="col">Description</th>
                     <th scope="col">Thème</th>
                     <th scope="col">Pers. min</th>
                     <th scope="col">Service</th>
                     <th scope="col">Prix</th>
                     <th scope="col">Régime</th>
                     <th scope="col">Stock</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Délai</th>
                     <th scope="col">Statut</th>
                     <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>01/01/2026</td>
-                    <td>-</td>
-                    <td><input type="text" class="form-control" id="MenuTitleInput" placeholder="Titre du menu" name="Title"></td>
-                    <td>
-                      <select class="form-select" aria-label="Theme menu select" id="ThemeMenuSelect">
-                        <option value="1" selected>-</option>
-                      </select>
-                    </td>
-                    <td><input type="number" class="form-control" id="MenuPersInput" placeholder="Nombre personne min" name="min_pers"></td>
-                    <td>
-                      <select class="form-select" aria-label="Service menu select" id="ServiceMenuSelect">
-                        <option value="1" selected>Entrée/Plat/dessert</option>
-                        <option value="2">Entrée/Plat-Plat/dessert</option>
-                        <option value="3">Entrée/Plat</option>
-                        <option value="4">Plat/dessert</option>
-                      </select>
-                    </td>
-                    <td>
-                      <div class="input-group">
-                        <input type="number" class="form-control" id="MenuPriceInput" placeholder="Prix" name="price">
-                        <span class="input-group-text">€</span>
-                      </div> 
-                    </td>
-                    <td>
-                      <select class="form-select" aria-label="Menu diet select" id="MenuDietSelect">
-                        <option value="1" selected>-</option>
-                        <option value="2">Végé</option>
-                        <option value="3">Végé et Végan</option>
-                      </select>
-                    </td>
-                    <td><input type="number" class="form-control" id="MenuStockInput" placeholder="stock" name="stock"></td>
-                    <td>
-                      <select class="form-select" aria-label="Statut employee select" id="StatutMenuSelect">
-                        <option value="1" selected>Actif</option>
-                        <option value="2">Inactif</option>
-                      </select>
-                    </td>
-                    <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailMenuModal">Détail</button></td>
-                  </tr>
                 </tbody>
               </table>
             </div>
             <div class="text-center">
               <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#newMenuModal">Créer un nouveau menu</button>
-              <button type="submit" class="btn btn-primary">Valider les changements</button>
+              <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#allPlatModal">Liste des plats</button>
+              <button type="button" class="btn btn-primary" id="btnSaveMenuChanges">Valider les changements</button>
             </div>
           </div>
         </form>
@@ -827,7 +495,7 @@
         <form action="">
           <div class="container">
             <div class="table-responsive">
-              <table id="employeeTable" class="table table-info table-striped-columns align-middle">
+              <table id="reviewTable" class="table table-info table-striped-columns align-middle">
                 <thead>
                   <tr>
                     <th>Date de création</th>
@@ -892,33 +560,19 @@
                     <th>#</th>
                     <th>Nom</th>
                     <th>Prénom</th>
-                    <th>Date de création</th>
+                    <th>Gsm</th>
                     <th>Email</th>
                     <th>Statut</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td><input type="text" class="form-control" id="EmployeeNameInput" placeholder="Nom" name="Nom"></td>
-                    <td><input type="text" class="form-control" id="EmployeeFirstnameInput" placeholder="Prénom" name="Prenom"></td>
-                    <td>01/01/2026</td>
-                    <td><input type="email" class="form-control" id="EmployeeMailInput" placeholder="Email" name="Email"></td>
-                    <td>
-                      <select class="form-select" aria-label="Statut employee select" id="StatutEmployeeSelect">
-                        <option value="1" selected>Actif</option>
-                        <option value="2">Inactif</option>
-                      </select>
-                    </td>
-                    <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationDeleteModal">Supprimer</button></td>
-                  </tr>
                 </tbody>
               </table>
             </div>
             <div class="text-center">
               <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#newEmployeeModal">Créer un nouvel employé</button>
-              <button type="submit" class="btn btn-primary">Valider les changements</button>
+              <button type="button" class="btn btn-primary" id="btnSaveChanges">Valider les changements</button>
             </div>
           </div>
         </form>
@@ -1266,7 +920,7 @@
         <p>Étes-vous sur de vouloir supprimer cet élément ?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger">Oui</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="btnConfirmDelete">Oui</button>
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Non</button>
       </div>
     </div>
@@ -1303,7 +957,7 @@
   </div>
 </div>
 <!--Modal détail menu-->
-<div class="modal fade" id="detailMenuModal" tabindex="-1" aria-labelledby="detailMenuModalLabel" data-bs-focus="true" aria-hidden="true">
+<div class="modal fade" id="detailMenuModal" tabindex="-1" aria-labelledby="detailMenuModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form action="">
@@ -1319,18 +973,18 @@
               <input type="text" class="form-control" id="editMenuTitleInput" placeholder="titre du menu">
             </div>
             <div class="mb-3">
-              <label for="editmenuDescriptionTextarea" class="form-label">Description du menu</label>
+              <label for="editMenuDescriptionTextarea" class="form-label">Description du menu</label>
               <textarea class="form-control" id="editMenuDescriptionTextarea" rows="3"></textarea>
             </div>
             <div class="row">
               <div class="col">
                 <div class="mb-3">
                   <label for="editMenuPriceInput" class="form-label">Prix du menu</label>
-                  <div class="input-group mb-3"> 
+                  <div class="input-group mb-3">
                     <input type="number" class="form-control" id="editMenuPriceInput" placeholder="50">
                     <span class="input-group-text">€</span>
                   </div>
-                </div> 
+                </div>
               </div>
               <div class="col">
                 <div class="mb-3">
@@ -1341,74 +995,69 @@
                   </div>
                 </div>
               </div>
+              <div class="col">
+                <div class="mb-3">
+                  <label for="editMenuDelaiInput" class="form-label">Délai</label>
+                  <div class="input-group mb-3">
+                    <input type="number" class="form-control" id="editMenuDelaiInput" placeholder="5">
+                    <span class="input-group-text">Jours</span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="row mb-3">
               <div class="col">
                 <label for="serviceEditMenuSelect" class="form-label">Service</label>
-                <select class="form-select" aria-label="service edit menu select" id="serviceEditMenuSelect">
-                  <option value="1" selected>Entrée/Plat/dessert</option>
-                  <option value="2">Entrée/Plat-Plat/dessert</option>
-                  <option value="3">Entrée/Plat</option>
-                  <option value="4">Plat/dessert</option>
+                <select class="form-select" id="serviceEditMenuSelect">
+                  <option value="Entrée/Plat/dessert">Entrée/Plat/dessert</option>
+                  <option value="Entrée/Plat-Plat/dessert">Entrée/Plat-Plat/dessert</option>
+                  <option value="Entrée/Plat">Entrée/Plat</option>
+                  <option value="Plat/dessert">Plat/dessert</option>
                 </select>
               </div>
               <div class="col">
-                <label for="themeEditMenuSelect" class="form-label">Thème</label>
-                <select class="form-select" aria-label="theme edit menu select" id="themeEditMenuSelect">
-                  <option value="1" selected>-</option>
+                <label for="theme" class="form-label">Thèmes</label>
+                <select id="themeEditMenuSelect"
+                        name="themes[]"
+                        class="form-select"
+                        multiple>
                 </select>
               </div>
               <div class="col">
                 <label for="dietEditMenuSelect" class="form-label">Régime</label>
-                <select class="form-select" aria-label="diet edit menu select" id="dietEditMenuSelect">
-                  <option value="1" selected>-</option>
-                  <option value="2" selected>Végé</option>
-                  <option value="1" selected>Végé et végan</option>
+                <select class="form-select" id="dietEditMenuSelect">
+                  <option value="">— Régime —</option>
                 </select>
               </div>
             </div>
+            <div id="editMenuCurrentImage" class="mb-2"></div>
             <div class="mb-3">
-              <label for="formFile" class="form-label">Image de fond</label>
-              <input class="form-control" type="file" id="editMenuBackgroundformFile">
+                <label for="editMenuBackgroundformFile" class="form-label">Image de fond</label>
+                <input class="form-control" type="file" id="editMenuBackgroundformFile">
             </div>
             <hr>
-            <!--entrée-->
             <h5 class="text-center text-primary my-4">Entrées</h5>
-            <div class="mb-3">
-              <select class="form-select" aria-label="entree edit menu select" id="entreeEditMenuSelect">
-                <option value="1" selected>-</option>
-              </select>
-            </div>
-            <button class="btn btn-primary" id="addEntreeEditMenu">Ajouter une entrée</i></button>
-            <!--Plats-->
+            <div id="entreeEditSelects"></div>
+            <button class="btn btn-primary" id="addEntreeEditMenu" type="button">Ajouter une entrée</button>
             <h5 class="text-center text-primary my-4">Plats</h5>
-            <div class="mb-3">
-              <select class="form-select" aria-label="plat edit menu select" id="platEditMenuSelect">
-                <option value="1" selected>-</option>
-              </select>
-            </div>
-            <button class="btn btn-primary" id="addPlatEditMenu">ajouter un plat</i></button>
-            <!--Desserts-->
+            <div id="platEditSelects"></div>
+            <button class="btn btn-primary" id="addPlatEditMenu" type="button">Ajouter un plat</button>
             <h5 class="text-center text-primary my-4">Desserts</h5>
-            <div class="mb-3">
-              <select class="form-select" aria-label="dessert edit menu select" id="dessertEditMenuSelect">
-                <option value="1" selected>-</option>
-              </select>
-            </div>
-            <button class="btn btn-primary" id="addDessertEditMenu">Ajouter un dessert</i></button>
+            <div id="dessertEditSelects"></div>
+            <button class="btn btn-primary" id="addDessertEditMenu" type="button">Ajouter un dessert</button>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Valider les changements</button>
+          <button type="button" class="btn btn-primary" id="btnValiderEditMenu">Valider les changements</button>
           <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Annuler</button>
           <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationDeleteModal">Supprimer le menu</button>
         </div>
-      </form> 
+      </form>
     </div>
   </div>
 </div>
 <!--Modal création  menu-->
-<div class="modal fade" id="newMenuModal" tabindex="-1" aria-labelledby="newMenuModalLabel" data-bs-focus="true" aria-hidden="true">
+<div class="modal fade" id="newMenuModal" tabindex="-1" aria-labelledby="newMenuModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form action="">
@@ -1446,29 +1095,40 @@
                   </div>
                 </div>
               </div>
+              <div class="col">
+                <div class="mb-3">
+                  <label for="newMenuDelaiInput" class="form-label">Délai</label>
+                  <div class="input-group mb-3">
+                    <input type="number" class="form-control" id="newMenuDelaiInput" placeholder="5">
+                    <span class="input-group-text">Jours</i></span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="row mb-3">
               <div class="col">
                 <label for="serviceNewMenuSelect" class="form-label">Service</label>
                 <select class="form-select" aria-label="service new menu select" id="serviceNewMenuSelect">
-                  <option value="1" selected>Entrée/Plat/dessert</option>
-                  <option value="2">Entrée/Plat-Plat/dessert</option>
-                  <option value="3">Entrée/Plat</option>
-                  <option value="4">Plat/dessert</option>
+                  <option value="Entrée/Plat/dessert" selected>Entrée/Plat/dessert</option>
+                  <option value="Entrée/Plat-Plat/dessert">Entrée/Plat-Plat/dessert</option>
+                  <option value="Entrée/Plat">Entrée/Plat</option>
+                  <option value="Plat/dessert">Plat/dessert</option>
                 </select>
               </div>
               <div class="col">
-                <label for="themeNewMenuSelect" class="form-label">Thème</label>
-                <select class="form-select" aria-label="theme new menu select" id="themeNewMenuSelect">
-                  <option value="1" selected>-</option>
+                <label for="theme" class="form-label">Thèmes</label>
+                <select id="themes"
+                        name="themes[]"
+                        class="form-select"
+                        multiple>
                 </select>
               </div>
               <div class="col">
                 <label for="dietNewMenuSelect" class="form-label">Régime</label>
                 <select class="form-select" aria-label="diet new menu select" id="dietNewMenuSelect">
-                  <option value="1" selected>-</option>
-                  <option value="2" selected>Végé</option>
-                  <option value="1" selected>Végé et végan</option>
+                  <option value="1" selected>Aucun</option>
+                  <option value="2" selected>Végétarien</option>
+                  <option value="3" selected>Végan</option>
                 </select>
               </div>
             </div>
@@ -1479,32 +1139,142 @@
             <hr>
             <!--entrée-->
             <h5 class="text-center text-primary my-4">Entrées</h5>
-            <div class="mb-3">
-              <select class="form-select" aria-label="entree new menu select" id="entreeNewMenuSelect">
-                <option value="1" selected>-</option>
-              </select>
-            </div>
-            <button class="btn btn-primary" id="addEntreeNewMenu">Ajouter une entrée</i></button>
+            <div id="entreeNewMenuSelect" class="mb-3"></div>
+            <button class="btn btn-primary" id="btnAddEntree" type="button">Ajouter une entrée</button>
+
             <!--Plats-->
             <h5 class="text-center text-primary my-4">Plats</h5>
-            <div class="mb-3">
-              <select class="form-select" aria-label="plat new menu select" id="platNewMenuSelect">
-                <option value="1" selected>-</option>
-              </select>
-            </div>
-            <button class="btn btn-primary" id="addPlatNewMenu">ajouter un plat</i></button>
+            <div id="platNewMenuSelect" class="mb-3"></div>
+            <button class="btn btn-primary" id="btnAddPlat" type="button">Ajouter un plat</button>
+
             <!--Desserts-->
             <h5 class="text-center text-primary my-4">Desserts</h5>
-            <div class="mb-3">
-              <select class="form-select" aria-label="dessert new menu select" id="dessertNewMenuSelect">
-                <option value="1" selected>-</option>
-              </select>
-            </div>
-            <button class="btn btn-primary" id="addDessertNewMenu">Ajouter un dessert</i></button>
+            <div id="dessertNewMenuSelect" class="mb-3"></div>
+            <button class="btn btn-primary" id="btnAddDessert" type="button">Ajouter un dessert</button>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Valider</button>
+          <button type="button" class="btn btn-primary" id="buttonValidateMenu">Valider</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
+        </div>
+      </form> 
+    </div>
+  </div>
+</div>
+<!--Modal gestion plats-->
+<div class="modal fade" id="allPlatModal" tabindex="-1" aria-labelledby="allPlatModalLabel" data-bs-focus="true" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="allPlatModalLabel">Gestion des plats</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <h5 class="text-center text-primary my-4">Liste des Entrée/Plats/Desserts</h5>
+            <div class="mb-3">
+              <h6 class="text-center">Entrées</h6>
+              <div class="table-responsive">
+                <table class="table" id="tableEntrees">
+                  <thead>
+                    <tr>
+                      <th scope="col">Titre</th>
+                      <th scope="col">Photo</th>
+                      <th scope="col">Allergènes</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Les entrées seront ajoutées ici dynamiquement -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="mb-3">
+              <h6 class="text-center">Plats</h6>
+              <div class="table-responsive">
+                <table class="table" id="tablePlats">
+                  <thead>
+                    <tr>
+                      <th scope="col">Titre</th>
+                      <th scope="col">Photo</th>
+                      <th scope="col">Allergènes</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Les plats seront ajoutés ici dynamiquement -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="mb-3">
+              <h6 class="text-center">Desserts</h6>
+              <div class="table-responsive">
+                <table class="table" id="tableDesserts">
+                  <thead>
+                    <tr>
+                      <th scope="col">Titre</th>
+                      <th scope="col">Photo</th>
+                      <th scope="col">Allergènes</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Les desserts seront ajoutés ici dynamiquement -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="btnOpenNewPlat">Ajouter un plat</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer la liste</button>
+        </div>
+      </form> 
+    </div>
+  </div>
+</div>
+<!--Modal creation plats-->
+<div class="modal fade" id="newPlatModal" tabindex="-1" aria-labelledby="newPlatModalLabel" data-bs-focus="true" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="newPlatModalLabel">Creation plats</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <h5 class="text-center text-primary my-4">Nouveau plat</h5>
+            <div class="mb-3">
+              <label for="newPlatTitleInput" class="form-label">Titre du plat</label>
+              <input type="text" class="form-control" id="newPlatTitleInput" placeholder="Titre du plat">
+            </div>
+            <label for="newPlatCategorySelect" class="form-label">Catégorie du plat</label>
+                <select class="form-select" aria-label="new plat category select" id="newPlatCategorySelect">
+                  <option value="entree">Entrée</option>
+                  <option value="plat">Plat</option>
+                  <option value="dessert">Dessert</option>
+                </select>
+            </div> 
+            <div class="mb-3">
+              <label for="newPlatPhotoFormFile" class="form-label">Photo du plat</label>
+              <input class="form-control" type="file" id="newPlatPhotoFormFile">
+          </div>
+        </div>
+        <div class="mb-3">
+            <label for="allergenes" class="form-label">Allergènes</label>
+            <select id="allergenes"
+                    name="allergenes[]"
+                    class="form-select"
+                    multiple>
+            </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="btnValiderNewPlat">Valider</button>
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
         </div>
       </form> 

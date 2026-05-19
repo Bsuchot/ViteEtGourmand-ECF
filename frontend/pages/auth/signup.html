@@ -24,7 +24,7 @@
         </div>
         <div class="mb-3">
             <label for="GsmInput" class="form-label">Gsm</label>
-            <input type="text" class="form-control" id="GsmInput" placeholder="Votre Gsm" name="0655555555"> 
+            <input type="text" class="form-control" id="GsmInput" placeholder="Votre Gsm" name="Telephone">
             <div class="invalid-feedback">
                 Le gsm est requis.
             </div>
@@ -48,28 +48,28 @@
             </div>
         </div>
         <div class="mb-3">
-            <label for="PostalCodeInput" class="form-label">Code postal</label>
-            <input type="text" class="form-control" id="PostalCodeInput" name="postal_code" placeholder="Votre code postal">
-            <div class="invalid-feedback">
-                Le code postal est requis.
-            </div>
-        </div>
-        <div class="mb-3">
             <label for="CityInput" class="form-label">Ville</label>
             <input type="text" class="form-control" id="CityInput" name="city" placeholder="Votre ville">
             <div class="invalid-feedback">
                 La ville est requis.
             </div>
         </div>
+        <div class="mb-3">
+            <label for="CountryInput" class="form-label">Pays</label>
+            <input type="text" class="form-control" id="CountryInput" name="country" placeholder="Votre pays">
+            <div class="invalid-feedback">
+                Le pays est requis.
+            </div>
+        </div>
         <hr class="mt-5">
         <div class="text-center text-primary my-4">
-            <h5>Choisir un mot de passe</h5>
+            <h5>Entrer un mot de passe</h5>
         </div>
         <div class="mb-3">
             <label for="PasswordInput" class="form-label">Mot de passe</label>
             <input type="password" class="form-control" id="PasswordInput" name="Password">
             <div class="invalid-feedback">
-                Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.
+                Le mot de passe doit contenir au moins 10 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.
             </div>
             <div class="valid-feedback">
                 Mot de passe valide.
@@ -84,7 +84,7 @@
             </div>
           </div>
         <div class="text-center">
-            <button type="submit" class="btn btn-primary" id="btn-validation-inscription">Inscription</button>
+            <button type="button" class="btn btn-primary" id="btn-validation-inscription" disabled>Inscription</button>
         </div>
     </form>
     <div class="text-center pt-3">

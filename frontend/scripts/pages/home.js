@@ -1,3 +1,5 @@
+import { api } from '../modules/api.js';
+
 const inputNom = document.getElementById("nameReviewInput");
 const inputPrenom = document.getElementById("firstnameReviwInput");
 const selectMenu = document.getElementById("menuReviewFormSelect");

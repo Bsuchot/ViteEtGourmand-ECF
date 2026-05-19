@@ -11,8 +11,8 @@ export default class Route {
 /*
 [] -> tout le monde
 ["disconnected"] -> utilisateur non connectés
-["client"] -> utilisateur connecté
+["user"] -> utilisateur connecté
 ["employe"] -> employé connecté
 ["admin"] -> admin connecté
-["admin","employe","client"]
+["admin","employe","user"]
 */

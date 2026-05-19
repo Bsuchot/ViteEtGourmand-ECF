@@ -1,24 +1,34 @@
-const mailInput = document.getElementById('EmailInput');
+import { api } from '../../modules/api.js';
+import { setCookie } from '../../main.js';
+
+const mailInput     = document.getElementById('EmailInput');
 const passwordInput = document.getElementById('PasswordInput');
-const btnSingnin = document.getElementById('btn-signin');
+const btnSignin     = document.getElementById('btn-signin');
 
-btnSingnin.addEventListener('click', checkCredentials);
+btnSignin.addEventListener('click', checkCredentials);
 
-function checkCredentials() {
-    // ici il faudra appelé l'API pour vérifier les credentials
 
-    if (mailInput.value === "test@mail.com" && passwordInput.value === "123") {
-        
-        // Il faudra récupérer le vrai token depuis l'API
-        const token = "sdmfkjzslkjvcxbcvbsfhsfjgchkjcbncghdhfisddjhflsdujfh"
-        setToken(token);
 
-        // placer ce token en cookie
+async function checkCredentials() {
+    const email    = mailInput.value.trim();
+    const password = passwordInput.value.trim();
 
-        setCookie(RoleCookieName, "employe", 7);
-        window.location.replace("/");
-    }else{
-        mailInput.classList.add("is-invalid");
-        passwordInput.classList.add("is-invalid");
+    if (!email || !password) {
+        mailInput.classList.add('is-invalid');
+        passwordInput.classList.add('is-invalid');
+        return;
+    }
+
+    const data = await api.post('/utilisateur/login', { email, password });
+
+    if (data.success) {
+        const role = data.data.user.role.replace('ROLE_', '').toLowerCase();
+        setCookie('role', role, 1);
+        setCookie('id', data.data.user.id, 1);
+        console.log('cookies après login:', document.cookie);
+        window.location.replace('/');
+    } else {
+        mailInput.classList.add('is-invalid');
+        passwordInput.classList.add('is-invalid');
     }
 }

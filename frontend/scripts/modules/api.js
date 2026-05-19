@@ -1,0 +1,53 @@
+const BASE_URL = '/api';
+let csrfToken = null;
+
+const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS'];
+
+async function getCsrfToken(force = false) {
+    if (csrfToken && !force) return csrfToken;
+
+    const res = await fetch(`${BASE_URL}/csrf`, {
+        credentials: 'include'
+    });
+
+    const data = await res.json();
+    csrfToken = data.token;
+    return csrfToken;
+}
+
+async function request(method, endpoint, body = null) {
+    const options = {
+        method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    };
+
+    if (!SAFE_METHODS.includes(method)) {
+        options.headers['X-CSRF-TOKEN'] = await getCsrfToken();
+    }
+
+    if (body) {
+        options.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(`${BASE_URL}${endpoint}`, options);
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+        throw {
+            status: response.status,
+            data
+        };
+    }
+
+    return data;
+}
+
+export const api = {
+    get: (e) => request('GET', e),
+    post: (e, b) => request('POST', e, b),
+    put: (e, b) => request('PUT', e, b),
+    delete: (e) => request('DELETE', e)
+};
