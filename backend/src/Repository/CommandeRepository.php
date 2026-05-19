@@ -10,11 +10,24 @@ class CommandeRepository extends Repository
 {
     public function findAll(): array
     {
-        $query = $this->pdo->prepare("SELECT * FROM commande");
+        $query = $this->pdo->prepare("
+        SELECT c.*, m.titre AS menuTitre,
+               u.nom AS clientNom, u.prenom AS clientPrenom
+        FROM commande c
+        LEFT JOIN menu m ON c.menu_id = m.id
+        LEFT JOIN utilisateur u ON c.utilisateur_id = u.id
+        ORDER BY c.date_commande DESC
+    ");
         $query->execute();
         $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        return array_map(fn($row) => Commande::createAndHydrate($row)->toArray(), $rows);
+        return array_map(function($row) {
+            $commande = Commande::createAndHydrate($row)->toArray();
+            $commande['menuTitre']    = $row['menuTitre'];
+            $commande['clientNom']    = $row['clientNom'];
+            $commande['clientPrenom'] = $row['clientPrenom'];
+            return $commande;
+        }, $rows);
     }
 
     public function findById(int $id): ?array
@@ -31,11 +44,21 @@ class CommandeRepository extends Repository
 
     public function findByUtilisateurId(int $utilisateurId): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM commande WHERE utilisateur_id = :utilisateur_id");
+        $stmt = $this->pdo->prepare("
+        SELECT c.*, m.titre AS menuTitre
+        FROM commande c
+        LEFT JOIN menu m ON c.menu_id = m.id
+        WHERE c.utilisateur_id = :utilisateur_id
+        ORDER BY c.date_commande DESC
+    ");
         $stmt->execute(['utilisateur_id' => $utilisateurId]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return array_map(fn($row) => Commande::createAndHydrate($row)->toArray(), $rows);
+        return array_map(function($row) {
+            $commande = Commande::createAndHydrate($row)->toArray();
+            $commande['menuTitre'] = $row['menuTitre'];
+            return $commande;
+        }, $rows);
     }
 
     public function create(Commande $commande): void

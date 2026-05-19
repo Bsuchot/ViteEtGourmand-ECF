@@ -55,13 +55,23 @@ class MenuRepository extends Repository
 
     public function findAll(): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM menu");
+        $stmt = $this->pdo->prepare("
+        SELECT m.*,
+               t.libelle AS themeLibelle,
+               r.libelle AS regimeLibelle
+        FROM menu m
+        LEFT JOIN theme t  ON m.theme_id  = t.id
+        LEFT JOIN regime r ON m.regime_id = r.id
+        ORDER BY m.id DESC
+    ");
         $stmt->execute();
 
-        return array_map(
-            fn($row) => Menu::createAndHydrate($row)->toArray(),
-            $stmt->fetchAll(PDO::FETCH_ASSOC)
-        );
+        return array_map(function($row) {
+            $menu = Menu::createAndHydrate($row)->toArray();
+            $menu['themeLibelle']  = $row['themeLibelle'];
+            $menu['regimeLibelle'] = $row['regimeLibelle'];
+            return $menu;
+        }, $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
     public function create(Menu $menu): void
@@ -130,14 +140,36 @@ class MenuRepository extends Repository
     public function delete(int $id): void
     {
         $this->pdo->beginTransaction();
+
         try {
-            $stmt = $this->pdo->prepare("DELETE FROM menu_plat WHERE menu_id = :id");
+
+            $stmt = $this->pdo->prepare("
+            SELECT COUNT(*) 
+            FROM commande 
+            WHERE menu_id = :id
+        ");
             $stmt->execute(['id' => $id]);
 
-            $stmt = $this->pdo->prepare("DELETE FROM menu WHERE id = :id");
+            if ($stmt->fetchColumn() > 0) {
+                throw new \Exception("Impossible de supprimer ce menu : il est utilisé dans des commandes.");
+            }
+
+
+            $stmt = $this->pdo->prepare("
+            DELETE FROM menu_plat 
+            WHERE menu_id = :id
+        ");
+            $stmt->execute(['id' => $id]);
+
+
+            $stmt = $this->pdo->prepare("
+            DELETE FROM menu 
+            WHERE id = :id
+        ");
             $stmt->execute(['id' => $id]);
 
             $this->pdo->commit();
+
         } catch (\Throwable $e) {
             $this->pdo->rollBack();
             throw $e;

@@ -22,6 +22,8 @@ CREATE TABLE utilisateur
     adresse VARCHAR(255) NOT NULL,
     statut VARCHAR(12),
     role_id INT NOT NULL,
+    reset_token VARCHAR(64) NULL,
+    reset_token_expires_at DATETIME NULL,
     FOREIGN KEY (role_id) REFERENCES role(id)
 );
 
@@ -145,6 +147,14 @@ INSERT INTO utilisateur (email, password, prenom, nom, telephone, ville, pays, a
      'adresse',
      1
      );
+INSERT INTO horaire (jour, statut, heure_ouverture, heure_fermeture) VALUES
+    ('lundi','fermé','00:00','00:00'),
+    ('mardi','fermé','00:00','00:00'),
+    ('mercredi','fermé','00:00','00:00'),
+    ('jeudi','fermé','00:00','00:00'),
+    ('vendredi','fermé','00:00','00:00'),
+    ('samedi','fermé','00:00','00:00'),
+    ('dimanche','fermé','00:00','00:00');
 
 
 

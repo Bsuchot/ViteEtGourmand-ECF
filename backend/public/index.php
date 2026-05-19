@@ -23,20 +23,12 @@ session_set_cookie_params([
     'path'     => '/',
     'domain'   => 'localhost',
     'secure'   => false,
-    'httponly'  => true,
-    'samesite' => 'None'
+    'httponly' => true,
+    'samesite' => 'Lax'
 ]);
 session_start();
 
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$allowedOrigins = [
-    'http://localhost:5500',
-    'http://127.0.0.1:5500',
-];
-
-if (in_array($origin, $allowedOrigins)) {
-    header("Access-Control-Allow-Origin: $origin");
-}
+header('Access-Control-Allow-Origin: http://localhost:5500');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-CSRF-TOKEN');
@@ -50,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $router = new Router($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
 //Route Admin
+$router->register('POST', '/api/upload', SecurityController::class, 'upload');
 $router->register('POST',   '/api/admin/employe/create',        EmployeController::class,  'create');
 $router->register('GET',    '/api/admin/employe/readAll',        EmployeController::class,  'readAll');
 $router->register('PUT',    '/api/admin/employe/update',         EmployeController::class,  'update');
@@ -74,6 +67,7 @@ $router->register('DELETE', '/api/avis/{id}',                     AvisController
 
 // Route Commande
 $router->register('POST',   '/api/commande/create',                    CommandeController::class, 'create');
+$router->register('GET', '/api/commande/stats', CommandeController::class, 'stats');
 $router->register('GET',    '/api/employe/commande/readAll',           CommandeController::class, 'readAll');
 $router->register('GET',    '/api/commande/mesCommandes',                        CommandeController::class, 'readMyCommandes');
 $router->register('GET',    '/api/commande/{id}',                      CommandeController::class, 'read');
@@ -126,10 +120,13 @@ $router->register('POST',   '/api/utilisateur/registration',      SecurityContro
 $router->register('POST',   '/api/utilisateur/login',             SecurityController::class, 'login');
 $router->register('GET', '/api/utilisateur/me', SecurityController::class, 'me');
 $router->register('POST',   '/api/utilisateur/logout',            SecurityController::class, 'logout');
+$router->register('POST', '/api/utilisateur/forgot-password', SecurityController::class, 'forgotPassword');
+$router->register('POST', '/api/utilisateur/reset-password',  SecurityController::class, 'resetPassword');
 $router->register('GET',    '/api/utilisateur/{id}',              SecurityController::class, 'read');
 $router->register('PUT',    '/api/utilisateur/{id}',              SecurityController::class, 'update');
 $router->register('PUT',    '/api/utilisateur/{id}/password',     SecurityController::class, 'updatePassword');
 $router->register('DELETE', '/api/utilisateur/{id}',              SecurityController::class, 'delete');
+
 
 //Roure crsf
 $router->register('GET', '/api/csrf', SecurityController::class, 'csrf');

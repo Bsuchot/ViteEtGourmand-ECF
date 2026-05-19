@@ -154,7 +154,7 @@ class Menu extends Model
 
     public function addPlat(Plat $plat): void
     {
-        $this->plats[] = $plat->toArray();
+        $this->plats[] = $plat;
     }
     public function addPlatId(int $id): void
     {

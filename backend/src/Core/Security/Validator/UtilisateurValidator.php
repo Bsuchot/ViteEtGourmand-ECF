@@ -38,7 +38,12 @@ class UtilisateurValidator extends AbstractValidator
     public function validateUpdate(array $data): array
     {
         $this->reset();
-        $this->validateRequired($data, self::REQUIRED_FIELDS_UPDATE);
+
+        foreach (self::REQUIRED_FIELDS_UPDATE as $field => $label) {
+            if (isset($data[$field]) && empty($data[$field])) {
+                $this->errors[$field] = "Le champ $label ne doit pas être vide";
+            }
+        }
 
         if (isset($data['email'])) {
             $this->validateEmail($data);

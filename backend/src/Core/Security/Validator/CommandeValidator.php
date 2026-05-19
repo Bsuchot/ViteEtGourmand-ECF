@@ -32,12 +32,12 @@ class CommandeValidator extends AbstractValidator
     ];
 
     private const STATUTS_AUTORISES = [
-        'en_attente',
-        'accepte',
-        'en_preparation',
-        'livree',
-        'en_attente_du_retour_de_materiel',
-        'annulee',
+        'en attente',
+        'accepté',
+        'en préparation',
+        'livré',
+        'en attente du retour de matériel',
+        'terminée',
     ];
 
     public function validate(array $data): array

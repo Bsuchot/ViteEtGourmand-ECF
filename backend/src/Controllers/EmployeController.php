@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\AbstractController;
+use App\Core\MailService;
 use App\Core\Security\Security;
 use App\Core\Security\Validator\EmployeValidator;
 use App\Models\Utilisateur;
@@ -85,10 +86,13 @@ class EmployeController extends AbstractController
 
             $this->repository->create($utilisateur);
 
+            $mailer = new MailService();
+            $mailer->sendBienvenueEmploye($_ENV['MAIL_FROM'], $data['email']);
+
             $this->success([
-                'message'  => 'Employé créé avec succès',
-                'password' => $plainPassword // à envoyer par email en production
+                'message' => 'Employé créé avec succès',
             ], 201);
+
         });
     }
     #[OA\Get(
@@ -218,6 +222,7 @@ class EmployeController extends AbstractController
 
         $this->tryCatch(function () {
             $data = json_decode(file_get_contents("php://input"), true);
+            error_log('data reçue: ' . json_encode($data));
             if (!$data || !is_array($data)) { $this->error('Données invalides', 400); return; }
 
             $allErrors = [];
@@ -234,7 +239,7 @@ class EmployeController extends AbstractController
                 $utilisateurData = $this->repository->findById($item['id']);
                 if (!$utilisateurData) continue;
 
-                $role = $this->roleRepository->findById($utilisateurData['role_id']);
+                $role = $this->roleRepository->findById($utilisateurData['roleId']);
                 if (!$role || $role['libelle'] !== 'ROLE_EMPLOYE') continue;
 
                 $utilisateur = Utilisateur::createAndHydrate($utilisateurData);
@@ -252,6 +257,7 @@ class EmployeController extends AbstractController
                 if (isset($item['adresse']))   $utilisateur->setAdresse($item['adresse']);
                 if (isset($item['ville']))     $utilisateur->setVille($item['ville']);
                 if (isset($item['pays']))      $utilisateur->setPays($item['pays']);
+                if (isset($item['statut'])) $utilisateur->setStatut($item['statut']);
 
                 $this->repository->update($utilisateur);
             }

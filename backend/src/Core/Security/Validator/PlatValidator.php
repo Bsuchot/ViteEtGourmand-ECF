@@ -45,6 +45,8 @@ class PlatValidator extends AbstractValidator
             );
         }
     }
+    private function validatePhoto(array $data): void
+    {}
 
     private function validateAllergenes(array $data): void
     {

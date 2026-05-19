@@ -16,8 +16,8 @@ class HoraireRepository extends Repository
         ");
         $stmt->execute([
             'jour'           => $horaire->getJour(),
-            'heure_ouverture' => $horaire->getHeureOuverture(),
-            'heure_fermeture' => $horaire->getHeureFermeture(),
+            'heureOuverture' => $horaire->getHeureOuverture(),
+            'heureFermeture' => $horaire->getHeureFermeture(),
             'statut'         => $horaire->getStatut()
         ]);
     }
@@ -66,11 +66,12 @@ class HoraireRepository extends Repository
         ");
         $stmt->execute([
             'jour'           => $horaire->getJour(),
-            'heure_ouverture' => $horaire->getHeureOuverture(),
-            'heure_fermeture' => $horaire->getHeureFermeture(),
+            'heureOuverture' => $horaire->getHeureOuverture(),
+            'heureFermeture' => $horaire->getHeureFermeture(),
             'statut'         => $horaire->getStatut(),
             'id'             => $horaire->getId(),
         ]);
+        error_log('rows affected: ' . $stmt->rowCount());
     }
 
     public function delete(int $id): void

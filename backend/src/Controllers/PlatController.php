@@ -66,6 +66,8 @@ class PlatController extends AbstractController
             if (!$data) { $this->error('Données invalides', 400); return; }
 
             $errors = $this->validator->validate($data);
+            error_log('errors: ' . json_encode($errors));
+            error_log('photo length: ' . strlen($data['photo'] ?? ''));
             if ($errors) { $this->error($errors, 422); return; }
 
             $plat = new Plat();

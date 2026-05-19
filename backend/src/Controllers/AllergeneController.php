@@ -63,8 +63,12 @@ class AllergeneController extends AbstractController
             $allergene = new Allergene();
             $allergene->setLibelle($data['libelle']);
             $this->repository->create($allergene);
+            $id = $this->repository->getLastInsertId();
 
-            $this->success(['message' => 'Allergène créé avec succès'], 201);
+            $this->success([
+                'message' => 'Allergène créé avec succès',
+                'id'      => $id
+            ], 201);
         });
     }
     #[OA\Get(

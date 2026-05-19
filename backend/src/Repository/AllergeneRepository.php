@@ -59,4 +59,9 @@ class AllergeneRepository extends Repository implements LibelleRepository
         $stmt = $this->pdo->prepare("DELETE FROM allergene WHERE id = :id");
         $stmt->execute(['id' => $id]);
     }
+
+    public function getLastInsertId(): int
+    {
+        return (int) $this->pdo->lastInsertId();
+    }
 }

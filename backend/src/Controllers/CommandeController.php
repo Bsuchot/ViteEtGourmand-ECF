@@ -8,17 +8,20 @@ use App\Models\Commande;
 use App\Repository\CommandeRepository;
 use App\Repository\MenuRepository;
 use DateTimeImmutable;
+use App\Core\MongoService;
 use OpenApi\Attributes as OA;
 
 class CommandeController extends AbstractController
 {
     private CommandeValidator $validator;
     private CommandeRepository $repository;
+    private MongoService $mongo;
 
     public function __construct()
     {
         $this->repository = new CommandeRepository();
         $this->validator  = new CommandeValidator(new MenuRepository());
+        $this->mongo = new MongoService();
     }
     #[OA\Post(
         path: "/api/commande/create",
@@ -77,12 +80,19 @@ class CommandeController extends AbstractController
             $commande->setPrixMenu($data['prixMenu']);
             $commande->setNombrePersonne($data['nombrePersonne']);
             $commande->setPrixLivraison($data['prixLivraison']);
-            $commande->setStatut('en_attente');
-            $commande->setPretMateriel($data['pretMateriel'] ?? false);
+            $commande->setStatut('en attente');
+            $commande->setPretMateriel(filter_var($data['pretMateriel'] ?? false, FILTER_VALIDATE_BOOLEAN));
             $commande->setRestitutionMateriel(false);
             $commande->setUtilisateurId($_SESSION['user']['id']);
             $commande->setMenuId($data['menuId']);
             $this->repository->create($commande);
+
+            $this->mongo->collection("commandes_stats")->insertOne([
+                "commandeId" => $commande->getId(),
+                "total" => $commande->getPrixMenu() + $commande->getPrixLivraison(),
+                "date" => new \MongoDB\BSON\UTCDateTime(),
+                "statut" => "en_attente"
+            ]);
 
             $this->success(['message' => 'Commande créée avec succès'], 201);
         });
@@ -229,6 +239,37 @@ class CommandeController extends AbstractController
 
         $this->tryCatch(fn () => $this->success($this->repository->findAll()));
     }
+    #[OA\Get(
+        path: "/api/commande/stats",
+        summary: "Statistiques commandes",
+        tags: ["Commande"]
+    )]
+    public function stats(): void
+    {
+        if (!$this->requireAdminOrEmploye()) return;
+
+        $this->tryCatch(function () {
+
+            $collection = $this->mongo->collection("commandes_stats");
+
+            $data = $collection->aggregate([
+                [
+                    '$group' => [
+                        '_id' => [
+                            '$dateToString' => [
+                                'format' => '%Y-%m-%d',
+                                'date' => '$date'
+                            ]
+                        ],
+                        'total' => ['$sum' => '$total']
+                    ]
+                ],
+                ['$sort' => ['_id' => 1]]
+            ])->toArray();
+
+            $this->success($data);
+        });
+    }
     #[OA\Put(
         path: "/api/commande/{id}",
         summary: "Modifier une commande",
@@ -298,7 +339,7 @@ class CommandeController extends AbstractController
             if (isset($data['prixMenu']))         $commandeModel->setPrixMenu($data['prixMenu']);
             if (isset($data['nombrePersonne']))   $commandeModel->setNombrePersonne($data['nombrePersonne']);
             if (isset($data['prixLivraison']))    $commandeModel->setPrixLivraison($data['prixLivraison']);
-            if (isset($data['pretMateriel']))     $commandeModel->setPretMateriel($data['pretMateriel']);
+            if (isset($data['pretMateriel']))    $commandeModel->setPretMateriel(filter_var($data['pretMateriel'], FILTER_VALIDATE_BOOLEAN));
             $this->repository->update($commandeModel);
 
             $this->success(['message' => 'Commande mise à jour avec succès']);
@@ -324,7 +365,7 @@ class CommandeController extends AbstractController
             content: new OA\JsonContent(
                 required: ["statut"],
                 properties: [
-                    new OA\Property(property: "statut", type: "string", example: "accepté", description: "en_attente | accepté | en cours de livraison | en attente du retour de matériel | terminee"), // Fix: "livraidon" → "livraison"
+                    new OA\Property(property: "statut", type: "string", example: "accepté", description: "en attente | accepté | en cours de livraison | en attente du retour de matériel | terminee"), // Fix: "livraidon" → "livraison"
                 ]
             )
         ),
@@ -366,6 +407,15 @@ class CommandeController extends AbstractController
             $commandeModel = Commande::createAndHydrate($commande);
             $commandeModel->setStatut($data['statut']);
             $this->repository->update($commandeModel);
+
+            $this->mongo->collection("commandes_stats")->updateOne(
+                ["commandeId" => $id],
+                [
+                    '$set' => [
+                        "statut" => $data['statut']
+                    ]
+                ]
+            );
 
             $this->success(['message' => 'Statut de la commande mis à jour']);
         });

@@ -44,6 +44,10 @@ class ThemeRepository extends Repository implements LibelleRepository
         $stmt = $this->pdo->prepare("INSERT INTO theme (libelle) VALUES (:libelle)");
         $stmt->execute(['libelle' => $theme->getLibelle()]);
     }
+    public function getLastInsertId(): int
+    {
+        return (int) $this->pdo->lastInsertId();
+    }
 
     public function update(Theme $theme): void
     {

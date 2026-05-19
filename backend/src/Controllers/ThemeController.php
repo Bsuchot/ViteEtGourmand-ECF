@@ -64,8 +64,12 @@ class ThemeController extends AbstractController
             $theme = new Theme();
             $theme->setLibelle($data['libelle']);
             $this->repository->create($theme);
+            $id = $this->repository->getLastInsertId();
 
-            $this->success(['message' => 'Thème créé avec succès'], 201);
+            $this->success([
+                'message' => 'Thème créé avec succès',
+                'id'      => $id
+            ], 201);
         });
     }
 

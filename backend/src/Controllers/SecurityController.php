@@ -283,6 +283,7 @@ class SecurityController extends AbstractController
     )]
     public function read(int $id): void
     {
+        error_log('SESSION: ' . json_encode($_SESSION['user'] ?? null) . ' | ID: ' . $id);
         if (!$this->requireSelf($id)) return;
 
         $this->tryCatch(function () use ($id) {
@@ -440,6 +441,54 @@ class SecurityController extends AbstractController
             $this->success(['message' => 'Mot de passe mis à jour'], 200);
         });
     }
+    public function forgotPassword(): void
+    {
+        $this->tryCatch(function () {
+            $data = json_decode(file_get_contents("php://input"), true);
+            $email = $data['email'] ?? null;
+
+            if (!$email) { $this->error('Email requis', 400); return; }
+
+            $repository = new UtilisateurRepository();
+            $user = $repository->findByEmail($email);
+
+            // Toujours retourner success pour ne pas révéler si l'email existe
+            if (!$user) { $this->success(['message' => 'Si cet email existe, un lien a été envoyé.']); return; }
+
+            $token     = bin2hex(random_bytes(32));
+            $expiresAt = (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s');
+
+            $repository->saveResetToken($user['id'], $token, $expiresAt);
+
+            $mailer = new MailService();
+            $mailer->sendReinitialisationPassword($user['email'], $user['prenom'], $token);
+
+            $this->success(['message' => 'Si cet email existe, un lien a été envoyé.']);
+        });
+    }
+
+    public function resetPassword(): void
+    {
+        $this->tryCatch(function () {
+            $data     = json_decode(file_get_contents("php://input"), true);
+            $token    = $data['token']       ?? null;
+            $password = $data['newPassword'] ?? null;
+
+            if (!$token || !$password) { $this->error('Données invalides', 400); return; }
+
+            $repository = new UtilisateurRepository();
+            $user = $repository->findByResetToken($token);
+
+            if (!$user) { $this->error('Lien invalide ou expiré', 400); return; }
+
+            $utilisateur = Utilisateur::createAndHydrate($user);
+            Security::hashPassword($utilisateur, $password);
+            $repository->updatePassword($utilisateur);
+            $repository->clearResetToken($user['id']);
+
+            $this->success(['message' => 'Mot de passe mis à jour.']);
+        });
+    }
     #[OA\Delete(
         path: "/api/utilisateur/{id}",
         summary: "Supprimer un utilisateur",
@@ -493,6 +542,30 @@ class SecurityController extends AbstractController
             session_destroy();
 
             $this->success(['message' => 'Compte supprimé avec succès']);
+        });
+    }
+    public function upload(): void
+    {
+        if (!$this->requireAdminOrEmploye()) return;
+
+        $this->tryCatch(function () {
+            $data   = json_decode(file_get_contents("php://input"), true);
+            $base64 = $data['photo'] ?? null;
+
+            if (!$base64) { $this->error('Aucune image', 400); return; }
+
+            preg_match('/^data:image\/(\w+);base64,/', $base64, $matches);
+            $extension = $matches[1] ?? 'jpg';
+            $imageData = base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $base64));
+
+            $filename  = uniqid('plat_') . '.' . $extension;
+            $uploadDir = __DIR__ . '/../../public/uploads/';
+
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+
+            file_put_contents($uploadDir . $filename, $imageData);
+
+            $this->success(['url' => '/uploads/' . $filename]);
         });
     }
 }

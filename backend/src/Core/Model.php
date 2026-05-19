@@ -27,20 +27,21 @@ class Model
 
     public function toArray(): array
     {
-        $array      = [];
-        $reflection = new ReflectionClass($this);
+        $array = [];
+        $reflection = new \ReflectionClass($this);
 
         foreach ($reflection->getProperties() as $property) {
             $property->setAccessible(true);
             $value = $property->getValue($this);
 
-            // Sérialise les objets enfants imbriqués (ex: $plats = [Plat, ...])
             if (is_array($value)) {
-                $value = array_map(
-                    fn($item) => $item instanceof self ? $item->toArray() : $item,
-                    $value
-                );
-            } elseif ($value instanceof self) {
+                $value = array_map(function ($item) {
+                    if (is_object($item) && method_exists($item, 'toArray')) {
+                        return $item->toArray();
+                    }
+                    return $item;
+                }, $value);
+            } elseif (is_object($value) && method_exists($value, 'toArray')) {
                 $value = $value->toArray();
             }
 

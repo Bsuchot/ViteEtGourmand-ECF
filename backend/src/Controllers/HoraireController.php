@@ -145,6 +145,7 @@ class HoraireController extends AbstractController
 
         $this->tryCatch(function () {
             $data = json_decode(file_get_contents("php://input"), true);
+            error_log('data reçue: ' . json_encode($data));
             if (!$data || !is_array($data)) { $this->error('Données invalides', 400); return; }
 
             $allErrors = [];
@@ -167,6 +168,7 @@ class HoraireController extends AbstractController
                 if (isset($item['heureOuverture'])) $horaire->setHeureOuverture($item['heureOuverture']);
                 if (isset($item['heureFermeture'])) $horaire->setHeureFermeture($item['heureFermeture']);
                 if (isset($item['statut']))         $horaire->setStatut($item['statut']);
+                error_log('avant update: ' . json_encode($horaire->toArray()));
                 $this->repository->update($horaire);
             }
 

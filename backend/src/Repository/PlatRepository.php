@@ -38,11 +38,22 @@ class PlatRepository extends Repository
 
     public function findAll(): array
     {
-        $query = $this->pdo->prepare("SELECT * FROM plat");
-        $query->execute();
-        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $this->pdo->prepare("
+        SELECT p.*,
+               GROUP_CONCAT(a.libelle SEPARATOR ', ') AS allergenesLibelle
+        FROM plat p
+        LEFT JOIN plat_allergene pa ON p.id = pa.plat_id
+        LEFT JOIN allergene a ON pa.allergene_id = a.id
+        GROUP BY p.id
+        ORDER BY p.id DESC
+    ");
+        $stmt->execute();
 
-        return array_map(fn($row) => Plat::createAndHydrate($row)->toArray(), $rows);
+        return array_map(function($row) {
+            $plat = Plat::createAndHydrate($row)->toArray();
+            $plat['allergenesLibelle'] = $row['allergenesLibelle'] ?? null;
+            return $plat;
+        }, $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
     public function create(Plat $plat): void
