@@ -16,8 +16,10 @@ use App\Controllers\AvisController;
 use App\Controllers\EmployeController;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-$dotenv = Dotenv::createImmutable(__DIR__.'/..');
-$dotenv->load();
+if (file_exists(__DIR__.'/../.env')) {
+    $dotenv = Dotenv::createImmutable(__DIR__.'/..');
+    $dotenv->load();
+}
 
 session_set_cookie_params([
     'lifetime' => 86400,
