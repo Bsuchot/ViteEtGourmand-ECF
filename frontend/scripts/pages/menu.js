@@ -7,6 +7,24 @@ let allMenus = [];
 let selectedMenu = null;
 const menuCache = new Map();
 
+
+function displayPlat(container, plat, label) {
+    if (!container) return;
+    if (!plat) {
+        container.innerHTML = `<p class="text-muted">Aucun(e) ${label}</p>`;
+        return;
+    }
+    const allergenes = plat.allergenes?.length
+        ? plat.allergenes.map(a => a.libelle ?? a).join(', ')
+        : 'Aucun';
+
+    container.innerHTML = `
+        <div>
+            <strong>${plat.titre}</strong>
+            <p class="mb-1 text-muted small">${plat.description ?? ''}</p>
+            <p class="mb-0 small"><span class="fw-semibold">Allergènes :</span> ${allergenes}</p>
+        </div>`;
+}
 // ─── Point d'entrée (appelé par le Router) ───────────────────────────────────
 export async function init() {
     const [data, dataThemes, dataRegimes] = await Promise.all([
@@ -220,10 +238,10 @@ function initFilters() {
 }
 
 function applyFilters() {
-    const minPrice  = parseFloat(document.querySelector('#minPriceFormControlInput1')?.value) || null;
-    const maxPrice  = parseFloat(document.querySelector('#maxPriceFormControlInput1')?.value) || null;
+    const minPrice  = Number.parseFloat(document.querySelector('#minPriceFormControlInput1')?.value) || null;
+    const maxPrice  = Number.parseFloat(document.querySelector('#maxPriceFormControlInput1')?.value) || null;
     // "Personne min" → afficher les menus dont nombrePersonneMinimum <= valeur saisie
-    const maxPerson = parseInt(document.querySelector('#minPersonFormControlInput1')?.value)  || null;
+    const maxPerson = Number.parseInt(document.querySelector('#minPersonFormControlInput1')?.value)  || null;
 
     const checkedThemes = [...document.querySelectorAll('.check-theme input:checked')]
         .map(cb => cb.closest('.form-check').querySelector('label').textContent.trim().toLowerCase());
@@ -405,8 +423,7 @@ function initCommandModal() {
     const containerEntree   = document.querySelector('#commandeMenuEntree');
     const containerPlat     = document.querySelector('#commandeMenuPlat');
     const containerDessert  = document.querySelector('#commandeMenuDessert');
-    const liPrixBase     = document.querySelector('#reduction')?.closest('.container')?.querySelector('.list-unstyled li:first-child strong');
-    const liPrixReduc    = document.querySelector('.text-success strong');
+
 
     // Ouverture du modal → pré-sélectionner le menu et charger les plats
     modal?.addEventListener('show.bs.modal', async () => {
@@ -422,7 +439,7 @@ function initCommandModal() {
 
     // Changement de menu dans le select
     selectMenu?.addEventListener('change', async () => {
-        const id = parseInt(selectMenu.value);
+        const id = Number.parseInt(selectMenu.value);
         selectedMenu = allMenus.find(m => m.id === id) ?? null;
         if (!selectedMenu) return;
         await loadPlatsIntoSelects(id);
@@ -434,8 +451,8 @@ function initCommandModal() {
     // Changement du nombre de personnes → recalcul prix + empêcher valeur trop basse
     inputNbPersons?.addEventListener('input', () => {
         if (!selectedMenu) return;
-        const min = parseInt(selectedMenu.nombrePersonneMinimum);
-        if (parseInt(inputNbPersons.value) < min) inputNbPersons.value = min;
+        const min = Number.parseInt(selectedMenu.nombrePersonneMinimum);
+        if (Number.parseInt(inputNbPersons.value) < min) inputNbPersons.value = min;
         updatePrice();
     });
 
@@ -456,35 +473,19 @@ function initCommandModal() {
         displayPlat(containerDessert, groups.dessert?.[0], 'Dessert');
     }
 
-    function displayPlat(container, plat, label) {
-        if (!container) return;
-        if (!plat) {
-            container.innerHTML = `<p class="text-muted">Aucun(e) ${label}</p>`;
-            return;
-        }
-        const allergenes = plat.allergenes?.length
-            ? plat.allergenes.map(a => a.libelle ?? a).join(', ')
-            : 'Aucun';
-
-        container.innerHTML = `
-            <div>
-                <strong>${plat.titre}</strong>
-                <p class="mb-1 text-muted small">${plat.description ?? ''}</p>
-                <p class="mb-0 small"><span class="fw-semibold">Allergènes :</span> ${allergenes}</p>
-            </div>`;
-    }
+    
 
 
     function updatePrice() {
         if (!selectedMenu) return;
 
-        const prix      = parseFloat(selectedMenu.prixParPersonne);
-        const personMin = parseInt(selectedMenu.nombrePersonneMinimum);
-        const nb        = parseInt(inputNbPersons?.value) || personMin;
+        const prix      = Number.parseFloat(selectedMenu.prixParPersonne);
+        const personMin = Number.parseInt(selectedMenu.nombrePersonneMinimum);
+        const nb        = Number.parseInt(inputNbPersons?.value) || personMin;
         const seuil     = personMin + 5;
 
         const prixBase  = prix * nb;
-        const reduction = nb >= seuil ? 0.10 : 0;
+        const reduction = nb >= seuil ? 0.1 : 0;
         const prixFinal = prixBase * (1 - reduction);
 
         // Prix de base
@@ -506,16 +507,12 @@ function initConfirmationModal() {
     const modal = document.querySelector('#comfirmationcommandModal');
     if (!modal) return;
 
-    const BORDEAUX_COORD = [44.8378, -0.5792]; // lat, lng Bordeaux centre
-    const FRAIS_BASE     = 5.00;
-    const FRAIS_KM       = 0.59;
-    const ORS_API_KEY    = 'TA_CLE_ORS'; // → https://openrouteservice.org
 
     modal.addEventListener('show.bs.modal', async () => {
         // ── Récupérer les données du modal commande ──────────────────────────
-        const menuId = parseInt(document.querySelector('#orderChoiceMenu')?.value);
+        const menuId = Number.parseInt(document.querySelector('#orderChoiceMenu')?.value);
         const menu   = allMenus.find(m => m.id === menuId) ?? selectedMenu;
-        const nbPersonnes = parseInt(document.querySelector('#numberPersonFormControlInput2')?.value) || 0;
+        const nbPersonnes = Number.parseInt(document.querySelector('#numberPersonFormControlInput2')?.value) || 0;
         const plats   = menuCache.get(String(menuId)) ?? [];
         const entree  = plats.find(p => p.category === 'entree');
         const plat    = plats.find(p => p.category === 'plat');
@@ -542,10 +539,10 @@ function initConfirmationModal() {
             .filter(Boolean).join(', ');
 
         // ── Calcul du prix ───────────────────────────────────────────────────
-        const prixUnit   = parseFloat(menu?.prixParPersonne ?? 0);
-        const personMin  = parseInt(menu?.nombrePersonneMinimum ?? 0);
+        const prixUnit   = Number.parseFloat(menu?.prixParPersonne ?? 0);
+        const personMin  = Number.parseInt(menu?.nombrePersonneMinimum ?? 0);
         const seuil      = personMin + 5;
-        const reduction  = nbPersonnes >= seuil ? 0.10 : 0;
+        const reduction  = nbPersonnes >= seuil ? 0.1 : 0;
         const prixMenu   = prixUnit * nbPersonnes * (1 - reduction);
 
         // Frais de livraison : calcul via géolocalisation
@@ -595,9 +592,9 @@ function initConfirmationModal() {
                     datePrestation:   date,
                     heureLivraison:   heure,
                     adresseLivraison: adresseLivraison,
-                    prixMenu:         parseFloat(prixMenu.toFixed(2)),
+                    prixMenu:         Number.parseFloat(prixMenu.toFixed(2)),
                     nombrePersonne:   nbPersonnes,
-                    prixLivraison:    parseFloat(prixLivraison.toFixed(2)),
+                    prixLivraison:    Number.parseFloat(prixLivraison.toFixed(2)),
                     menuId:           menuId,
                     pretMateriel:     pretMat,
                     email: document.querySelector('#mailOrderInput')?.value?.trim(),
@@ -621,9 +618,9 @@ function initConfirmationModal() {
 async function calculerFraisLivraison(adresseDestination) {
     try {
         const res = await api.post('/commande/fraisLivraison', { adresse: adresseDestination });
-        return res.success ? (res.data.frais ?? 5.00) : 5.00;
+        return res.success ? (res.data.frais ?? 5) : 5;
     } catch {
-        return 5.00; // fallback si API indisponible
+        return 5; // fallback si API indisponible
     }
 }
 

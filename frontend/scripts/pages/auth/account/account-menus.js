@@ -4,6 +4,7 @@ import 'tom-select/dist/css/tom-select.bootstrap5.css';
 import { loadPlats, getPlats } from './account-plats.js';
 import { showAlert } from '../../../modules/alerts.js';
 
+
 let menus          = [];
 let themes         = [];
 let regimes        = [];
@@ -19,6 +20,14 @@ function fileToBase64(file) {
         reader.onerror = () => reject(new Error('Erreur lecture fichier'));
         reader.readAsDataURL(file);
     });
+}
+
+function getPlatOptions(cat) {
+    const plats = getPlats();
+    return plats
+        .filter(p => p.category === cat)
+        .map(p => `<option value="${p.id}">${p.titre}</option>`)
+        .join('');
 }
 
 export function initMenus() {
@@ -101,13 +110,6 @@ export function initMenus() {
         regimes.forEach(r => sel.innerHTML += `<option value="${r.id}">${r.libelle}</option>`);
     }
 
-    function getPlatOptions(cat) {
-        const plats = getPlats();
-        return plats
-            .filter(p => p.category === cat)
-            .map(p => `<option value="${p.id}">${p.titre}</option>`)
-            .join('');
-    }
 
     function initPlatSelects() {
         const config = [
@@ -182,7 +184,7 @@ export function initMenus() {
         });
 
         document.querySelectorAll('.btn-detail-menu').forEach(btn => {
-            btn.addEventListener('click', () => openEditModal(parseInt(btn.dataset.id)));
+            btn.addEventListener('click', () => openEditModal(Number.parseInt(btn.dataset.id)));
         });
     }
 
@@ -227,7 +229,7 @@ export function initMenus() {
         // Image
         const imgContainer = document.getElementById('editMenuCurrentImage');
         if (imgContainer) {
-            const isValidUrl = menu.image && menu.image.startsWith('/');
+            const isValidUrl = menu.image?.startsWith('/');
             imgContainer.innerHTML = isValidUrl
                 ? `<img src="${menu.image}" height="60" class="mb-2">`
                 : '<p class="text-muted small text-danger">Image invalide — veuillez en choisir une nouvelle.</p>';
@@ -237,10 +239,10 @@ export function initMenus() {
     // Valider création menu
     btnValiderNew?.addEventListener('click', async () => {
         const themeIds = tomSelectThemeNew ? tomSelectThemeNew.getValue() : [];
-        const themeId  = themeIds.length > 0 ? parseInt(themeIds[0]) : null;
+        const themeId  = themeIds.length > 0 ? Number.parseInt(themeIds[0]) : null;
         const platIds  = [...document.querySelectorAll('#entreeNewMenuSelect [data-cat], #platNewMenuSelect [data-cat], #dessertNewMenuSelect [data-cat]')]
-            .map(sel => parseInt(sel.value))
-            .filter(v => v);
+            .map(sel => Number.parseInt(sel.value))
+            .filter(Boolean);
 
         // Upload image
         let imageUrl = null;
@@ -254,11 +256,11 @@ export function initMenus() {
         const data = await api.post('/menu/create', {
             titre:                 document.getElementById('newMenuTitleInput').value.trim(),
             description:           document.getElementById('newMenuDescriptionTextarea').value.trim(),
-            prixParPersonne:       parseFloat(document.getElementById('newMenuPriceInput').value),
-            nombrePersonneMinimum: parseInt(document.getElementById('newMenuMinPersInput').value),
-            delai:                 parseInt(document.getElementById('newMenuDelaiInput').value),
+            prixParPersonne:       Number.parseFloat(document.getElementById('newMenuPriceInput').value),
+            nombrePersonneMinimum: Number.parseInt(document.getElementById('newMenuMinPersInput').value),
+            delai:                 Number.parseInt(document.getElementById('newMenuDelaiInput').value),
             themeId,
-            regimeId:              parseInt(document.getElementById('dietNewMenuSelect').value),
+            regimeId:              Number.parseInt(document.getElementById('dietNewMenuSelect').value),
             quantiteRestante:      0,
             image:                 imageUrl,
             plats:                 platIds,
@@ -278,13 +280,13 @@ export function initMenus() {
         const promises = [];
 
         rows.forEach(row => {
-            const id     = parseInt(row.dataset.id);
+            const id     = Number.parseInt(row.dataset.id);
             const titre  = row.querySelector('[data-field="titre"]').value.trim();
             const statut = row.querySelector('[data-field="statut"]').value;
             const menu   = menus.find(m => m.id === id);
             
             const payload = {};
-            const quantite = parseInt(row.querySelector('[data-field="quantiteRestante"]').value, 10);
+            const quantite = Number.parseInt(row.querySelector('[data-field="quantiteRestante"]').value, 10);
 
             if (quantite !== menu?.quantiteRestante) payload.quantiteRestante = quantite;
             if (titre  !== menu?.titre)  payload.titre  = titre;
@@ -306,10 +308,10 @@ export function initMenus() {
         if (!currentEditId) return;
 
         const themeIds = tomSelectThemeEdit ? tomSelectThemeEdit.getValue() : [];
-        const themeId  = themeIds.length > 0 ? parseInt(themeIds[0]) : null;
+        const themeId  = themeIds.length > 0 ? Number.parseInt(themeIds[0]) : null;
         const platIds  = [...document.querySelectorAll('#entreeEditSelects [data-cat], #platEditSelects [data-cat], #dessertEditSelects [data-cat]')]
-            .map(sel => parseInt(sel.value))
-            .filter(v => v);
+            .map(sel => Number.parseInt(sel.value))
+            .filter(Boolean);
 
         // Upload image si nouveau fichier
         let imageUrl = menus.find(m => m.id === currentEditId)?.image ?? null;
@@ -323,11 +325,11 @@ export function initMenus() {
         const data = await api.put(`/menu/${currentEditId}`, {
             titre:                 document.getElementById('editMenuTitleInput').value.trim(),
             description:           document.getElementById('editMenuDescriptionTextarea').value.trim(),
-            prixParPersonne:       parseFloat(document.getElementById('editMenuPriceInput').value),
-            nombrePersonneMinimum: parseInt(document.getElementById('editMenuMinPersInput').value),
-            delai:                 parseInt(document.getElementById('editMenuDelaiInput').value) || 48,
+            prixParPersonne:       Number.parseFloat(document.getElementById('editMenuPriceInput').value),
+            nombrePersonneMinimum: Number.parseInt(document.getElementById('editMenuMinPersInput').value),
+            delai:                 Number.parseInt(document.getElementById('editMenuDelaiInput').value) || 48,
             themeId,
-            regimeId:              parseInt(document.getElementById('dietEditMenuSelect').value),
+            regimeId:              Number.parseInt(document.getElementById('dietEditMenuSelect').value),
             image:                 imageUrl,
             plats:                 platIds,
         });

@@ -39,7 +39,7 @@ export function initCommandesAdmin() {
 
     function populateFilters(commandes) {
         const years   = [...new Set(commandes.map(c => getDateStr(c.datePrestation).split('-')[0]))];
-        const months  = [...new Set(commandes.map(c => parseInt(getDateStr(c.datePrestation).split('-')[1])))];
+        const months  = [...new Set(commandes.map(c => Number.parseInt(getDateStr(c.datePrestation).split('-')[1])))];
         const clients = [...new Set(commandes.map(c => c.utilisateurId))];
         const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 
@@ -75,7 +75,7 @@ export function initCommandesAdmin() {
         const filtered = allCommandes.filter(c => {
             const [y, m] = getDateStr(c.datePrestation).split('-');
             const matchYear   = year   ? y == year            : true;
-            const matchMonth  = month  ? parseInt(m) == month : true;
+            const matchMonth  = month  ? Number.parseInt(m) == month : true;
             const matchClient = client ? c.utilisateurId == client : true;
             const matchStatut = statutFilter.value ? c.statut === statutFilter.value : true;
             return matchYear && matchMonth && matchClient && matchStatut;
@@ -84,14 +84,6 @@ export function initCommandesAdmin() {
         renderCommandes(filtered);
     }
 
-    const statutBadge = {
-        'en attente':                       'bg-dark',
-        'accepté':                          'bg-success',
-        'en préparation':                   'bg-primary',
-        'livré':                            'bg-info text-dark',
-        'en attente du retour de matériel': 'bg-warning text-dark',
-        'terminée':                         'bg-secondary',
-    };
 
     const statutOptions = {
         'en attente':                       'en attente',
@@ -113,8 +105,7 @@ export function initCommandesAdmin() {
         commandes.forEach(c => {
             const date      = formatDate(getDateStr(c.dateCommande));
             const livraison = formatDate(getDateStr(c.datePrestation)) + ' à ' + c.heureLivraison;
-            const prix      = (parseFloat(c.prixMenu) + parseFloat(c.prixLivraison)).toFixed(2);
-            const badge     = statutBadge[c.statut] ?? 'bg-secondary';
+            const prix      = (Number.parseFloat(c.prixMenu) + Number.parseFloat(c.prixLivraison)).toFixed(2);
 
             const statutSelect = Object.keys(statutOptions).map(s =>
                 `<option value="${s}" ${c.statut === s ? 'selected' : ''}>${s}</option>`
@@ -147,13 +138,13 @@ export function initCommandesAdmin() {
             select.addEventListener('change', async () => {
                 const id = select.dataset.id;
                 const data = await api.put(`/employe/commande/${id}/statut`, { statut: select.value });
-                if (!data.success){showAlert('Erreur lors du changement de statut.', 'danger')   
-                }else {showAlert('Statut mis à jour avec succès !', 'success')}
+                if (data.success){showAlert('Statut mis à jour avec succès !', 'success')}else {showAlert('Erreur lors du changement de statut.', 'danger')   
+                }
                 ;
             });
         });
         document.querySelectorAll('#adminOrderTable button[data-id]').forEach(btn => {
-            btn.addEventListener('click', () => openDetailModal(parseInt(btn.dataset.id)));
+            btn.addEventListener('click', () => openDetailModal(Number.parseInt(btn.dataset.id)));
         });
     }
 
@@ -206,18 +197,18 @@ export function initCommandesAdmin() {
         const plat    = plats.find(p => p.category === 'plat')?.titre   ?? '—';
         const dessert = plats.find(p => p.category === 'dessert')?.titre ?? '—';
 
-        modal.querySelector('#detailEntree').textContent  = entree;
-        modal.querySelector('#detailPlat').textContent    = plat;
-        modal.querySelector('#detailDessert').textContent = dessert;
+        modal.querySelector('#detailEntreeAdmin').textContent  = entree;
+        modal.querySelector('#detailPlatAdmin').textContent    = plat;
+        modal.querySelector('#detailDessertAdmin').textContent = dessert;
 
         // Prix
-        const personMin      = parseInt(menuRes.data?.nombrePersonneMinimum ?? 0);
+        const personMin      = Number.parseInt(menuRes.data?.nombrePersonneMinimum ?? 0);
         const seuil          = personMin + 5;
-        const reduction      = detail.nombrePersonne >= seuil ? 0.10 : 0;
-        const prixAvantReduc = parseFloat(detail.prixMenu ?? 0) / (1 - reduction || 1);
+        const reduction      = detail.nombrePersonne >= seuil ? 0.1 : 0;
+        const prixAvantReduc = Number.parseFloat(detail.prixMenu ?? 0) / (1 - reduction || 1);
         const montantReduc   = prixAvantReduc * reduction;
-        const prixMenu       = parseFloat(detail.prixMenu ?? 0);
-        const prixLiv        = parseFloat(detail.prixLivraison ?? 0);
+        const prixMenu       = Number.parseFloat(detail.prixMenu ?? 0);
+        const prixLiv        = Number.parseFloat(detail.prixLivraison ?? 0);
         const total          = prixMenu + prixLiv;
 
         modal.querySelector('.menuPrice').textContent    = prixAvantReduc.toFixed(2);

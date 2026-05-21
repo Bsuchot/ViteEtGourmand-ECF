@@ -10,6 +10,7 @@ export const allRoutes = [
     new Route("/signup", "Inscription", "/pages/auth/signup.html", ["disconnected"], "/scripts/pages/auth/signup.js"),
     new Route("/forgot-password", "Mot de passe oublié", "/pages/auth/forgot-password.html", ["disconnected"], "/scripts/pages/auth/forgot-password.js"),
     new Route("/reset-password", "Réinitialisation", "/pages/auth/reset-password.html", ["disconnected"], "/scripts/pages/auth/reset-password.js"),
+    new Route("/cvg-mention-legal", "CVG & Mentions légales", "/pages/cvg-mention-legal.html", []),
 ];
 
 //Le titre s'affiche comme ceci : Route.titre - websitename

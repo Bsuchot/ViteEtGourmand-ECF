@@ -1,7 +1,7 @@
 import { api } from '../../modules/api.js';
 import { showAlert } from '../../modules/alerts.js';
 
-const token   = new URLSearchParams(window.location.search).get('token');
+const token   = new URLSearchParams(globalThis.location.search).get('token');
 const input   = document.getElementById('resetPasswordInput');
 const confirm = document.getElementById('resetPasswordConfirmInput');
 const btn     = document.getElementById('btnResetPassword');
@@ -20,7 +20,7 @@ btn?.addEventListener('click', async () => {
     const res = await api.post('/utilisateur/reset-password', { token, newPassword: password });
     if (res.success) {
         showAlert('Mot de passe réinitialisé ! Vous pouvez vous connecter.', 'success');
-        setTimeout(() => window.location.href = '/signin', 2000);
+        setTimeout(() => globalThis.location.href = '/signin', 2000);
     } else {
         showAlert(res.data?.error ?? 'Une erreur est survenue.', 'danger');
     }

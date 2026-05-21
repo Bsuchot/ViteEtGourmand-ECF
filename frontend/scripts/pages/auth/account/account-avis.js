@@ -1,6 +1,20 @@
 import { api } from '../../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
 
+// ─── Helpers ─────────────────────────────────────────────────────────────
+function renderStars(note) {
+    const n = Number.parseInt(note) || 0;
+    return Array.from({ length: 5 }, (_, i) =>
+        `<i class="bi ${i < n ? 'bi-star-fill' : 'bi-star'} text-warning"></i>`
+    ).join('');
+}
+
+function escHtml(str) {
+    return str ? str.replace(/[&<>"']/g, m =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m])
+    ) : '';
+}
+
 export function initAvis() {
     const collapse = document.getElementById('collapseReviewManagement');
     if (!collapse) return;
@@ -68,7 +82,7 @@ export function initAvis() {
         // Boutons supprimer → mémoriser l'id
         tbody.querySelectorAll('.btn-delete-avis').forEach(btn => {
             btn.addEventListener('click', () => {
-                pendingDeleteId = parseInt(btn.dataset.id);
+                pendingDeleteId = Number.parseInt(btn.dataset.id);
             });
         });
     }
@@ -79,7 +93,7 @@ export function initAvis() {
         const promises = [];
 
         selects.forEach(select => {
-            const id      = parseInt(select.dataset.id);
+            const id      = Number.parseInt(select.dataset.id);
             const statut  = select.value;
             const current = allAvis.find(a => a.id === id);
 
@@ -119,18 +133,4 @@ export function initAvis() {
         }
         pendingDeleteId = null;
     });
-
-    // ─── Helpers ─────────────────────────────────────────────────────────────
-    function renderStars(note) {
-        const n = parseInt(note) || 0;
-        return Array.from({ length: 5 }, (_, i) =>
-            `<i class="bi ${i < n ? 'bi-star-fill' : 'bi-star'} text-warning"></i>`
-        ).join('');
-    }
-
-    function escHtml(str) {
-        return str ? str.replace(/[&<>"']/g, m =>
-            ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m])
-        ) : '';
-    }
 }

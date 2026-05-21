@@ -1,7 +1,7 @@
 const BASE_URL = '/api';
 let csrfToken = null;
 
-const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS'];
+const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 
 async function getCsrfToken(force = false) {
     if (csrfToken && !force) return csrfToken;
@@ -24,7 +24,7 @@ async function request(method, endpoint, body = null) {
         credentials: 'include'
     };
 
-    if (!SAFE_METHODS.includes(method)) {
+    if (!SAFE_METHODS.has(method)) {
         options.headers['X-CSRF-TOKEN'] = await getCsrfToken();
     }
 
@@ -36,10 +36,10 @@ async function request(method, endpoint, body = null) {
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {
-        throw {
-            status: response.status,
-            data
-        };
+        const err = new Error(`HTTP ${response.status}`);
+        err.status = response.status;
+        err.data   = data;
+        throw err;
     }
 
     return data;

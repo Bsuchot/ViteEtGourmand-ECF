@@ -15,7 +15,7 @@ async function loadAvis() {
     const res = await api.get('/avis/readAll');
     if (!res.success) return;
 
-    const avis = (res.data ?? []).filter(a => a.statut === 'publié');
+    const avis = (res.data ?? []).filter(a => a.statut === 'Publié');
 
     // Supprimer les review-card statiques
     container.querySelectorAll('.review-card').forEach(el => el.remove());
@@ -27,7 +27,7 @@ async function loadAvis() {
         const empty = document.createElement('p');
         empty.className = 'text-muted text-center';
         empty.textContent = 'Aucun avis pour le moment.';
-        container.insertBefore(empty, btnWrapper);
+        btnWrapper.before(empty);
         return;
     }
 
@@ -51,13 +51,13 @@ async function loadAvis() {
                 </div>
             </div>
         `;
-        container.insertBefore(card, btnWrapper);
+        btnWrapper.before(card);
     });
 }
 
 // ─── Étoiles ──────────────────────────────────────────────────────────────────
 function renderStars(note) {
-    const n = parseInt(note) || 0;
+    const n = Number.parseInt(note) || 0;
     return Array.from({ length: 5 }, (_, i) =>
         `<i class="bi ${i < n ? 'bi-star-fill' : 'bi-star'}"></i>`
     ).join('');
@@ -96,30 +96,30 @@ function initModal() {
         const titre       = document.getElementById('titleReviewInput')?.value.trim();
         const description = document.getElementById('reviewTextarea')?.value.trim();
         const noteInput   = document.querySelector('input[name="rating"]:checked');
-        const note        = noteInput ? parseInt(noteInput.value) : null;
+        const note        = noteInput ? Number.parseInt(noteInput.value) : null;
 
         // Validation
         let valid = true;
 
-        if (!titre) {
+        if (titre) {
+            document.getElementById('titleReviewInput')?.classList.remove('is-invalid');
+        } else {
             document.getElementById('titleReviewInput')?.classList.add('is-invalid');
             valid = false;
-        } else {
-            document.getElementById('titleReviewInput')?.classList.remove('is-invalid');
         }
 
-        if (!description) {
+        if (description) {
+            document.getElementById('reviewTextarea')?.classList.remove('is-invalid');
+        } else {
             document.getElementById('reviewTextarea')?.classList.add('is-invalid');
             valid = false;
-        } else {
-            document.getElementById('reviewTextarea')?.classList.remove('is-invalid');
         }
 
-        if (!note) {
+        if (note) {
+            document.querySelector('.star-rating')?.classList.remove('is-invalid');
+        } else {
             document.querySelector('.star-rating')?.classList.add('is-invalid');
             valid = false;
-        } else {
-            document.querySelector('.star-rating')?.classList.remove('is-invalid');
         }
 
         if (!valid) return;

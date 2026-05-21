@@ -1,5 +1,4 @@
 import { api } from "./modules/api.js";
-import { showAlert } from "./modules/alerts.js";
 
 
 const tokenCookieName = "accessToken";
@@ -18,7 +17,7 @@ async function signout(e) {
             method: "POST",
             credentials: "include",
             headers: {
-                "X-CSRF-Token": window.CSRF_TOKEN || ""
+                "X-CSRF-Token": globalThis.CSRF_TOKEN || ""
             }
         });
     } catch (err) {
@@ -29,7 +28,7 @@ async function signout(e) {
     eraseCookie(tokenCookieName);
     eraseCookie(RoleCookieName);
 
-    window.location.replace("/");
+    globalThis.location.replace("/");
 }
 
 /* --------------------------
@@ -51,9 +50,9 @@ function getCookie(name) {
     const nameEQ = name + "=";
     const ca = document.cookie.split(";");
 
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i].trim();
-        if (c.indexOf(nameEQ) === 0) {
+    for (const element of ca) {
+        let c = element.trim();
+        if (c.startsWith(nameEQ)) {
             return c.substring(nameEQ.length);
         }
     }
@@ -80,6 +79,7 @@ async function initSession() {
             eraseCookie(tokenCookieName);
         }
     } catch (e) {
+        console.error('Erreur déconnexion:', e);
         eraseCookie("role");
         eraseCookie(tokenCookieName);
     }
@@ -187,14 +187,15 @@ async function loadFooterHours() {
                 <span>${escHtml(h.jour)}</span>
                 <span>
                     ${h.statut === "fermé"
-                        ? "Fermé"
-                        : `${formatHour(h.heureOuverture)} - ${formatHour(h.heureFermeture)}`
-                    }
+                ? "Fermé"
+                : `${formatHour(h.heureOuverture)} - ${formatHour(h.heureFermeture)}`
+            }
                 </span>
             </li>
         `).join("");
 
     } catch (e) {
+        console.error('Erreur chargement horaires:', e);
         container.innerHTML = `<li class="text-warning">Horaires indisponibles</li>`;
     }
 }

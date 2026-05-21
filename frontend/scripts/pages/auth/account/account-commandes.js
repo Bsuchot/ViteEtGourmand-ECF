@@ -13,6 +13,86 @@ function formatDate(dateStr) {
     return `${day}/${month}/${year}`;
 }
 
+function fillModalHeader(modal, c) {
+    const h5Menus = modal.querySelectorAll('h5.text-center.text-primary');
+    if (h5Menus[0]) h5Menus[0].textContent = c.menuTitre ?? '—';
+
+    const statutBadge = {
+        'en attente':                       'bg-dark',
+        'accepté':                          'bg-success',
+        'en cours de livraison':            'bg-primary',
+        'en attente du retour de matériel': 'bg-warning text-dark',
+        'terminee':                         'bg-secondary',
+    };
+    const badge = modal.querySelector('.badge');
+    if (badge) {
+        badge.textContent = c.statut;
+        badge.className   = 'badge ' + (statutBadge[c.statut] ?? 'bg-secondary');
+    }
+
+    const rows      = modal.querySelectorAll('.row.my-2');
+    const dateCmdEl = rows[1]?.querySelector('.col-6.align-items-center p');
+    if (dateCmdEl) dateCmdEl.textContent = formatDate(getDateStr(c.dateCommande));
+}
+
+function fillModalPrix(modal, c, elMenu, elDel, elTtc, liPromo) {
+    const prixLivraison = Number.parseFloat(c.prixLivraison ?? 0);
+    if (elMenu) elMenu.textContent = Number.parseFloat(c.prixMenu ?? 0).toFixed(2);
+    if (elDel)  elDel.textContent  = prixLivraison.toFixed(2);
+    if (elTtc)  elTtc.textContent  = (Number.parseFloat(c.prixMenu ?? 0) + prixLivraison).toFixed(2);
+    if (liPromo) liPromo.style.setProperty('display', 'none', 'important');
+}
+
+function onNbBlur(input, min) {
+    if (Number.parseInt(input.value) < min) {
+        input.value = min;
+        input.dispatchEvent(new Event('input'));
+    }
+}
+
+function onNbInput(input, min, prixUnit, prixLivraison, elMenu, elTtc, liPromo) {
+    const nb        = Number.parseInt(input.value) || 0;
+    const reduction = nb >= min + 5 ? 0.1 : 0;
+    const newPrix   = prixUnit * nb * (1 - reduction);
+
+    if (elMenu) elMenu.textContent = newPrix.toFixed(2);
+    if (elTtc)  elTtc.textContent  = (newPrix + prixLivraison).toFixed(2);
+    if (liPromo) {
+        liPromo.style.setProperty('display', reduction > 0 ? '' : 'none', 'important');
+        const promoEl = liPromo.querySelector('.promoPrice');
+        if (promoEl) promoEl.textContent = (prixUnit * nb * reduction).toFixed(2);
+    }
+}
+
+function setTextById(modal, selector, text) {
+    const el = modal.querySelector(selector);
+    if (el) el.textContent = text;
+}
+
+function fillModalPlats(modal, c, inputNb, elMenu, elTtc, liPromo, prixLivraison) {
+    if (!c.menuId) return;
+
+    api.get(`/menu/${c.menuId}`).then(res => {
+        if (!res.success) return;
+
+        const min      = Number.parseInt(res.data.nombrePersonneMinimum ?? 1);
+        const prixUnit = Number.parseFloat(res.data.prixParPersonne ?? 0);
+
+        if (inputNb) {
+            inputNb.min = min;
+            const newInputNb = inputNb.cloneNode(true);
+            inputNb.parentNode.replaceChild(newInputNb, inputNb);
+            newInputNb.addEventListener('blur',  () => onNbBlur(newInputNb, min));
+            newInputNb.addEventListener('input', () => onNbInput(newInputNb, min, prixUnit, prixLivraison, elMenu, elTtc, liPromo));
+        }
+
+        const plats = res.data.plats ?? [];
+        setTextById(modal, '#detailEntree',  plats.find(p => p.category === 'entree')?.titre  ?? '—');
+        setTextById(modal, '#detailPlat',    plats.find(p => p.category === 'plat')?.titre    ?? '—');
+        setTextById(modal, '#detailDessert', plats.find(p => p.category === 'dessert')?.titre ?? '—');
+    });
+}
+
 export function initCommandes() {
     const collapse = document.getElementById('collapseCommandUser');
     if (!collapse) return;
@@ -40,7 +120,7 @@ export function initCommandes() {
         monthFilter.innerHTML  = '<option value="">Mois de livraison</option>';
 
         const years  = [...new Set(commandes.map(c => getDateStr(c.datePrestation).split('-')[0]))];
-        const months = [...new Set(commandes.map(c => parseInt(getDateStr(c.datePrestation).split('-')[1])))];
+        const months = [...new Set(commandes.map(c => Number.parseInt(getDateStr(c.datePrestation).split('-')[1])))];
         const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 
         years.forEach(y => {
@@ -65,7 +145,7 @@ export function initCommandes() {
         const filtered = allCommandes.filter(c => {
             const [y, m] = getDateStr(c.datePrestation).split('-');
             const matchYear  = year  ? y == year            : true;
-            const matchMonth = month ? parseInt(m) == month : true;
+            const matchMonth = month ? Number.parseInt(m) == month : true;
             return matchYear && matchMonth;
         });
 
@@ -91,7 +171,7 @@ export function initCommandes() {
         commandes.forEach(c => {
             const date      = formatDate(getDateStr(c.dateCommande));
             const livraison = formatDate(getDateStr(c.datePrestation)) + ' à ' + c.heureLivraison;
-            const prix      = (parseFloat(c.prixMenu) + parseFloat(c.prixLivraison)).toFixed(2);
+            const prix      = (Number.parseFloat(c.prixMenu) + Number.parseFloat(c.prixLivraison)).toFixed(2);
             const badge     = statutBadge[c.statut] ?? 'bg-secondary';
 
             tbodyOrders.innerHTML += `
@@ -152,129 +232,35 @@ export function initDetailCommande() {
         fillModal(currentCommande);
     });
 
-    function fillModal(c) {
-        const elMenu  = modal.querySelector('.menuPrice');
-        const elDel   = modal.querySelector('.deliveryCost');
-        const elTtc   = modal.querySelector('.ttcPrice');
-        const liPromo = modal.querySelector('#rowReductionDetail');
+    
 
-        // ── Titre menu ──────────────────────────────────────────────────────
-        const h5Menus = modal.querySelectorAll('h5.text-center.text-primary');
-        const h5Menu  = h5Menus[0];
-        if (h5Menu) h5Menu.textContent = c.menuTitre ?? '—';
-
-        // ── Statut ──────────────────────────────────────────────────────────
-        const statutBadge = {
-            'en attente':                       'bg-dark',
-            'accepté':                          'bg-success',
-            'en cours de livraison':            'bg-primary',
-            'en attente du retour de matériel': 'bg-warning text-dark',
-            'terminee':                         'bg-secondary',
-        };
-        const badge = modal.querySelector('.badge');
-        if (badge) {
-            badge.textContent = c.statut;
-            badge.className   = 'badge ' + (statutBadge[c.statut] ?? 'bg-secondary');
-        }
-
-        // ── Date commande ────────────────────────────────────────────────────
-        const rows = modal.querySelectorAll('.row.my-2');
-        const dateCmdEl = rows[1]?.querySelector('.col-6.align-items-center p');
-        if (dateCmdEl) dateCmdEl.textContent = formatDate(getDateStr(c.dateCommande));
-
-        // ── Nombre de personnes ──────────────────────────────────────────────
-        const inputNb = document.getElementById('commandeDetailNumberPersonFormControlInput');
+    function fillModalAdresse(modal, c, inputDate, selectHeure) {
+        const rows         = modal.querySelectorAll('.row.my-2');
+        const inputNb      = document.getElementById('commandeDetailNumberPersonFormControlInput');
         if (inputNb) inputNb.value = c.nombrePersonne ?? '';
 
-        // ── Date livraison ───────────────────────────────────────────────────
         if (inputDate) {
             const d = getDateStr(c.datePrestation);
             inputDate.value = d ? d.substring(0, 10) : '';
         }
-
-        // ── Heure livraison ──────────────────────────────────────────────────
         if (selectHeure) selectHeure.value = c.heureLivraison ?? '';
 
-        // ── Adresse livraison ────────────────────────────────────────────────
         const parts = (c.adresseLivraison ?? '').split(',').map(s => s.trim());
         setVal('#commandeDetailAdressFormControlInput',  parts[0] ?? '');
         setVal('#commandeDetailCityFormControlInput',    parts[1] ?? '');
         setVal('#commandeDetailCountryFormControlInput', parts[2] ?? '');
 
-        // ── Nom/Prénom ───────────────────────────────────────────────────────
         const livraisonRow = [...rows].find(r => r.textContent.includes('A livrer à'));
         const nomEl = livraisonRow?.querySelector('.col-6.align-items-center p');
         if (nomEl) {
             nomEl.innerHTML = `<span class="text-uppercase">${escHtml(c.utilisateurNom ?? '')}</span> ${escHtml(c.utilisateurPrenom ?? '')}`;
         }
 
-        // ── Email / Téléphone ────────────────────────────────────────────────
         setVal('#commandeDetailEmailFormControlInput',     c.utilisateurEmail     ?? '');
         setVal('#commandeDetailTelephoneFormControlInput', c.utilisateurTelephone ?? '');
+    }
 
-        // ── Prix initial ─────────────────────────────────────────────────────
-        const prixLivraison = parseFloat(c.prixLivraison ?? 0);
-        if (elMenu) elMenu.textContent = parseFloat(c.prixMenu ?? 0).toFixed(2);
-        if (elDel)  elDel.textContent  = prixLivraison.toFixed(2);
-        if (elTtc)  elTtc.textContent  = (parseFloat(c.prixMenu ?? 0) + prixLivraison).toFixed(2);
-        if (liPromo) liPromo.style.setProperty('display', 'none', 'important');
-
-        // ── Plats + logique prix ─────────────────────────────────────────────
-        if (c.menuId) {
-            api.get(`/menu/${c.menuId}`).then(res => {
-                if (!res.success) return;
-
-                const min      = parseInt(res.data.nombrePersonneMinimum ?? 1);
-                const prixUnit = parseFloat(res.data.prixParPersonne ?? 0);
-
-                // Contrainte minimum
-                if (inputNb) {
-                    inputNb.min = min;
-
-                    // Cloner pour éviter les doublons de listeners
-                    const newInputNb = inputNb.cloneNode(true);
-                    inputNb.parentNode.replaceChild(newInputNb, inputNb);
-
-                    newInputNb.addEventListener('blur', () => {
-                        if (parseInt(newInputNb.value) < min) {
-                            newInputNb.value = min;
-                            newInputNb.dispatchEvent(new Event('input'));
-                        }
-                    });
-
-                    newInputNb.addEventListener('input', () => {
-                        const nb        = parseInt(newInputNb.value) || 0;
-                        const seuil     = min + 5;
-                        const reduction = nb >= seuil ? 0.10 : 0;
-                        const newPrix   = prixUnit * nb * (1 - reduction);
-
-                        if (elMenu) elMenu.textContent = newPrix.toFixed(2);
-                        if (elTtc)  elTtc.textContent  = (newPrix + prixLivraison).toFixed(2);
-                        if (liPromo) {
-                            liPromo.style.setProperty('display', reduction > 0 ? '' : 'none', 'important');
-                            const promoEl = liPromo.querySelector('.promoPrice');
-                            if (promoEl) promoEl.textContent = (prixUnit * nb * reduction).toFixed(2);
-                        }
-                    });
-                }
-
-                // Plats
-                const plats   = res.data.plats ?? [];
-                const entree  = plats.find(p => p.category === 'entree')?.titre ?? '—';
-                const plat    = plats.find(p => p.category === 'plat')?.titre   ?? '—';
-                const dessert = plats.find(p => p.category === 'dessert')?.titre ?? '—';
-
-                const elEntree  = modal.querySelector('#detailEntree');
-                const elPlat    = modal.querySelector('#detailPlat');
-                const elDessert = modal.querySelector('#detailDessert');
-
-                if (elEntree)  elEntree.textContent  = entree;
-                if (elPlat)    elPlat.textContent    = plat;
-                if (elDessert) elDessert.textContent = dessert;
-            });
-        }
-
-        // ── Éditable ou non ──────────────────────────────────────────────────
+    function fillModalEditable(modal, c, inputDate, selectHeure) {
         const editable = c.statut === 'en attente';
         [
             document.getElementById('commandeDetailNumberPersonFormControlInput'),
@@ -293,6 +279,21 @@ export function initDetailCommande() {
         if (btnAnnuler) btnAnnuler.style.display = editable ? '' : 'none';
     }
 
+    function fillModal(c) {
+        const elMenu     = modal.querySelector('.menuPrice');
+        const elDel      = modal.querySelector('.deliveryCost');
+        const elTtc      = modal.querySelector('.ttcPrice');
+        const liPromo    = modal.querySelector('#rowReductionDetail');
+        const inputNb    = document.getElementById('commandeDetailNumberPersonFormControlInput');
+        const prixLivraison = Number.parseFloat(c.prixLivraison ?? 0);
+
+        fillModalHeader(modal, c);
+        fillModalAdresse(modal, c, inputDate, selectHeure);
+        fillModalPrix(modal, c, elMenu, elDel, elTtc, liPromo);
+        fillModalPlats(modal, c, inputNb, elMenu, elTtc, liPromo, prixLivraison);
+        fillModalEditable(modal, c, inputDate, selectHeure);
+    }
+
     // ── Valider les changements ───────────────────────────────────────────────
     const btnValider = modal.querySelector('button[type="submit"]');
     btnValider?.addEventListener('click', async (e) => {
@@ -309,9 +310,9 @@ export function initDetailCommande() {
             datePrestation:   inputDate?.value,
             heureLivraison:   selectHeure?.value,
             adresseLivraison: adresse,
-            nombrePersonne:   parseInt(document.getElementById('commandeDetailNumberPersonFormControlInput')?.value),
-            prixMenu:         parseFloat(modal.querySelector('.menuPrice')?.textContent ?? 0),
-            prixLivraison:    parseFloat(modal.querySelector('.deliveryCost')?.textContent ?? 0),
+            nombrePersonne:   Number.parseInt(document.getElementById('commandeDetailNumberPersonFormControlInput')?.value),
+            prixMenu:         Number.parseFloat(modal.querySelector('.menuPrice')?.textContent ?? 0),
+            prixLivraison:    Number.parseFloat(modal.querySelector('.deliveryCost')?.textContent ?? 0),
         };
 
         const res = await api.put(`/commande/${currentCommande.id}`, payload);

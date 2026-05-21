@@ -1,5 +1,6 @@
 import { api } from '../../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
+import Chart from 'chart.js/auto';
 
 export function initStatsAdmin() {
     let chartInstance = null;

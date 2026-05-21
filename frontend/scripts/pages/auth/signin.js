@@ -27,7 +27,7 @@ async function checkCredentials() {
         const role = data.data.user.role.replace('ROLE_', '').toLowerCase();
         setCookie('role', role, 1);
         setCookie('id', data.data.user.id, 1);
-        window.location.replace('/');
+        globalThis.location.replace('/');
     } else {
         mailInput.classList.add('is-invalid');
         passwordInput.classList.add('is-invalid');

@@ -34,6 +34,7 @@ header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-CSRF-TOKEN');
 header('Content-Type: application/json');
+header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self' http://localhost:5500 https://geo.api.gouv.fr https://api-adresse.data.gouv.fr https://api.openrouteservice.org; frame-ancestors 'none';");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);

@@ -1,6 +1,37 @@
 import { api } from '../../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
 
+
+function validateRequired(input) {
+    const ok = input.value.trim() !== '';
+    input.classList.toggle('is-valid', ok);
+    input.classList.toggle('is-invalid', !ok);
+    return ok;
+}
+
+function validateEmail(input) {
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+    input.classList.toggle('is-valid', ok);
+    input.classList.toggle('is-invalid', !ok);
+    return ok;
+    }
+
+function validatePassword(input) {
+    const ok = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{10,}$/.test(input.value);
+    input.classList.toggle('is-valid', ok);
+    input.classList.toggle('is-invalid', !ok);
+    return ok;
+}
+
+function validatePasswordConfirm(inputPwd, inputConfirm) {
+    const ok = inputPwd.value === inputConfirm.value && inputConfirm.value !== '';
+    inputConfirm.classList.toggle('is-valid', ok);
+    inputConfirm.classList.toggle('is-invalid', !ok);
+    return ok;
+}
+
+
+
 export function initEmployes() {
     const collapse = document.getElementById('collapseEmployeeManagement');
     if (!collapse) return;
@@ -74,7 +105,7 @@ export function initEmployes() {
     const payload = [];
 
     rows.forEach(row => {
-        const id      = parseInt(row.dataset.id);
+        const id      = Number.parseInt(row.dataset.id);
         const original = employes.find(e => e.id === id);
         const item    = { id };
 
@@ -114,33 +145,7 @@ export function initEmployes() {
         const passwordInput        = document.getElementById('newEmployeePasswordInput');
         const passwordConfirmInput = document.getElementById('ValidateNewEmployeePasswordInput');
 
-        function validateRequired(input) {
-            const ok = input.value.trim() !== '';
-            input.classList.toggle('is-valid', ok);
-            input.classList.toggle('is-invalid', !ok);
-            return ok;
-        }
 
-        function validateEmail(input) {
-            const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
-            input.classList.toggle('is-valid', ok);
-            input.classList.toggle('is-invalid', !ok);
-            return ok;
-        }
-
-        function validatePassword(input) {
-            const ok = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{10,}$/.test(input.value);
-            input.classList.toggle('is-valid', ok);
-            input.classList.toggle('is-invalid', !ok);
-            return ok;
-        }
-
-        function validatePasswordConfirm(inputPwd, inputConfirm) {
-            const ok = inputPwd.value === inputConfirm.value && inputConfirm.value !== '';
-            inputConfirm.classList.toggle('is-valid', ok);
-            inputConfirm.classList.toggle('is-invalid', !ok);
-            return ok;
-        }
 
         const ok = validateRequired(nomInput)
             && validateRequired(prenomInput)

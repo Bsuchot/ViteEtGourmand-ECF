@@ -8,6 +8,16 @@ let allergenes          = [];
 let pendingDeletePlatId = null;
 let tomSelectInstance   = null;
 
+// fonction de conversion image en base64
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload  = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('Erreur lecture fichier'));
+        reader.readAsDataURL(file);
+    });
+}
+
 export async function loadPlats() {
     const [dataPlats, dataAllergenes] = await Promise.all([
         api.get('/plat/readAll'),
@@ -48,15 +58,6 @@ export function initPlats() {
     document.getElementById('newPlatModal')?.addEventListener('show.bs.modal', () => {
         initTomSelect();
     });
-    // fonction de conversion image en base64
-    function fileToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload  = () => resolve(reader.result);
-            reader.onerror = () => reject(new Error('Erreur lecture fichier'));
-            reader.readAsDataURL(file);
-        });
-    }
 
     // Valider création plat
     document.getElementById('btnValiderNewPlat')?.addEventListener('click', async () => {
@@ -64,7 +65,7 @@ export function initPlats() {
         const category  = document.getElementById('newPlatCategorySelect').value;
         const fileInput = document.getElementById('newPlatPhotoFormFile');
         const allergeneIds = tomSelectInstance
-            ? tomSelectInstance.getValue().map(v => parseInt(v))
+            ? tomSelectInstance.getValue().map(v => Number.parseInt(v))
             : [];
 
         if (!titre) {
@@ -159,8 +160,6 @@ function renderPlats() {
         }
 
         filtered.forEach(p => {
-            const allergenesList = p.allergenes?.map(a => a.libelle ?? a).join(', ') ?? '—';
-
             tbodies[cat].innerHTML += `
                 <tr data-id="${p.id}">
                     <td>${p.titre}</td>
@@ -183,15 +182,14 @@ function renderPlats() {
     });
 
     document.querySelectorAll('.btn-allergenes').forEach(btn => {
-        btn.setAttribute('data-bs-toggle', 'tooltip');
-        btn.setAttribute('data-bs-placement', 'top');
+        btn.dataset.bsToggle = 'tooltip';
+        btn.dataset.bsPlacement = 'top';
         btn.setAttribute('title', btn.dataset.allergenes || 'Aucun allergène');
-        new bootstrap.Tooltip(btn);
     });
 
     document.querySelectorAll('.btn-delete-plat').forEach(btn => {
         btn.addEventListener('click', () => {
-            pendingDeletePlatId = parseInt(btn.dataset.id);
+            pendingDeletePlatId = Number.parseInt(btn.dataset.id);
         });
     });
     document.getElementById('btnOpenNewPlat')?.addEventListener('click', () => {
