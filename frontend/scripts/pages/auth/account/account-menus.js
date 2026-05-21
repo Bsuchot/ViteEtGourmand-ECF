@@ -229,7 +229,7 @@ export function initMenus() {
         if (imgContainer) {
             const isValidUrl = menu.image?.startsWith('/');
             imgContainer.innerHTML = isValidUrl
-                ? `<img src="${menu.image}" height="60" class="mb-2">`
+                ? `<img src="${menu.image?.startsWith('/') ? API_URL + menu.image : menu.image}" height="60" class="mb-2">`
                 : '<p class="text-muted small text-danger">Image invalide — veuillez en choisir une nouvelle.</p>';
         }
     }

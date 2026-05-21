@@ -20,6 +20,9 @@ if (file_exists(__DIR__.'/../.env')) {
     $dotenv = Dotenv::createImmutable(__DIR__.'/..');
     $dotenv->load();
 }
+error_reporting(E_ALL);
+ini_set('log_errors', 1);
+ini_set('error_log', 'php://stderr');
 
 $isProduction = !isset($_ENV['APP_ENV']) || $_ENV['APP_ENV'] === 'production';
 

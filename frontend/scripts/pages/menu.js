@@ -90,7 +90,8 @@ function renderMenus(menus) {
         const item = document.createElement('div');
         item.className = `accordion-item border-secondary${isSoldOut ? ' soldout' : ''}`;
         item.dataset.menuId = menu.id;
-        item.style.setProperty('--menu-image', `url(${menu.image ?? ''})`);
+        const imageUrl = menu.image?.startsWith('/') ? API_URL + menu.image : (menu.image ?? '');
+        item.style.setProperty('--menu-image', `url(${imageUrl})`);
 
         item.innerHTML = `
             <h2 class="accordion-header">
