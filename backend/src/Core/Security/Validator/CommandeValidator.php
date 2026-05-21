@@ -144,7 +144,7 @@ class CommandeValidator extends AbstractValidator
 
     private function validatePrix(array $data, string $field, string $label): void
     {
-        if (empty($data[$field])) {
+        if (!isset($data[$field]) || $data[$field] === '') {
             return;
         }
 

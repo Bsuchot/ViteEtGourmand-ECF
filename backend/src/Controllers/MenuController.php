@@ -38,7 +38,6 @@ class MenuController extends AbstractController
                     new OA\Property(property: "themeId",               type: "integer", example: 2),
                     new OA\Property(property: "image",                 type: "string",  example: "https://example.com/menu.jpg"),
                     new OA\Property(property: "delai",                 type: "integer", example: 48, description: "Délai en heures"),
-                    new OA\Property(property: "service",               type: "string",  example: "midi"),
                     new OA\Property(
                         property: "plats",
                         type: "array",
@@ -86,7 +85,6 @@ class MenuController extends AbstractController
             $menu->setImage($data['image'] ?? null);
             $menu->setStatut('actif');
             $menu->setDelai($data['delai']);
-            $menu->setService($data['service']);
             foreach ($data['plats'] as $platId) {
                 $menu->addPlatId((int)$platId);
             }
@@ -123,7 +121,6 @@ class MenuController extends AbstractController
                         new OA\Property(property: "quantiteRestante",      type: "integer", example: 10),
                         new OA\Property(property: "statut",                type: "string",  example: "actif"),
                         new OA\Property(property: "delai",                 type: "integer", example: 48),
-                        new OA\Property(property: "service",               type: "string",  example: "midi"),
                         new OA\Property(property: "regimeId",              type: "integer", example: 1),
                         new OA\Property(property: "themeId",               type: "integer", example: 2),
                         new OA\Property(property: "image",                 type: "string",  example: "https://example.com/menu.jpg"),
@@ -202,7 +199,6 @@ class MenuController extends AbstractController
                     new OA\Property(property: "image",                 type: "string",  example: "https://example.com/new.jpg"),
                     new OA\Property(property: "statut",                type: "string",  example: "inactif"),
                     new OA\Property(property: "delai",                 type: "integer", example: 24),
-                    new OA\Property(property: "service",               type: "string",  example: "soir"),
                     new OA\Property(
                         property: "plats",
                         type: "array",
@@ -254,7 +250,6 @@ class MenuController extends AbstractController
             if (isset($data['image']))                 $menuModel->setImage($data['image']);
             if (isset($data['statut']))                $menuModel->setStatut($data['statut']);
             if (isset($data['delai']))                 $menuModel->setDelai($data['delai']);
-            if (isset($data['service']))               $menuModel->setService($data['service']);
             if (isset($data['plats'])) {
                 $menuModel->setPlats([]);
                 foreach ($data['plats'] as $platId) {

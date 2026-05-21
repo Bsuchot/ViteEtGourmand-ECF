@@ -32,14 +32,34 @@ class CommandeRepository extends Repository
 
     public function findById(int $id): ?array
     {
-        $query = $this->pdo->prepare("SELECT * FROM commande WHERE id = :id");
+        $query = $this->pdo->prepare("
+        SELECT c.*,
+               m.titre        AS menuTitre,
+               u.nom          AS utilisateurNom,
+               u.prenom       AS utilisateurPrenom,
+               u.email        AS utilisateurEmail,
+               u.telephone    AS utilisateurTelephone
+        FROM commande c
+        LEFT JOIN menu        m ON c.menu_id        = m.id
+        LEFT JOIN utilisateur u ON c.utilisateur_id = u.id
+        WHERE c.id = :id
+    ");
         $query->bindValue(':id', $id, PDO::PARAM_INT);
         $query->execute();
         $row = $query->fetch(PDO::FETCH_ASSOC);
 
         if (!$row) return null;
 
-        return Commande::createAndHydrate($row)->toArray();
+        $data = Commande::createAndHydrate($row)->toArray();
+
+        // Ajouter les champs joints
+        $data['menuTitre']            = $row['menuTitre'];
+        $data['utilisateurNom']       = $row['utilisateurNom'];
+        $data['utilisateurPrenom']    = $row['utilisateurPrenom'];
+        $data['utilisateurEmail']     = $row['utilisateurEmail'];
+        $data['utilisateurTelephone'] = $row['utilisateurTelephone'];
+
+        return $data;
     }
 
     public function findByUtilisateurId(int $utilisateurId): array

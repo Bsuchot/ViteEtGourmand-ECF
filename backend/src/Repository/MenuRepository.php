@@ -79,10 +79,10 @@ class MenuRepository extends Repository
         $stmt = $this->pdo->prepare("
             INSERT INTO menu
                 (titre, nombre_personne_minimum, prix_par_personne, description,
-                 quantite_restante, regime_id, theme_id, image, statut, delai, service)
+                 quantite_restante, regime_id, theme_id, image, statut, delai)
             VALUES
                 (:titre, :nombrePersonneMinimum, :prixParPersonne, :description,
-                 :quantiteRestante, :regimeId, :themeId, :image, :statut, :delai, :service)
+                 :quantiteRestante, :regimeId, :themeId, :image, :statut, :delai)
         ");
         $stmt->execute([
             'titre'             => $menu->getTitre(),
@@ -95,7 +95,6 @@ class MenuRepository extends Repository
             'image'             => $menu->getImage(),
             'statut'            => $menu->getStatut(),
             'delai'          => $menu->getDelai(),
-            'service'           => $menu->getService()
         ]);
 
         $menuId = (int) $this->pdo->lastInsertId();
@@ -115,8 +114,7 @@ class MenuRepository extends Repository
                 theme_id                = :themeId,
                 image                   = :image,
                 statut                 = :statut,
-                delai                   = :delai,
-                service                 = :service
+                delai                   = :delai
             WHERE id = :id
         ");
         $stmt->execute([
@@ -130,7 +128,6 @@ class MenuRepository extends Repository
             'image'                 => $menu->getImage(),
             'statut'                => $menu->getStatut(),
             'delai'                 => $menu->getDelai(),
-            'service'               => $menu->getService(),
             'id'                    => $menu->getId()
         ]);
 

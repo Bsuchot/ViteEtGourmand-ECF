@@ -19,6 +19,7 @@ class EmployeValidator extends AbstractValidator
         $this->reset();
         $this->validateEmail($data);
         $this->validateEmailUnique($data['email'] ?? null);
+        $this->validatePassword($data);
 
         return $this->errors;
     }
@@ -36,7 +37,7 @@ class EmployeValidator extends AbstractValidator
     }
 
     // Réinitialisation du mot de passe par l'admin
-    public function validatePassword(array $data): array
+    public function validateNewPassword(array $data): array
     {
         $this->reset();
 
@@ -58,6 +59,26 @@ class EmployeValidator extends AbstractValidator
         $existing = $this->repository->findByEmail($email);
         if ($existing) {
             $this->errors['email'] = 'Un compte est déjà associé à cet email';
+        }
+    }
+    private function validatePassword(array $data): void
+    {
+        $password = $data['password'] ?? null;
+
+        if (empty($password)) {
+            return; // déjà capturé par validateRequired
+        }
+
+        $errors = [];
+
+        if (strlen($password) < 10)              $errors[] = '10 caractères minimum';
+        if (!preg_match('/[A-Z]/', $password))   $errors[] = 'une majuscule';
+        if (!preg_match('/[a-z]/', $password))   $errors[] = 'une minuscule';
+        if (!preg_match('/[0-9]/', $password))   $errors[] = 'un chiffre';
+        if (!preg_match('/[\W_]/', $password))   $errors[] = 'un caractère spécial';
+
+        if ($errors) {
+            $this->errors['password'] = 'Le mot de passe doit contenir : ' . implode(', ', $errors);
         }
     }
 }

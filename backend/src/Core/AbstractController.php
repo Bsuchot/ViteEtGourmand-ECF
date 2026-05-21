@@ -24,7 +24,7 @@ abstract class AbstractController
             $this->error($e->getMessage(), 500);
             return;
         } catch (\Throwable $e) {
-            // ← remplacer cette ligne temporairement
+            error_log('ERREUR: ' . $e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine());
             $this->error($e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine(), 500);
             return;
         }
@@ -84,6 +84,12 @@ abstract class AbstractController
             $this->error('Accès interdit', 403);
             return false;
         }
+
+        if (Security::isEmploye() && ($_SESSION['user']['statut'] ?? null) !== 'actif') {
+            $this->error('Accès interdit — compte inactif', 403);
+            return false;
+        }
+
         return true;
     }
     protected function requireUser(): bool
@@ -120,15 +126,16 @@ abstract class AbstractController
     }
     protected function requireOwner(array $data, string $ownerId = 'utilisateurId'): bool
     {
-        if ($data[$ownerId] !== $_SESSION['user']['id']) {
+        if ((int)$data[$ownerId] !== (int)$_SESSION['user']['id']) {
             $this->error('Accès interdit', 403);
             return false;
         }
+        error_log('ownerId: ' . $data[$ownerId] . ' | sessionId: ' . $_SESSION['user']['id']);
         return true;
     }
     protected function checkOrderStatut(array $commande): bool
     {
-        if ($commande['statut'] !== 'en_attente') {
+        if ($commande['statut'] !== 'en attente') {
             $this->error('Cette commande ne peut plus être modifiée', 403);
             return false;
         }
@@ -146,6 +153,21 @@ abstract class AbstractController
 
         $this->error('La commande ne peut pas être terminée : le matériel n\'a pas été restitué', 403);
         return false;
+    }
+
+
+    protected function httpPost(string $url, array $payload, array $headers = []): string|false
+    {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => json_encode($payload),
+            CURLOPT_HTTPHEADER     => array_merge(['Content-Type: application/json'], $headers),
+        ]);
+        $res = curl_exec($ch);
+        curl_close($ch);
+        return $res;
     }
 
 }

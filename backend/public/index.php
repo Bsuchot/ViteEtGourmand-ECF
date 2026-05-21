@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\CommandeController;
+use App\Controllers\ContactController;
 use App\Controllers\MenuController;
 use App\Controllers\PlatController;
 use App\Controllers\RegimeController;
@@ -50,6 +51,7 @@ $router->register('GET',    '/api/admin/employe/{id}',           EmployeControll
 $router->register('PUT',    '/api/admin/employe/{id}/password',  EmployeController::class,  'updatePassword');
 $router->register('DELETE', '/api/admin/employe/{id}',           EmployeController::class,  'delete');
 
+
 // Route Allergene
 $router->register('POST',   '/api/allergene/create',   AllergeneController::class, 'create');
 $router->register('GET',    '/api/allergene/readAll',  AllergeneController::class, 'readAll');
@@ -67,13 +69,18 @@ $router->register('DELETE', '/api/avis/{id}',                     AvisController
 
 // Route Commande
 $router->register('POST',   '/api/commande/create',                    CommandeController::class, 'create');
+$router->register('POST',   '/api/commande/fraisLivraison',          CommandeController::class, 'calculerFrais');
 $router->register('GET', '/api/commande/stats', CommandeController::class, 'stats');
 $router->register('GET',    '/api/employe/commande/readAll',           CommandeController::class, 'readAll');
 $router->register('GET',    '/api/commande/mesCommandes',                        CommandeController::class, 'readMyCommandes');
+$router->register('GET', '/api/employe/commande/{id}', CommandeController::class, 'readById');
 $router->register('GET',    '/api/commande/{id}',                      CommandeController::class, 'read');
 $router->register('PUT',    '/api/commande/{id}',                      CommandeController::class, 'update');
 $router->register('PUT',    '/api/employe/commande/{id}/statut',       CommandeController::class, 'updateStatut');
 $router->register('DELETE', '/api/commande/{id}',                      CommandeController::class, 'delete');
+
+// Route Contact
+$router->register('POST', '/api/contact', ContactController::class, 'send');
 
 // Route Horaire
 $router->register('POST',   '/api/horaire/create',   HoraireController::class, 'create');

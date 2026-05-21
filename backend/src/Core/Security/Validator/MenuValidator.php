@@ -69,7 +69,8 @@ class MenuValidator extends AbstractValidator
         if (!isset($data['quantiteRestante'])) {
             return;
         }
-        if (!is_int($data['quantiteRestante']) || $data['quantiteRestante'] < 0) {
+        $val = $data['quantiteRestante'];
+        if (!is_numeric($val) || intval($val) != $val || $val < 0) {
             $this->errors['quantiteRestante'] = 'La quantité restante doit être un entier positif ou nul';
         }
     }

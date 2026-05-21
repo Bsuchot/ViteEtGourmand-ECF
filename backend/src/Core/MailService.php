@@ -2,14 +2,21 @@
 
 namespace App\Core;
 
+use App\Repository\UtilisateurRepository;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class MailService
 {
     private PHPMailer $mailer;
 
-    public function __construct()
+
+    private readonly string $adminEmail;
+
+    public function __construct(UtilisateurRepository $repository)
     {
+        $admin = $repository->findByRole('ROLE_ADMIN');
+        $this->adminEmail = $admin['email'] ?? $_ENV['MAIL_FROM'];
+
         $this->mailer = new PHPMailer(true);
         $this->mailer->isSMTP();
         $this->mailer->Host       = $_ENV['MAIL_HOST'];
@@ -24,6 +31,7 @@ class MailService
 
     public function send(string $to, string $subject, string $body): void
     {
+        error_log('MAIL TO: ' . $to . ' | SUBJECT: ' . $subject);
         $this->mailer->clearAddresses();
         $this->mailer->addAddress($to);
         $this->mailer->isHTML(true);
@@ -50,7 +58,7 @@ class MailService
             <p>Merci pour votre confiance — Vite & Gourmand</p>
         ";
 
-        $this->send('Confirmation de commande — ' . $numero, $body);
+        $this->send($to,'Confirmation de commande — ' . $numero, $body);
     }
 
     public function sendBienvenue(string $to, string $prenom): void
@@ -62,22 +70,19 @@ class MailService
             <p>À bientôt — Vite & Gourmand</p>
         ";
 
-        $this->send('Bienvenue chez Vite & Gourmand', $body);
+        $this->send($to,'Bienvenue chez Vite & Gourmand', $body);
     }
 
-    public function sendBienvenueEmploye(string $adminEmail, string $emailEmploye): void
+    public function sendBienvenueEmploye(string $to): void
     {
         $body = "
-        <h2>Nouveau compte employé créé</h2>
-        <p>Un nouveau compte employé a été créé avec l'email suivant :</p>
-        <ul>
-            <li>Email : <strong>{$emailEmploye}</strong></li>
-            <li>Pour votre mot de passe, rapprochez-vous de votre employeur.</li>
-        </ul>
+        <h2>Bienvenue chez Vite & Gourmand !</h2>
+        <p>Un compte employé vient d'être créé pour vous.</p>
+        <p>Pour votre mot de passe, rapprochez-vous de votre employeur.</p>
         <p>— Vite & Gourmand</p>
     ";
 
-        $this->send($adminEmail, 'Nouveau compte employé créé', $body);
+        $this->send($to, 'Bienvenue chez Vite & Gourmand', $body);
     }
 
     public function sendChangementStatutCommande(string $to, string $prenom, string $numero, string $statut): void
@@ -90,7 +95,7 @@ class MailService
             <p>— Vite & Gourmand</p>
         ";
 
-        $this->send('Mise à jour commande — ' . $numero, $body);
+        $this->send($to,'Mise à jour commande — ' . $numero, $body);
     }
 
     public function sendReinitialisationPassword(string $to, string $prenom, string $token): void
@@ -107,18 +112,19 @@ class MailService
             <p>— Vite & Gourmand</p>
         ";
 
-        $this->send('Réinitialisation de mot de passe — Vite & Gourmand', $body);
+        $this->send($to,'Réinitialisation de mot de passe — Vite & Gourmand', $body);
     }
 
-    public function sendContact(string $from, string $nom, string $message): void
+    public function sendContact(string $from, string $titre, string $nom, string $prenom, string $message): void
     {
         $body = "
             <h2>Nouveau message de contact</h2>
-            <p><strong>De :</strong> {$nom} ({$from})</p>
+            <p><strong>De :</strong>$prenom $nom ({$from})</p>
+            <p><strong>Titre :</strong>$titre </p>
             <p><strong>Message :</strong></p>
             <p>{$message}</p>
         ";
 
-        $this->send('Message de contact — ' . $nom, $body);
+        $this->send($this->adminEmail,'Message de contact — ' . $prenom . ' ' . $nom, $body);
     }
 }

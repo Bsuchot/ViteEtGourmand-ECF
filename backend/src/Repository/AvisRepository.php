@@ -22,11 +22,22 @@ class AvisRepository extends Repository
 
     public function findAll(): array
     {
-        $query = $this->pdo->prepare("SELECT * FROM avis");
+        $query = $this->pdo->prepare("
+        SELECT a.*,
+               u.prenom AS utilisateurPrenom,
+               u.nom    AS utilisateurNom
+        FROM avis a
+        LEFT JOIN utilisateur u ON a.utilisateur_id = u.id
+        ORDER BY a.date DESC
+    ");
         $query->execute();
-        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        return array_map(fn($row) => Avis::createAndHydrate($row)->toArray(), $rows);
+        return array_map(function($row) {
+            $data = Avis::createAndHydrate($row)->toArray();
+            $data['utilisateurPrenom'] = $row['utilisateurPrenom'];
+            $data['utilisateurNom']    = $row['utilisateurNom'];
+            return $data;
+        }, $query->fetchAll(PDO::FETCH_ASSOC));
     }
 
     public function create(Avis $avis): void

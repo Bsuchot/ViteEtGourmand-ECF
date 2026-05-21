@@ -3,10 +3,13 @@
 namespace App\Controllers;
 
 use App\Core\AbstractController;
+use App\Core\MailService;
+use App\Core\Security\Security;
 use App\Core\Security\Validator\CommandeValidator;
 use App\Models\Commande;
 use App\Repository\CommandeRepository;
 use App\Repository\MenuRepository;
+use App\Repository\UtilisateurRepository;
 use DateTimeImmutable;
 use App\Core\MongoService;
 use OpenApi\Attributes as OA;
@@ -16,12 +19,14 @@ class CommandeController extends AbstractController
     private CommandeValidator $validator;
     private CommandeRepository $repository;
     private MongoService $mongo;
+    private MailService $mailer;
 
     public function __construct()
     {
         $this->repository = new CommandeRepository();
         $this->validator  = new CommandeValidator(new MenuRepository());
         $this->mongo = new MongoService();
+        $this->mailer = new MailService(new UtilisateurRepository());
     }
     #[OA\Post(
         path: "/api/commande/create",
@@ -87,15 +92,79 @@ class CommandeController extends AbstractController
             $commande->setMenuId($data['menuId']);
             $this->repository->create($commande);
 
-            $this->mongo->collection("commandes_stats")->insertOne([
+            $menu = (new MenuRepository())->findById($commande->getMenuId());
+            $menuTitre = $menu['titre'] ?? 'Menu inconnu';
+
+            $this->mongo->getCollection("commandes_stats")->insertOne([
                 "commandeId" => $commande->getId(),
-                "total" => $commande->getPrixMenu() + $commande->getPrixLivraison(),
-                "date" => new \MongoDB\BSON\UTCDateTime(),
-                "statut" => "en_attente"
+                "menuId"     => $commande->getMenuId(),
+                "menuTitre"  => $menuTitre,
+                "total"      => $commande->getPrixMenu() + $commande->getPrixLivraison(),
+                "date"       => new \MongoDB\BSON\UTCDateTime(),
+                "statut"     => "en_attente"
             ]);
+
+            $email = $data['email'] ?? $_SESSION['user']['email'] ?? null;
+            error_log('Email destinataire : ' . $email);
+
+            try {
+                $this->mailer->sendConfirmationCommande($email, [
+                    'numeroDeCommande' => $commande->getNumeroDeCommande(),
+                    'datePrestation'   => $data['datePrestation'],
+                    'heureLivraison'   => $data['heureLivraison'],
+                    'prixMenu'         => $commande->getPrixMenu(),
+                    'prixLivraison'    => $commande->getPrixLivraison(),
+                ]);
+                error_log('Mail envoyé avec succès');
+            } catch (\Exception $e) {
+                error_log('Erreur mail : ' . $e->getMessage());
+            }
 
             $this->success(['message' => 'Commande créée avec succès'], 201);
         });
+    }
+    public function calculerFrais(): void
+    {
+        $data    = json_decode(file_get_contents("php://input"), true);
+        $adresse = $data['adresse'] ?? '';
+
+        // 1. Géocoder via api-adresse.data.gouv.fr
+        $geoRes = file_get_contents(
+            "https://api-adresse.data.gouv.fr/search/?q=" . urlencode($adresse) . "&limit=1"
+        );
+        $geo    = json_decode($geoRes, true);
+        $coords = $geo['features'][0]['geometry']['coordinates'] ?? null; // [lng, lat]
+
+        if (!$coords) { $this->success(['frais' => 5.00]); return; }
+
+        // 2. Appel ORS via curl
+        $bordeaux = [-0.5792, 44.8378];
+        $payload  = json_encode(['coordinates' => [$bordeaux, $coords]]);
+
+        $ch = curl_init('https://api.openrouteservice.org/v2/directions/driving-car');
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => $payload,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $_ENV['ORS_API_KEY'],
+
+            ],
+        ]);
+        error_log('ORS KEY: ' . $_ENV['ORS_API_KEY']);
+        $orsRes = curl_exec($ch);
+        curl_close($ch);
+
+        $ors = json_decode($orsRes, true);
+        error_log('ORS response: ' . print_r($ors, true));
+        error_log('Distance km: ' . ($ors['routes'][0]['summary']['distance'] ?? 'NULL'));
+        $distanceKm = ($ors['routes'][0]['summary']['distance'] ?? 0) / 1000;
+
+        // 3. Calcul frais (0 si ≤ 5km de Bordeaux)
+        $frais = $distanceKm <= 5 ? 0.0 : 5.00 + (0.59 * $distanceKm);
+
+        $this->success(['frais' => round($frais, 2)]);
     }
     #[OA\Get(
         path: "/api/commande/{id}",
@@ -149,6 +218,15 @@ class CommandeController extends AbstractController
             if (!$commande) { $this->error('Commande introuvable', 404); return; }
             if (!$this->checkAccess(fn() => $this->requireOwner($commande))) return;
 
+            $this->success($commande);
+        });
+    }
+    public function readById(int $id): void
+    {
+        if (!$this->requireAdminOrEmploye()) return;
+        $this->tryCatch(function () use ($id) {
+            $commande = $this->repository->findById($id);
+            if (!$commande) { $this->error('Commande introuvable', 404); return; }
             $this->success($commande);
         });
     }
@@ -249,25 +327,34 @@ class CommandeController extends AbstractController
         if (!$this->requireAdminOrEmploye()) return;
 
         $this->tryCatch(function () {
+            $menuTitre = $_GET['menuTitre'] ?? null;
+            $dateDebut = $_GET['dateDebut'] ?? null;
+            $dateFin   = $_GET['dateFin']   ?? null;
 
-            $collection = $this->mongo->collection("commandes_stats");
+            $match = [];
+            if ($menuTitre) $match['menuTitre']    = $menuTitre;
+            if ($dateDebut) $match['date']['$gte'] = new \MongoDB\BSON\UTCDateTime(strtotime($dateDebut) * 1000);
+            if ($dateFin)   $match['date']['$lte'] = new \MongoDB\BSON\UTCDateTime(strtotime($dateFin)   * 1000);
 
-            $data = $collection->aggregate([
-                [
-                    '$group' => [
-                        '_id' => [
-                            '$dateToString' => [
-                                'format' => '%Y-%m-%d',
-                                'date' => '$date'
-                            ]
-                        ],
-                        'total' => ['$sum' => '$total']
-                    ]
-                ],
-                ['$sort' => ['_id' => 1]]
-            ])->toArray();
+            $pipeline = [];
+            if ($match) $pipeline[] = ['$match' => $match];
 
-            $this->success($data);
+            $pipeline[] = ['$group' => [
+                '_id'        => '$menuTitre',
+                'total'      => ['$sum' => '$total'],
+                'commandes'  => ['$sum' => 1],
+            ]];
+            $pipeline[] = ['$sort' => ['total' => -1]];
+
+            $results = $this->mongo->getCollection('commandes_stats')
+                ->aggregate($pipeline)
+                ->toArray();
+
+            $this->success(array_map(fn($r) => [
+                'menu'      => $r['_id'],
+                'total'     => round($r['total'], 2),
+                'commandes' => $r['commandes'],
+            ], $results));
         });
     }
     #[OA\Put(
@@ -408,13 +495,21 @@ class CommandeController extends AbstractController
             $commandeModel->setStatut($data['statut']);
             $this->repository->update($commandeModel);
 
-            $this->mongo->collection("commandes_stats")->updateOne(
+            $this->mongo->getCollection("commandes_stats")->updateOne(
                 ["commandeId" => $id],
                 [
                     '$set' => [
                         "statut" => $data['statut']
                     ]
                 ]
+            );
+
+
+            $this->mailer->sendChangementStatutCommande(
+                $commande['utilisateurEmail'],
+                $commande['utilisateurPrenom'],
+                $commande['numeroDeCommande'],
+                $data['statut']
             );
 
             $this->success(['message' => 'Statut de la commande mis à jour']);
@@ -457,6 +552,7 @@ class CommandeController extends AbstractController
         $this->tryCatch(function () use ($id) {
             $commande = $this->repository->findById($id);
             if (!$commande) { $this->error('Commande introuvable', 404); return; }
+
             if (!$this->checkAccess(fn() => $this->requireOwner($commande) && $this->checkOrderStatut($commande))) return;
 
             $this->repository->delete($id);

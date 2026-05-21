@@ -17,7 +17,6 @@ class Menu extends Model
     private ?string $image = null;
     private ?string $statut = null;
     private ?int $delai = null;
-    private ?string $service = null;
     private array $plats =[];
 
     public function getId(): ?int
@@ -121,15 +120,6 @@ class Menu extends Model
         $this->statut = $statut;
     }
 
-    public function getService(): ?string
-    {
-        return $this->service;
-    }
-
-    public function setService(?string $service): void
-    {
-        $this->service = $service;
-    }
 
     public function getDelai(): ?int
     {

@@ -11,7 +11,7 @@ abstract class AbstractValidator
     protected function validateRequired(array $data, array $fields): void
     {
         foreach ($fields as $field => $label) {
-            if (empty($data[$field])) {
+            if (!isset($data[$field]) || $data[$field] === '') {
                 $this->errors[$field] = "Le champ {$label} ne doit pas être vide";
             }
         }

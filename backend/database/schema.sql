@@ -57,14 +57,13 @@ CREATE TABLE menu
     titre VARCHAR(50) NOT NULL,
     nombre_personne_minimum INT NOT NULL,
     prix_par_personne DOUBLE NOT NULL,
-    description VARCHAR(50) NOT NULL,
+    description VARCHAR(250) NOT NULL,
     quantite_restante int NOT NULL,
     regime_id INT NOT NULL,
     theme_id INT NOT NULL,
     image BLOB NOT NULL,
     statut VARCHAR(50) NOT NULL,
     delai INT NOT NULL,
-    service VARCHAR(50) NOT NULL,
     FOREIGN KEY (regime_id) REFERENCES regime(id),
     FOREIGN KEY (theme_id) REFERENCES theme(id)
 );

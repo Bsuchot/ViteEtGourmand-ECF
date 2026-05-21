@@ -51,6 +51,17 @@ class UtilisateurRepository extends Repository
 
         return Utilisateur::createAndHydrate($row)->toArray();
     }
+    public function findByRole(string $roleLibelle): ?array
+    {
+        $query = $this->pdo->prepare("
+        SELECT u.* FROM utilisateur u
+        JOIN role r ON u.role_id = r.id
+        WHERE r.libelle = :libelle
+        LIMIT 1
+    ");
+        $query->execute(['libelle' => $roleLibelle]);
+        return $query->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
     public function create(Utilisateur $utilisateur): void
     {
         $stmt = $this->pdo->prepare("

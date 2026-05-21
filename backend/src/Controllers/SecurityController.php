@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\AbstractController;
+use App\Core\MailService;
 use App\Core\Security\CsrfService;
 use App\Core\Security\Security;
 use App\Core\Security\Validator\UtilisateurValidator;
@@ -17,12 +18,20 @@ class SecurityController extends AbstractController
     private UtilisateurRepository $repository;
     private RoleRepository $roleRepository;
     private UtilisateurValidator $validator;
+    private MailService $mailer;
 
     public function __construct()
     {
         $this->repository     = new UtilisateurRepository();
         $this->roleRepository = new RoleRepository();
         $this->validator      = new UtilisateurValidator();
+        $this->mailer = new MailService(new UtilisateurRepository());
+    }
+
+    private function checkEmailUnique(object $repository, string $email, int $excludeId): bool
+    {
+        $existing = $repository->findByEmail($email);
+        return !$existing || $existing['id'] === $excludeId;
     }
     #[OA\Post(
         path: "/api/utilisateur/registration",
@@ -87,6 +96,8 @@ class SecurityController extends AbstractController
             Security::hashPassword($utilisateur, $data['password']);
 
             $this->repository->create($utilisateur);
+
+            $this->mailer->sendBienvenue($_ENV['MAIL_FROM'], $data['email']);
 
             $this->success(['message' => 'Utilisateur créé'], 201);
         });
@@ -157,7 +168,9 @@ class SecurityController extends AbstractController
             $_SESSION['user'] = [
                 'id'    => $utilisateur->getId(),
                 'email' => $utilisateur->getEmail(),
+                'statut' => $utilisateur->getStatut(),
                 'role'  => $role['libelle'],
+
             ];
 
             $this->success([
@@ -238,11 +251,37 @@ class SecurityController extends AbstractController
     )]
     public function logout(): void
     {
-        if (!Security::isLogged()) { $this->error('Non autorisé', 401); return; }
+        if (!Security::isLogged()) {
+            $this->error('Non autorisé', 401);
+            return;
+        }
+
+        // CSRF check
+        if (!$this->csrf->validate($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
+            $this->error('CSRF invalide', 403);
+            return;
+        }
+
+        // vider session proprement
+        $_SESSION = [];
+
+        // supprimer cookie session
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"],
+                $params["domain"],
+                $params["secure"],
+                $params["httponly"]
+            );
+        }
 
         session_destroy();
-        setcookie(session_name(), '', time() - 3600, '/');
-        $this->success(['message' => 'Déconnexion réussie']);
+
+        $this->success([
+            'message' => 'Déconnexion réussie'
+        ]);
     }
     #[OA\Get(
         path: "/api/utilisateur/{id}",
@@ -361,6 +400,7 @@ class SecurityController extends AbstractController
                     return;
                 }
                 $utilisateur->setEmail($data['email']);
+                $_SESSION['user']['email'] = $data['email'];
             }
             if (isset($data['nom']))       $utilisateur->setNom($data['nom']);
             if (isset($data['prenom']))    $utilisateur->setPrenom($data['prenom']);
@@ -460,8 +500,7 @@ class SecurityController extends AbstractController
 
             $repository->saveResetToken($user['id'], $token, $expiresAt);
 
-            $mailer = new MailService();
-            $mailer->sendReinitialisationPassword($user['email'], $user['prenom'], $token);
+            $this->mailer->sendReinitialisationPassword($user['email'], $user['prenom'], $token);
 
             $this->success(['message' => 'Si cet email existe, un lien a été envoyé.']);
         });

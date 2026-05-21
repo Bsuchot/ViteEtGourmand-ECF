@@ -16,12 +16,14 @@ class EmployeController extends AbstractController
     private UtilisateurRepository $repository;
     private RoleRepository $roleRepository;
     private EmployeValidator $validator;
+    private MailService $mailer;
 
     public function __construct()
     {
         $this->repository     = new UtilisateurRepository();
         $this->roleRepository = new RoleRepository();
         $this->validator      = new EmployeValidator($this->repository);
+        $this->mailer        = new MailService(new UtilisateurRepository());
     }
     #[OA\Post(
         path: "/api/admin/employe/create",
@@ -72,22 +74,19 @@ class EmployeController extends AbstractController
 
             $utilisateur = new Utilisateur();
             $utilisateur->setEmail($data['email']);
-            $utilisateur->setNom('nom');
-            $utilisateur->setPrenom('prenom');
+            $utilisateur->setNom($data['nom'] ?? 'nom');
+            $utilisateur->setPrenom($data['prenom'] ?? 'prenom');
             $utilisateur->setTelephone('telephone');
             $utilisateur->setAdresse('adresse');
             $utilisateur->setVille('ville');
             $utilisateur->setPays('pays');
             $utilisateur->setStatut('actif');
             $utilisateur->setRoleId($role['id']);
-
-            $plainPassword = Security::generatePassword();
-            Security::hashPassword($utilisateur, $plainPassword);
+            Security::hashPassword($utilisateur, $data['password']);
 
             $this->repository->create($utilisateur);
 
-            $mailer = new MailService();
-            $mailer->sendBienvenueEmploye($_ENV['MAIL_FROM'], $data['email']);
+            $this->mailer->sendBienvenueEmploye($data['email']);
 
             $this->success([
                 'message' => 'Employé créé avec succès',
@@ -317,7 +316,7 @@ class EmployeController extends AbstractController
             $data = json_decode(file_get_contents("php://input"), true);
             if (!$data) { $this->error('Données invalides', 400); return; }
 
-            $errors = $this->validator->validatePassword($data);
+            $errors = $this->validator->validateNewPassword($data);
             if ($errors) { $this->error($errors, 422); return; }
 
             $utilisateur = Utilisateur::createAndHydrate($utilisateurData);

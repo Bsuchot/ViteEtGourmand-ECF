@@ -17,7 +17,7 @@ class AvisValidator extends AbstractValidator
     ];
 
     private const STATUTS_AUTORISES = [
-        'en_attente', 'publie', 'rejete',
+        'En attente', 'Publié', 'Rejeté',
     ];
 
     public function validate(array $data): array
