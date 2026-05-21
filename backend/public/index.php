@@ -26,10 +26,10 @@ $isProduction = !isset($_ENV['APP_ENV']) || $_ENV['APP_ENV'] === 'production';
 session_set_cookie_params([
     'lifetime' => 86400,
     'path'     => '/',
-    'domain'   => $isProduction ? '' : 'localhost',
-    'secure'   => $isProduction,
+    'domain'   => '',
+    'secure'   => true,
     'httponly' => true,
-    'samesite' => 'Lax'
+    'samesite' => 'None'
 ]);
 session_start();
 
