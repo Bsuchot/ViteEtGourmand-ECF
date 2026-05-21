@@ -1,0 +1,32 @@
+{
+  "name": "bsuchot/vite-et-gourmand-backend",
+  "description": "API backend pour le projet Vite et Gourmand",
+  "type": "project",
+  "license": "proprietary",
+
+  "require": {
+    "php": "^8.2",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*",
+    "ext-curl": "*",
+    "vlucas/phpdotenv": "^5.6",
+    "zircote/swagger-php": "^6.1",
+    "phpmailer/phpmailer": "^7.1",
+    "mongodb/mongodb": "^2.3",
+    "ext-mongodb": "*"
+  },
+
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+
+  "scripts": {
+    "post-install-cmd": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ]
+  }
+}
+=uty@vitegourmand.fr MAIL_FROM_NAME="Vite & Gourmand" "FRONT_URL=https://vite-et-gourmand-ecf.alwaysdata.net" ORS_API_KEY=eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjY3N2JjODFiYzVmMDQ5ZTNhZTkyNzAwOGRmNjFjODE3IiwiaCI6Im11cm11cjY0In0= MONGO_URI=mongodb+srv://viteetgourmand_db_user:421118loL!@cluster0.ijh60vn.mongodb.net/?appName=Cluster0"
+heroku config:set DB_USER=vite-et-gourmand-ecf DB_PASS=753159789loL! "DB_DSN=mysql:host=mysql-vite-et-gourmand-ecf.alwaysdata.net;dbname=vite-et-gourmand-ecf_bdd;charset=utf8" MAIL_HOST=sandbox.smtp.mailtrap.io MAIL_PORT=2525 MAIL_USERNAME=bd4665716b90a1 MAIL_PASSWORD=7c99cbc04cbf9c MAIL_ENCRYPTION=tls MAIL_FROM=noreply@vitegourmand.fr "MAIL_FROM_NAME=Vite & Gourmand" "FRONT_URL=https://vite-et-gourmand-ecf.alwaysdata.net" "MONGO_URI=mongodb+srv://viteetgourmand_db_user:421118loL!@cluster0.ijh60vn.mongodb.net/?appName=Cluster0" ORS_API_KEY=ORS_API_KEY=eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjY3N2JjODFiYzVmMDQ5ZTNhZTkyNzAwOGRmNjFjODE3IiwiaCI6Im11cm11cjY0In0=

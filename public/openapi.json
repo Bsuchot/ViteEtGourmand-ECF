@@ -1,0 +1,4085 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Authentication",
+        "description": "API de gestion des utilisateurs",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Serveur local"
+        }
+    ],
+    "paths": {
+        "/api/allergene/create": {
+            "post": {
+                "tags": [
+                    "Allergène"
+                ],
+                "summary": "Créer un allergène",
+                "description": "Crée un nouvel allergène. Réservé aux administrateurs et employés.",
+                "operationId": "df8256787fd6c5fadf6ebb9378fe3077",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "libelle"
+                                ],
+                                "properties": {
+                                    "libelle": {
+                                        "type": "string",
+                                        "example": "Gluten"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Allergène créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Allergène créé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/allergene/{id}": {
+            "get": {
+                "tags": [
+                    "Allergène"
+                ],
+                "summary": "Afficher un allergène",
+                "description": "Retourne les informations d'un allergène par son identifiant. Accessible publiquement.",
+                "operationId": "d08c630ecae993fc82404625fb34374d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'allergène",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Allergène trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "libelle": {
+                                            "type": "string",
+                                            "example": "Arachide"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Allergène introuvable"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Allergène"
+                ],
+                "summary": "Modifier un allergène",
+                "description": "Met à jour le libellé d'un allergène existant. Réservé aux administrateurs et employés.",
+                "operationId": "750da404931bf321f8837f97e024159e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'allergène",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "libelle"
+                                ],
+                                "properties": {
+                                    "libelle": {
+                                        "type": "string",
+                                        "example": "Fruits à coque"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Allergène mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Allergène mis à jour avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Allergène introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Allergène"
+                ],
+                "summary": "Supprimer un allergène",
+                "description": "Supprime un allergène par son identifiant. Réservé aux administrateurs et employés.",
+                "operationId": "e33a8629620078c0277d6b7c76b0f8b1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'allergène",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Allergène supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Allergène supprimé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Allergène introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/allergene": {
+            "get": {
+                "tags": [
+                    "Allergène"
+                ],
+                "summary": "Lister tous les allergènes",
+                "description": "Retourne la liste complète des allergènes. Accessible publiquement.",
+                "operationId": "be729de044b86506fefb57225b3ea8ac",
+                "responses": {
+                    "200": {
+                        "description": "Liste des allergènes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "libelle": {
+                                                "type": "string",
+                                                "example": "Gluten"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/avis/create": {
+            "post": {
+                "tags": [
+                    "Avis"
+                ],
+                "summary": "Déposer un avis",
+                "description": "Crée un nouvel avis lié à l'utilisateur connecté. Le statut est 'en_attente' par défaut.",
+                "operationId": "3ffd30f86a00c1035069fd00c5ef61b2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "titre",
+                                    "description",
+                                    "note"
+                                ],
+                                "properties": {
+                                    "titre": {
+                                        "type": "string",
+                                        "example": "Mon avis"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Ma description"
+                                    },
+                                    "note": {
+                                        "description": "Note de 1 à 5",
+                                        "type": "integer",
+                                        "example": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Avis créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Avis créé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/avis/{id}": {
+            "get": {
+                "tags": [
+                    "Avis"
+                ],
+                "summary": "Afficher un avis",
+                "description": "Retourne les informations d'un avis par son identifiant. Accessible publiquement.",
+                "operationId": "9c56529f77cbe09222934b9037fc64d4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'avis",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Avis trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "titre": {
+                                            "type": "string",
+                                            "example": "Mon avis"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Ma description"
+                                        },
+                                        "note": {
+                                            "type": "integer",
+                                            "example": 5
+                                        },
+                                        "statut": {
+                                            "type": "string",
+                                            "example": "publié"
+                                        },
+                                        "date": {
+                                            "type": "string",
+                                            "example": "2026-05-12"
+                                        },
+                                        "utilisateurId": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Avis introuvable"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Avis"
+                ],
+                "summary": "Modifier un avis",
+                "description": "Met à jour les données d'un avis existant. Le statut est remis 'en_attente' par défaut. Réservé au propriétaire de l'avis.",
+                "operationId": "d7aeffc6c0287db7ef72e306778d7a72",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'avis",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "titre",
+                                    "description",
+                                    "note"
+                                ],
+                                "properties": {
+                                    "titre": {
+                                        "type": "string",
+                                        "example": "Mon avis"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Ma description"
+                                    },
+                                    "note": {
+                                        "type": "integer",
+                                        "example": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Avis mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Avis mis à jour avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit — l'avis n'appartient pas à l'utilisateur connecté"
+                    },
+                    "404": {
+                        "description": "Avis introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Avis"
+                ],
+                "summary": "Supprimer un avis",
+                "description": "Supprime un avis par son identifiant. Réservé aux administrateurs, employés et au propriétaire de l'avis.",
+                "operationId": "b90c14d266eafdd0b42750490691cb88",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'avis",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Avis supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Avis supprimé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Avis introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/avis": {
+            "get": {
+                "tags": [
+                    "Avis"
+                ],
+                "summary": "Lister tous les avis",
+                "description": "Retourne la liste complète des avis. Accessible publiquement.",
+                "operationId": "a0b3323210e2a44267ec1f0f6a2cb6de",
+                "responses": {
+                    "200": {
+                        "description": "Liste des avis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "titre": {
+                                                "type": "string",
+                                                "example": "Mon avis"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Ma description"
+                                            },
+                                            "note": {
+                                                "type": "integer",
+                                                "example": 5
+                                            },
+                                            "statut": {
+                                                "type": "string",
+                                                "example": "publié"
+                                            },
+                                            "date": {
+                                                "type": "string",
+                                                "example": "2026-05-12"
+                                            },
+                                            "utilisateurId": {
+                                                "type": "integer",
+                                                "example": 1
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/employe/avis/{id}/statut": {
+            "put": {
+                "tags": [
+                    "Avis"
+                ],
+                "summary": "Modifier le statut d'un avis",
+                "description": "Met à jour le statut d'un avis existant. Réservé aux administrateurs et employés.",
+                "operationId": "1c69ecd5fb360219adf6bcf29e9afea4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'avis",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "statut"
+                                ],
+                                "properties": {
+                                    "statut": {
+                                        "description": "en_attente | publié | rejeté",
+                                        "type": "string",
+                                        "example": "publié"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Statut de l'avis mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Statut de l'avis mis à jour avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Avis introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/commande/create": {
+            "post": {
+                "tags": [
+                    "Commande"
+                ],
+                "summary": "Créer une commande",
+                "description": "Crée une nouvelle commande liée à l'utilisateur connecté. Le statut est 'en_attente' par défaut.",
+                "operationId": "1535db02c5d8762a0612ea237f6a95f3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "datePrestation",
+                                    "heureLivraison",
+                                    "adresseLivraison",
+                                    "prixMenu",
+                                    "nombrePersonne",
+                                    "prixLivraison",
+                                    "menuId"
+                                ],
+                                "properties": {
+                                    "datePrestation": {
+                                        "type": "string",
+                                        "example": "2024-03-15"
+                                    },
+                                    "heureLivraison": {
+                                        "type": "string",
+                                        "example": "12:30"
+                                    },
+                                    "adresseLivraison": {
+                                        "type": "string",
+                                        "example": "5 avenue Foch, 39000 Bordeaux"
+                                    },
+                                    "prixMenu": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 50.5
+                                    },
+                                    "nombrePersonne": {
+                                        "type": "integer",
+                                        "example": 6
+                                    },
+                                    "prixLivraison": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 50.5
+                                    },
+                                    "menuId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Commande créée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Commande créée avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/commande/{id}": {
+            "get": {
+                "tags": [
+                    "Commande"
+                ],
+                "summary": "Afficher une commande",
+                "description": "Retourne les informations d'une commande par son identifiant.",
+                "operationId": "1570edb0aaef746142656499211d203d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de la commande",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Commande trouvée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "numeroDeCommande": {
+                                            "type": "string",
+                                            "example": "CMD-20240401-001"
+                                        },
+                                        "dateCommande": {
+                                            "type": "string",
+                                            "example": "2020-04-01"
+                                        },
+                                        "datePrestation": {
+                                            "type": "string",
+                                            "example": "2024-04-01"
+                                        },
+                                        "heureLivraison": {
+                                            "type": "string",
+                                            "example": "10:00"
+                                        },
+                                        "adresseLivraison": {
+                                            "type": "string",
+                                            "example": "5 avenue Foch, 39000 Bordeaux"
+                                        },
+                                        "prixMenu": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 60.5
+                                        },
+                                        "nombrePersonne": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "prixLivraison": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 90
+                                        },
+                                        "pretMateriel": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "restitutionMateriel": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "utilisateurId": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "menuId": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "statut": {
+                                            "type": "string",
+                                            "example": "en_attente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit — la commande n'appartient pas à l'utilisateur connecté"
+                    },
+                    "404": {
+                        "description": "Commande introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Commande"
+                ],
+                "summary": "Modifier une commande",
+                "description": "Met à jour les données d'une commande existante. Uniquement si la commande est encore modifiable (statut 'en_attente'). Réservé au propriétaire de la commande.",
+                "operationId": "06f5b1138e39709fc9197a71beef5f72",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de la commande",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "datePrestation",
+                                    "heureLivraison",
+                                    "adresseLivraison",
+                                    "prixMenu",
+                                    "nombrePersonne",
+                                    "prixLivraison",
+                                    "pretMateriel"
+                                ],
+                                "properties": {
+                                    "datePrestation": {
+                                        "type": "string",
+                                        "example": "2024-04-01"
+                                    },
+                                    "heureLivraison": {
+                                        "type": "string",
+                                        "example": "10:00"
+                                    },
+                                    "adresseLivraison": {
+                                        "type": "string",
+                                        "example": "5 avenue Foch, 39000 Bordeaux"
+                                    },
+                                    "prixMenu": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 10.5
+                                    },
+                                    "nombrePersonne": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "prixLivraison": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 100.5
+                                    },
+                                    "pretMateriel": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Commande mise à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Commande mise à jour avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit — commande non modifiable ou n'appartenant pas à l'utilisateur"
+                    },
+                    "404": {
+                        "description": "Commande introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Commande"
+                ],
+                "summary": "Supprimer une commande",
+                "description": "Supprime une commande. Réservé au propriétaire, uniquement si la commande est encore annulable (statut 'en_attente') ou administrateur et employés.",
+                "operationId": "729fb966b519002dc7e3c11fff9cdba0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de la commande",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Commande supprimée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Commande supprimée avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Commande introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/commande/mesCommandes": {
+            "get": {
+                "tags": [
+                    "Commande"
+                ],
+                "summary": "Lister mes commandes",
+                "description": "Retourne toutes les commandes de l'utilisateur connecté.",
+                "operationId": "a1c3269c79d8f7246649d591939d6193",
+                "responses": {
+                    "200": {
+                        "description": "Liste des commandes de l'utilisateur connecté",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "numeroDeCommande": {
+                                                "type": "string",
+                                                "example": "CMD-20240401-001"
+                                            },
+                                            "dateCommande": {
+                                                "type": "string",
+                                                "example": "2020-04-01"
+                                            },
+                                            "datePrestation": {
+                                                "type": "string",
+                                                "example": "2024-04-01"
+                                            },
+                                            "heureLivraison": {
+                                                "type": "string",
+                                                "example": "10:00"
+                                            },
+                                            "adresseLivraison": {
+                                                "type": "string",
+                                                "example": "5 avenue Foch, 39000 Bordeaux"
+                                            },
+                                            "prixMenu": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 60.5
+                                            },
+                                            "nombrePersonne": {
+                                                "type": "integer",
+                                                "example": 10
+                                            },
+                                            "prixLivraison": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 90
+                                            },
+                                            "pretMateriel": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "restitutionMateriel": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "utilisateurId": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "menuId": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "statut": {
+                                                "type": "string",
+                                                "example": "en_attente"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/commande": {
+            "get": {
+                "tags": [
+                    "Commande"
+                ],
+                "summary": "Lister toutes les commandes",
+                "description": "Retourne la liste complète des commandes. Réservé aux administrateurs et employés.",
+                "operationId": "df785422261e9cddaa6c294ba2b99e43",
+                "responses": {
+                    "200": {
+                        "description": "Liste des commandes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "numeroDeCommande": {
+                                                "type": "string",
+                                                "example": "CMD-20240401-001"
+                                            },
+                                            "dateCommande": {
+                                                "type": "string",
+                                                "example": "2020-04-01"
+                                            },
+                                            "datePrestation": {
+                                                "type": "string",
+                                                "example": "2024-04-01"
+                                            },
+                                            "heureLivraison": {
+                                                "type": "string",
+                                                "example": "10:00"
+                                            },
+                                            "adresseLivraison": {
+                                                "type": "string",
+                                                "example": "5 avenue Foch, 39000 Bordeaux"
+                                            },
+                                            "prixMenu": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 60.5
+                                            },
+                                            "nombrePersonne": {
+                                                "type": "integer",
+                                                "example": 10
+                                            },
+                                            "prixLivraison": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 90
+                                            },
+                                            "pretMateriel": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "restitutionMateriel": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "utilisateurId": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "menuId": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "statut": {
+                                                "type": "string",
+                                                "example": "en_attente"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/employe/commande/{id}/statut": {
+            "put": {
+                "tags": [
+                    "Commande"
+                ],
+                "summary": "Modifier le statut d'une commande",
+                "description": "Met à jour le statut d'une commande existante. Réservé aux administrateurs et employés.",
+                "operationId": "ab4dac8f7415e18f4e7a51cb650a8fe4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de la commande",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "statut"
+                                ],
+                                "properties": {
+                                    "statut": {
+                                        "description": "en_attente | accepté | en cours de livraison | en attente du retour de matériel | terminee",
+                                        "type": "string",
+                                        "example": "accepté"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Statut de la commande mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Statut de la commande mis à jour avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit — conditions non remplies pour passer au statut 'terminee'"
+                    },
+                    "404": {
+                        "description": "Commande introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/employe/create": {
+            "post": {
+                "tags": [
+                    "Employé"
+                ],
+                "summary": "Créer un compte employé",
+                "description": "Crée un nouveau compte employé et génère un mot de passe temporaire. Réservé aux administrateurs.",
+                "operationId": "afcf21c21d3c80a9a2740860204c7604",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "employe@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Employé créé avec succès. Le mot de passe temporaire est retourné (à envoyer par email en production).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Employé créé avec succès"
+                                        },
+                                        "password": {
+                                            "description": "Mot de passe temporaire généré automatiquement",
+                                            "type": "string",
+                                            "example": "xK9#mP2!qL"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Rôle employé introuvable en base"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/employe/{id}": {
+            "get": {
+                "tags": [
+                    "Employé"
+                ],
+                "summary": "Afficher un employé",
+                "description": "Retourne les informations d'un employé par son identifiant. Réservé aux administrateurs.",
+                "operationId": "4bc019814b4d240fd20ae58f859099a2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'employé",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Employé trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "nom": {
+                                            "type": "string",
+                                            "example": "Dupont"
+                                        },
+                                        "prenom": {
+                                            "type": "string",
+                                            "example": "Marie"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "employe@example.com"
+                                        },
+                                        "statut": {
+                                            "type": "string",
+                                            "example": "actif"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Employé introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Employé"
+                ],
+                "summary": "Supprimer un compte employé",
+                "description": "Supprime un compte employé. Les comptes administrateurs ne peuvent pas être supprimés via cette route. Réservé aux administrateurs.",
+                "operationId": "4ed70c54f1185fbfb259cbf87e7587e9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'employé",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Compte supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Compte supprimé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit — tentative de suppression d'un administrateur ou d'un non-employé"
+                    },
+                    "404": {
+                        "description": "Employé introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/employe": {
+            "get": {
+                "tags": [
+                    "Employé"
+                ],
+                "summary": "Lister tous les employés",
+                "description": "Retourne la liste de tous les comptes employés. Réservé aux administrateurs.",
+                "operationId": "4688126dd70f2585dbf82023bc6b0cc3",
+                "responses": {
+                    "200": {
+                        "description": "Liste des employés",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "nom": {
+                                                "type": "string",
+                                                "example": "Dupont"
+                                            },
+                                            "prenom": {
+                                                "type": "string",
+                                                "example": "Marie"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "employe@example.com"
+                                            },
+                                            "statut": {
+                                                "type": "string",
+                                                "example": "actif"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Employé"
+                ],
+                "summary": "Modifier plusieurs employés",
+                "description": "Met à jour les informations d'un ou plusieurs employés en une seule requête. Chaque élément doit contenir un 'id'. Réservé aux administrateurs.",
+                "operationId": "5087c17f0d476dd0533014ad31ff2a34",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "employe@example.com"
+                                        },
+                                        "nom": {
+                                            "type": "string",
+                                            "example": "Dupont"
+                                        },
+                                        "prenom": {
+                                            "type": "string",
+                                            "example": "Marie"
+                                        },
+                                        "telephone": {
+                                            "type": "string",
+                                            "example": "0612345678"
+                                        },
+                                        "adresse": {
+                                            "type": "string",
+                                            "example": "5 rue de la Paix"
+                                        },
+                                        "ville": {
+                                            "type": "string",
+                                            "example": "Lyon"
+                                        },
+                                        "pays": {
+                                            "type": "string",
+                                            "example": "France"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Employés mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Employés mis à jour"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "409": {
+                        "description": "Email déjà utilisé"
+                    },
+                    "422": {
+                        "description": "Erreurs de validation par index"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/employe/{id}/password": {
+            "put": {
+                "tags": [
+                    "Employé"
+                ],
+                "summary": "Modifier le mot de passe d'un employé",
+                "description": "Réinitialise le mot de passe d'un employé sans vérification de l'ancien mot de passe. Réservé aux administrateurs.",
+                "operationId": "8a73f3288a3a65dfb91340d9ebe6a0b8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'employé",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "newPassword"
+                                ],
+                                "properties": {
+                                    "newPassword": {
+                                        "type": "string",
+                                        "example": "NewPassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mot de passe de l'employé mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Mot de passe de l'employé mis à jour"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Employé introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/horaire/create": {
+            "post": {
+                "tags": [
+                    "Horaire"
+                ],
+                "summary": "Créer un horaire",
+                "description": "Crée un nouvel horaire d'ouverture. Réservé aux administrateurs et employés.",
+                "operationId": "b7d603f2ff1ca439b18f016709295d64",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "jour",
+                                    "heureOuverture",
+                                    "heureFermeture",
+                                    "statut"
+                                ],
+                                "properties": {
+                                    "jour": {
+                                        "type": "string",
+                                        "example": "Lundi"
+                                    },
+                                    "heureOuverture": {
+                                        "type": "string",
+                                        "example": "09:00"
+                                    },
+                                    "heureFermeture": {
+                                        "type": "string",
+                                        "example": "18:00"
+                                    },
+                                    "statut": {
+                                        "description": "ouvert | fermé",
+                                        "type": "string",
+                                        "example": "ouvert"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Horaire créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Horaire créé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/horaire": {
+            "get": {
+                "tags": [
+                    "Horaire"
+                ],
+                "summary": "Lister tous les horaires",
+                "description": "Retourne la liste complète des horaires d'ouverture. Accessible publiquement.",
+                "operationId": "f668174b48e6e039fc6281679d9847cb",
+                "responses": {
+                    "200": {
+                        "description": "Liste des horaires",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "jour": {
+                                                "type": "string",
+                                                "example": "Lundi"
+                                            },
+                                            "heureOuverture": {
+                                                "type": "string",
+                                                "example": "09:00"
+                                            },
+                                            "heureFermeture": {
+                                                "type": "string",
+                                                "example": "18:00"
+                                            },
+                                            "statut": {
+                                                "type": "string",
+                                                "example": "ouvert"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Horaire"
+                ],
+                "summary": "Modifier plusieurs horaires",
+                "description": "Met à jour un ou plusieurs horaires en une seule requête. Chaque élément doit contenir un 'id'. Réservé aux administrateurs et employés.",
+                "operationId": "75723ab7b5cf1cace784e26aef88ab5d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "required": [
+                                        "id"
+                                    ],
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "jour": {
+                                            "type": "string",
+                                            "example": "Mardi"
+                                        },
+                                        "heureOuverture": {
+                                            "type": "string",
+                                            "example": "10:00"
+                                        },
+                                        "heureFermeture": {
+                                            "type": "string",
+                                            "example": "19:00"
+                                        },
+                                        "statut": {
+                                            "type": "string",
+                                            "example": "fermé"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Horaires mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Horaires mis à jour"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "422": {
+                        "description": "Erreurs de validation par index"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/horaire/{id}": {
+            "delete": {
+                "tags": [
+                    "Horaire"
+                ],
+                "summary": "Supprimer un horaire",
+                "description": "Supprime un horaire par son identifiant. Réservé aux administrateurs et employés.",
+                "operationId": "544974748ff38ba429eff7d9045c1914",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'horaire",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Horaire supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Horaire supprimé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Horaire introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/menu/create": {
+            "post": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Créer un menu",
+                "description": "Crée un nouveau menu avec ses plats associés. Réservé aux administrateurs et employés.",
+                "operationId": "b5515beca026421982fc9424dc658797",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "titre",
+                                    "nombrePersonneMinimum",
+                                    "prixParPersonne",
+                                    "description",
+                                    "regimeId",
+                                    "themeId",
+                                    "delai",
+                                    "service",
+                                    "plats"
+                                ],
+                                "properties": {
+                                    "titre": {
+                                        "type": "string",
+                                        "example": "Menu du Chef"
+                                    },
+                                    "nombrePersonneMinimum": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "prixParPersonne": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 45
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Un menu gastronomique raffiné"
+                                    },
+                                    "quantiteRestante": {
+                                        "description": "Défaut : 0",
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "regimeId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "themeId": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "example": "https://example.com/menu.jpg"
+                                    },
+                                    "delai": {
+                                        "description": "Délai en heures",
+                                        "type": "integer",
+                                        "example": 48
+                                    },
+                                    "service": {
+                                        "type": "string",
+                                        "example": "midi"
+                                    },
+                                    "plats": {
+                                        "description": "Liste des identifiants de plats",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Menu créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Menu créé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/menu/{id}": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Afficher un menu",
+                "description": "Retourne les informations d'un menu par son identifiant. Accessible publiquement.",
+                "operationId": "9896751edcdd3be13844bc361759ffc4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du menu",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Menu trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "titre": {
+                                            "type": "string",
+                                            "example": "Menu du Chef"
+                                        },
+                                        "nombrePersonneMinimum": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "prixParPersonne": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 45
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Un menu gastronomique raffiné"
+                                        },
+                                        "quantiteRestante": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "statut": {
+                                            "type": "string",
+                                            "example": "actif"
+                                        },
+                                        "delai": {
+                                            "type": "integer",
+                                            "example": 48
+                                        },
+                                        "service": {
+                                            "type": "string",
+                                            "example": "midi"
+                                        },
+                                        "regimeId": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "themeId": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "image": {
+                                            "type": "string",
+                                            "example": "https://example.com/menu.jpg"
+                                        },
+                                        "plats": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "integer",
+                                                "example": 1
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Menu introuvable"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Modifier un menu",
+                "description": "Met à jour les informations d'un menu existant. Tous les champs sont optionnels. Réservé aux administrateurs et employés.",
+                "operationId": "d2d59717863439c6456e271445f76fa9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du menu",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "titre": {
+                                        "type": "string",
+                                        "example": "Menu Prestige"
+                                    },
+                                    "nombrePersonneMinimum": {
+                                        "type": "integer",
+                                        "example": 4
+                                    },
+                                    "prixParPersonne": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 60
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Version mise à jour"
+                                    },
+                                    "quantiteRestante": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "regimeId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "themeId": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "example": "https://example.com/new.jpg"
+                                    },
+                                    "statut": {
+                                        "type": "string",
+                                        "example": "inactif"
+                                    },
+                                    "delai": {
+                                        "type": "integer",
+                                        "example": 24
+                                    },
+                                    "service": {
+                                        "type": "string",
+                                        "example": "soir"
+                                    },
+                                    "plats": {
+                                        "description": "Remplace la liste complète des plats",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 3
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Menu mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Menu mis à jour avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Menu introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Supprimer un menu",
+                "description": "Supprime un menu par son identifiant. Réservé aux administrateurs et employés.",
+                "operationId": "45ee52452d2f069eb30c2fbbfab91793",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du menu",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Menu supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Menu supprimé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Menu introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/menu": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Lister tous les menus",
+                "description": "Retourne la liste complète des menus. Accessible publiquement.",
+                "operationId": "510efb770560961555d32d6902cf038b",
+                "responses": {
+                    "200": {
+                        "description": "Liste des menus",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "titre": {
+                                                "type": "string",
+                                                "example": "Menu du Chef"
+                                            },
+                                            "statut": {
+                                                "type": "string",
+                                                "example": "actif"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/plat/create": {
+            "post": {
+                "tags": [
+                    "Plat"
+                ],
+                "summary": "Créer un plat",
+                "description": "Crée un nouveau plat avec ses allergènes associés. Réservé aux administrateurs et employés.",
+                "operationId": "8131e4cd2fe50c2939edd83ef519e71a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "titre",
+                                    "category",
+                                    "photo"
+                                ],
+                                "properties": {
+                                    "titre": {
+                                        "type": "string",
+                                        "example": "Bœuf bourguignon"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "example": "plat"
+                                    },
+                                    "photo": {
+                                        "type": "string",
+                                        "example": "https://example.com/photo.jpg"
+                                    },
+                                    "allergenes": {
+                                        "description": "Liste des identifiants d'allergènes",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Plat créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Plat créé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/plat/{id}": {
+            "get": {
+                "tags": [
+                    "Plat"
+                ],
+                "summary": "Afficher un plat",
+                "description": "Retourne les informations d'un plat par son identifiant. Accessible publiquement.",
+                "operationId": "8e799f9edc1aa147221dae880658bbf1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du plat",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Plat trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "titre": {
+                                            "type": "string",
+                                            "example": "Bœuf bourguignon"
+                                        },
+                                        "category": {
+                                            "type": "string",
+                                            "example": "plat"
+                                        },
+                                        "photo": {
+                                            "type": "string",
+                                            "example": "https://example.com/photo.jpg"
+                                        },
+                                        "allergenes": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "integer",
+                                                "example": 1
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Plat introuvable"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Plat"
+                ],
+                "summary": "Modifier un plat",
+                "description": "Met à jour les informations d'un plat existant. Tous les champs sont optionnels. Réservé aux administrateurs et employés.",
+                "operationId": "bd38fe2cdbd2733b5e0b28503966838b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du plat",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "titre": {
+                                        "type": "string",
+                                        "example": "Poulet rôti"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "example": "plat"
+                                    },
+                                    "photo": {
+                                        "type": "string",
+                                        "example": "https://example.com/photo.jpg"
+                                    },
+                                    "allergenes": {
+                                        "description": "Remplace la liste complète des allergènes",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 2
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Plat mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Plat mis à jour avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Plat introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Plat"
+                ],
+                "summary": "Supprimer un plat",
+                "description": "Supprime un plat par son identifiant. Réservé aux administrateurs et employés.",
+                "operationId": "d920c322c6eeb016723fea09911f7562",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du plat",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Plat supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Plat supprimé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Plat introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/plat": {
+            "get": {
+                "tags": [
+                    "Plat"
+                ],
+                "summary": "Lister tous les plats",
+                "description": "Retourne la liste complète des plats. Accessible publiquement.",
+                "operationId": "1068ab7ba2f58228e13352e7149a6110",
+                "responses": {
+                    "200": {
+                        "description": "Liste des plats",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "titre": {
+                                                "type": "string",
+                                                "example": "Bœuf bourguignon"
+                                            },
+                                            "category": {
+                                                "type": "string",
+                                                "example": "plat"
+                                            },
+                                            "photo": {
+                                                "type": "string",
+                                                "example": "https://example.com/photo.jpg"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/regime/create": {
+            "post": {
+                "tags": [
+                    "Régime"
+                ],
+                "summary": "Créer un régime alimentaire",
+                "description": "Crée un nouveau régime alimentaire. Réservé aux administrateurs et employés.",
+                "operationId": "e25c9cd8bef1512c4e4c74185194525c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "libelle"
+                                ],
+                                "properties": {
+                                    "libelle": {
+                                        "type": "string",
+                                        "example": "Végétarien"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Régime créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Régime créé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/regime/{id}": {
+            "get": {
+                "tags": [
+                    "Régime"
+                ],
+                "summary": "Afficher un régime alimentaire",
+                "description": "Retourne les informations d'un régime par son identifiant. Accessible publiquement.",
+                "operationId": "a642e2bda7d42e579e3fbf4709ede48d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du régime",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Régime trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "libelle": {
+                                            "type": "string",
+                                            "example": "Végétarien"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Régime introuvable"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Régime"
+                ],
+                "summary": "Modifier un régime alimentaire",
+                "description": "Met à jour le libellé d'un régime existant. Réservé aux administrateurs et employés.",
+                "operationId": "5463a9ca38cb892d9f2e1b045fa0e208",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du régime",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "libelle"
+                                ],
+                                "properties": {
+                                    "libelle": {
+                                        "type": "string",
+                                        "example": "Vegan"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Régime mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Régime mis à jour avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Régime introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Régime"
+                ],
+                "summary": "Supprimer un régime alimentaire",
+                "description": "Supprime un régime par son identifiant. Réservé aux administrateurs et employés.",
+                "operationId": "221e1b3553f4ac9b4ba53a4074104e9b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du régime",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Régime supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Régime supprimé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Régime introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/regime": {
+            "get": {
+                "tags": [
+                    "Régime"
+                ],
+                "summary": "Lister tous les régimes alimentaires",
+                "description": "Retourne la liste complète des régimes. Accessible publiquement.",
+                "operationId": "0d459bd2fc754c64029bdd0ba1f4542a",
+                "responses": {
+                    "200": {
+                        "description": "Liste des régimes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "libelle": {
+                                                "type": "string",
+                                                "example": "Végétarien"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/role/create": {
+            "post": {
+                "tags": [
+                    "Rôle"
+                ],
+                "summary": "Créer un rôle",
+                "description": "Crée un nouveau rôle. Réservé aux administrateurs.",
+                "operationId": "b9d9348ad6a6ef24a69e0a6dc04fb0c5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "libelle"
+                                ],
+                                "properties": {
+                                    "libelle": {
+                                        "type": "string",
+                                        "example": "ROLE_MANAGER"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Rôle créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rôle créé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/role/{id}": {
+            "delete": {
+                "tags": [
+                    "Rôle"
+                ],
+                "summary": "Supprimer un rôle",
+                "description": "Supprime un rôle par son identifiant. Réservé aux administrateurs.",
+                "operationId": "0515de88901b4928d965d7de467e18c3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du rôle",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rôle supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rôle supprimé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Rôle introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateur/registration": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Créer un compte utilisateur",
+                "description": "Crée un nouveau compte utilisateur avec le rôle ROLE_USER.",
+                "operationId": "bdc63b95d4d8e92725a9242b32bf219c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "nom",
+                                    "prenom",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john@example.com"
+                                    },
+                                    "nom": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "prenom": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "telephone": {
+                                        "type": "string",
+                                        "example": "0600000000"
+                                    },
+                                    "adresse": {
+                                        "type": "string",
+                                        "example": "10 rue de Paris"
+                                    },
+                                    "ville": {
+                                        "type": "string",
+                                        "example": "Paris"
+                                    },
+                                    "pays": {
+                                        "type": "string",
+                                        "example": "France"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Utilisateur créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Utilisateur créé"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "409": {
+                        "description": "Email déjà utilisé"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                }
+            }
+        },
+        "/api/utilisateur/login": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Connexion utilisateur",
+                "description": "Authentifie l'utilisateur et ouvre une session. Retourne le token CSRF à inclure dans les requêtes suivantes.",
+                "operationId": "26baed47e42db92c9caa964a1e807fa1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Connexion réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Connexion réussie"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                },
+                                                "role": {
+                                                    "type": "string",
+                                                    "example": "ROLE_USER"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "csrf_token": {
+                                            "type": "string",
+                                            "example": "abc123xyz"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Email ou mot de passe incorrect"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                }
+            }
+        },
+        "/api/utilisateur/me": {
+            "get": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Récupérer l'utilisateur connecté",
+                "description": "Retourne les informations de l'utilisateur actuellement connecté via sa session.",
+                "operationId": "36e8ee85fb29ba39c83ce15b36d10ac1",
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur connecté",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                },
+                                                "role": {
+                                                    "type": "string",
+                                                    "example": "ROLE_USER"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateur/logout": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Déconnexion utilisateur",
+                "description": "Détruit la session de l'utilisateur connecté.",
+                "operationId": "6e07bf09295f53aa63786c278d40c035",
+                "responses": {
+                    "200": {
+                        "description": "Déconnexion réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Déconnexion réussie"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé — utilisateur non connecté"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateur/{id}": {
+            "get": {
+                "tags": [
+                    "Utilisateur"
+                ],
+                "summary": "Afficher un utilisateur",
+                "description": "Retourne les informations de l'utilisateur connecté. Accessible uniquement par le propriétaire du compte.",
+                "operationId": "bdebe287619fe9dd199b4f9ef2612dbf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "john@example.com"
+                                        },
+                                        "nom": {
+                                            "type": "string",
+                                            "example": "Doe"
+                                        },
+                                        "prenom": {
+                                            "type": "string",
+                                            "example": "John"
+                                        },
+                                        "telephone": {
+                                            "type": "string",
+                                            "example": "0600000000"
+                                        },
+                                        "adresse": {
+                                            "type": "string",
+                                            "example": "10 rue de Paris"
+                                        },
+                                        "ville": {
+                                            "type": "string",
+                                            "example": "Paris"
+                                        },
+                                        "pays": {
+                                            "type": "string",
+                                            "example": "France"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit — ressource appartenant à un autre utilisateur"
+                    },
+                    "404": {
+                        "description": "Utilisateur introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Utilisateur"
+                ],
+                "summary": "Modifier un utilisateur",
+                "description": "Met à jour les informations de l'utilisateur connecté. Tous les champs sont optionnels.",
+                "operationId": "03eb9ca8e7950647c46c08d7e26fbca5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john@example.com"
+                                    },
+                                    "nom": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "prenom": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "telephone": {
+                                        "type": "string",
+                                        "example": "0600000000"
+                                    },
+                                    "adresse": {
+                                        "type": "string",
+                                        "example": "10 rue de Paris"
+                                    },
+                                    "ville": {
+                                        "type": "string",
+                                        "example": "Paris"
+                                    },
+                                    "pays": {
+                                        "type": "string",
+                                        "example": "France"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Utilisateur mis à jour"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "409": {
+                        "description": "Email déjà utilisé"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Utilisateur"
+                ],
+                "summary": "Supprimer un utilisateur",
+                "description": "Supprime le compte de l'utilisateur connecté. Les comptes administrateurs et employés ne peuvent pas se supprimer via cette route.",
+                "operationId": "13697b5fc17825dcb70269a269e2e8c6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Compte supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Compte supprimé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit — les administrateurs et employés ne peuvent pas supprimer leur compte via cette route"
+                    },
+                    "404": {
+                        "description": "Utilisateur introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateur/{id}/password": {
+            "put": {
+                "tags": [
+                    "Utilisateur"
+                ],
+                "summary": "Modifier le mot de passe d'un utilisateur",
+                "description": "Modifie le mot de passe de l'utilisateur connecté après vérification de l'ancien mot de passe.",
+                "operationId": "69f043189f90f52377e4d7ffd30a26d3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "currentPassword",
+                                    "newPassword"
+                                ],
+                                "properties": {
+                                    "currentPassword": {
+                                        "type": "string",
+                                        "example": "OldPassword123"
+                                    },
+                                    "newPassword": {
+                                        "type": "string",
+                                        "example": "NewPassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mot de passe mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Mot de passe mis à jour"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Mot de passe actuel incorrect"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/theme/create": {
+            "post": {
+                "tags": [
+                    "Thème"
+                ],
+                "summary": "Créer un thème",
+                "description": "Crée un nouveau thème. Réservé aux administrateurs et employés.",
+                "operationId": "f1e7719fac1098803d0ed67b4efc3bec",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "libelle"
+                                ],
+                                "properties": {
+                                    "libelle": {
+                                        "type": "string",
+                                        "example": "Noël"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Thème créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Thème créé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/theme/{id}": {
+            "get": {
+                "tags": [
+                    "Thème"
+                ],
+                "summary": "Afficher un thème",
+                "description": "Retourne les informations d'un thème par son identifiant. Accessible publiquement.",
+                "operationId": "65e2037078200c987784017d17b618fb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du thème",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thème trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "libelle": {
+                                            "type": "string",
+                                            "example": "Noël"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Thème introuvable"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Thème"
+                ],
+                "summary": "Modifier un thème",
+                "description": "Met à jour le libellé d'un thème existant. Réservé aux administrateurs et employés.",
+                "operationId": "850cc2d9d94dcc2bc8789fad54467a33",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du thème",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "libelle"
+                                ],
+                                "properties": {
+                                    "libelle": {
+                                        "type": "string",
+                                        "example": "Hivernal"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Thème mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Thème mis à jour avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Thème introuvable"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Thème"
+                ],
+                "summary": "Supprimer un thème",
+                "description": "Supprime un thème par son identifiant. Réservé aux administrateurs et employés.",
+                "operationId": "6072410fc3f095ec8450823c10b3c92c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Identifiant du thème",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thème supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Thème supprimé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "403": {
+                        "description": "Accès interdit"
+                    },
+                    "404": {
+                        "description": "Thème introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/theme": {
+            "get": {
+                "tags": [
+                    "Thème"
+                ],
+                "summary": "Lister tous les thèmes",
+                "description": "Retourne la liste complète des thèmes. Accessible publiquement.",
+                "operationId": "881947bcdd7f980e04cf9b1d1c1c1535",
+                "responses": {
+                    "200": {
+                        "description": "Liste des thèmes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "libelle": {
+                                                "type": "string",
+                                                "example": "Noël"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "cookieAuth": {
+                "type": "apiKey",
+                "name": "PHPSESSID",
+                "in": "cookie"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Allergène",
+            "description": "Allergène"
+        },
+        {
+            "name": "Avis",
+            "description": "Avis"
+        },
+        {
+            "name": "Commande",
+            "description": "Commande"
+        },
+        {
+            "name": "Employé",
+            "description": "Employé"
+        },
+        {
+            "name": "Horaire",
+            "description": "Horaire"
+        },
+        {
+            "name": "Menu",
+            "description": "Menu"
+        },
+        {
+            "name": "Plat",
+            "description": "Plat"
+        },
+        {
+            "name": "Régime",
+            "description": "Régime"
+        },
+        {
+            "name": "Rôle",
+            "description": "Rôle"
+        },
+        {
+            "name": "Authentification",
+            "description": "Authentification"
+        },
+        {
+            "name": "Utilisateur",
+            "description": "Utilisateur"
+        },
+        {
+            "name": "Thème",
+            "description": "Thème"
+        }
+    ]
+}
