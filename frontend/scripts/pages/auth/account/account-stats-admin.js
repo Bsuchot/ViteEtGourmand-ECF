@@ -1,69 +1,89 @@
 import { api } from '../../../modules/api.js';
+import { showAlert } from '../../../modules/alerts.js';
 
 export function initStatsAdmin() {
     let chartInstance = null;
 
+    const collapse = document.getElementById('collapseBudget');
+    collapse?.addEventListener('show.bs.collapse', () => loadStats());
+
+    document.getElementById('btnFilterStats')?.addEventListener('click', () => loadStats());
+
     async function loadStats() {
-        try {
-            const res = await api.get('/commande/stats');
+        const menuTitre    = document.getElementById('filterMenu')?.value;
+        const dateDebut = document.getElementById('filterDateDebut')?.value;
+        const dateFin   = document.getElementById('filterDateFin')?.value;
 
-            const data = res.data || res;
+        const params = new URLSearchParams();
+        if (menuTitre)    params.append('menuTitre',    menuTitre);
+        if (dateDebut) params.append('dateDebut', dateDebut);
+        if (dateFin)   params.append('dateFin',   dateFin);
 
-            updateKPI(data);
-            renderChart(labels, values);
-
-            const labels = data.map(item => item._id);
-            const values = data.map(item => item.total);
-
-            renderChart(labels, values);
-
-        } catch (err) {
-            console.error('Erreur chargement stats:', err);
+        const res = await api.get(`/commande/stats?${params.toString()}`);
+        if (!res.success || !res.data?.length) {
+            showAlert('Aucune stat disponible.', 'warning');
+            return;
         }
+
+        const data = res.data;
+        updateKPI(data);
+        renderChart(data);
+        populateMenuFilter(data);
     }
 
     function updateKPI(data) {
-        const total = data.reduce((sum, item) => sum + item.total, 0);
+        const total   = data.reduce((sum, d) => sum + d.total, 0);
+        const orders  = data.reduce((sum, d) => sum + d.commandes, 0);
 
-        const orders = data.length;
-
-        const caEl = document.getElementById('totalCa');
+        const caEl    = document.getElementById('totalCa');
         const orderEl = document.getElementById('totalOrders');
-
-        if (caEl) caEl.textContent = total.toFixed(2) + ' €';
+        if (caEl)    caEl.textContent    = total.toFixed(2) + ' €';
         if (orderEl) orderEl.textContent = orders;
     }
 
-    function renderChart(labels, values) {
-        const ctx = document.getElementById('statsChart');
+    function populateMenuFilter(data) {
+        const select = document.getElementById('filterMenu');
+        if (!select || select.options.length > 1) return;
+        data.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value       = d.menu;
+            opt.textContent = d.menu;
+            select.appendChild(opt);
+        });
+    }
 
+    function renderChart(data) {
+        const ctx = document.getElementById('statsChart');
         if (!ctx) return;
 
-        
-        if (chartInstance) {
-            chartInstance.destroy();
-        }
+        if (chartInstance) chartInstance.destroy();
 
         chartInstance = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Chiffre d\'affaires',
-                    data: values,
-                    fill: true
-                }]
+                labels: data.map(d => d.menu),
+                datasets: [
+                    {
+                        label: "Chiffre d'affaires (€)",
+                        data:  data.map(d => d.total),
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        yAxisID: 'y',
+                    },
+                    {
+                        label: 'Nombre de commandes',
+                        data:  data.map(d => d.commandes),
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        yAxisID: 'y1',
+                    }
+                ]
             },
             options: {
                 responsive: true,
-                plugins: {
-                    legend: {
-                        display: true
-                    }
+                scales: {
+                    y:  { position: 'left',  title: { display: true, text: '€' } },
+                    y1: { position: 'right', title: { display: true, text: 'Commandes' }, grid: { drawOnChartArea: false } }
                 }
             }
         });
     }
-
-    document.addEventListener('DOMContentLoaded', loadStats);
 }

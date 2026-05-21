@@ -1,79 +1,168 @@
 import { api } from '../modules/api.js';
+import { showAlert } from '../modules/alerts.js';
 
-const inputNom = document.getElementById("nameReviewInput");
-const inputPrenom = document.getElementById("firstnameReviwInput");
-const selectMenu = document.getElementById("menuReviewFormSelect");
-const textareaReview = document.getElementById("reviewTextarea");
-const starRating = document.querySelector(".star-rating");
-const btnValidation = document.getElementById("btn-validate-review");
+// ─── Point d'entrée ───────────────────────────────────────────────────────────
+export async function init() {
+    await loadAvis();
+    initModal();
+}
 
-inputNom.addEventListener("keyup", validateForm);
-inputPrenom.addEventListener("keyup", validateForm);
-selectMenu.addEventListener("change", validateForm);
-textareaReview.addEventListener("keyup", validateForm);
+// ─── Chargement et affichage des avis ────────────────────────────────────────
+async function loadAvis() {
+    const container = document.querySelector('.container.my-4');
+    if (!container) return;
 
+    const res = await api.get('/avis/readAll');
+    if (!res.success) return;
 
-// Notation par étoiles
-document.querySelectorAll('.star-rating:not(.readonly) label').forEach(star => {
-    star.addEventListener('click', function() {
-        this.style.transform = 'scale(1.2)';
-        setTimeout(() => {
-            this.style.transform = 'scale(1)';
-        }, 200);
+    const avis = (res.data ?? []).filter(a => a.statut === 'publié');
+
+    // Supprimer les review-card statiques
+    container.querySelectorAll('.review-card').forEach(el => el.remove());
+
+    // Insérer avant le bouton
+    const btnWrapper = container.querySelector('.d-flex.justify-content-center');
+
+    if (!avis.length) {
+        const empty = document.createElement('p');
+        empty.className = 'text-muted text-center';
+        empty.textContent = 'Aucun avis pour le moment.';
+        container.insertBefore(empty, btnWrapper);
+        return;
+    }
+
+    avis.forEach(a => {
+        const card = document.createElement('div');
+        card.className = 'review-card py-3 border-bottom';
+        card.innerHTML = `
+            <div class="d-flex">
+                <div class="review-author pe-3">
+                    <strong class="d-block">${escHtml(a.utilisateurPrenom ?? '')} ${escHtml(a.utilisateurNom ?? '')}</strong>
+                    <small class="text-muted">Publié le ${formatDate(a.date)}</small>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <div class="text-warning d-flex gap-1">
+                            ${renderStars(a.note)}
+                        </div>
+                        <strong class="review-title">${escHtml(a.titre)}</strong>
+                    </div>
+                    <p class="review-text mt-2 mb-0">${escHtml(a.description)}</p>
+                </div>
+            </div>
+        `;
+        container.insertBefore(card, btnWrapper);
     });
-});
-document.querySelectorAll('.star-rating input').forEach(input => {
-    input.addEventListener('change', validateForm);
-});
-
-function validateForm() {
-
-    const nomOk = validateRequired(inputNom);
-    const prenomOk = validateRequired(inputPrenom);
-    const menuOk = validateSelected(selectMenu);
-    const reviewOk = validateRequired(textareaReview);
-    const ratingOk = validateRating();
-
-    if (nomOk && prenomOk && menuOk && reviewOk && ratingOk) {
-        btnValidation.disabled = false;
-    } else {
-        btnValidation.disabled = true;
-    }
 }
 
-function validateRequired(input){
-    if(input.value != ""){
-        input.classList.add("is-valid");
-        input.classList.remove("is-invalid");
-        return true;
-    }else{
-        input.classList.add("is-invalid");
-        input.classList.remove("is-valid");
-        return false;
-    }
+// ─── Étoiles ──────────────────────────────────────────────────────────────────
+function renderStars(note) {
+    const n = parseInt(note) || 0;
+    return Array.from({ length: 5 }, (_, i) =>
+        `<i class="bi ${i < n ? 'bi-star-fill' : 'bi-star'}"></i>`
+    ).join('');
 }
-function validateSelected(select){
-    if(select.value != ""){
-        select.classList.add("is-valid");
-        select.classList.remove("is-invalid");
-        return true;
-    }else{
-        select.classList.add("is-invalid");
-        select.classList.remove("is-valid");
-        return false;
-    }
-}
-function validateRating() {
-    const checked = document.querySelector('input[name="rating"]:checked');
-    const feedback = starRating.querySelector(".invalid-feedback");
 
-    if (checked) {
-        starRating.classList.remove("is-invalid");
-        feedback.style.display = "none";
-        return true;
-    } else {
-        starRating.classList.add("is-invalid");
-        feedback.style.display = "block";
-        return false;
-    }
+// ─── Modal dépôt d'avis ───────────────────────────────────────────────────────
+function initModal() {
+    const modal       = document.getElementById('reviewModal');
+    const btnValider  = document.getElementById('btn-validate-review');
+    if (!modal || !btnValider) return;
+
+    // Préremplir prénom/nom si connecté
+    modal.addEventListener('show.bs.modal', async () => {
+        try {
+            const me = await api.get('/utilisateur/me');
+            if (!me.success) return;
+
+            const userId = me.data.user?.id ?? me.data.id;
+            if (!userId) return;
+
+            const res = await api.get(`/utilisateur/${userId}`);
+            if (!res.success) return;
+
+            const u = res.data;
+            const inputPrenom = document.getElementById('firstnameReviwInput');
+            const inputNom    = document.getElementById('nameReviewInput');
+            if (inputPrenom && u.prenom) inputPrenom.value = u.prenom;
+            if (inputNom    && u.nom)    inputNom.value    = u.nom;
+        } catch { /* non connecté, champs vides */ }
+    });
+
+    // Soumission
+    btnValider.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        const titre       = document.getElementById('titleReviewInput')?.value.trim();
+        const description = document.getElementById('reviewTextarea')?.value.trim();
+        const noteInput   = document.querySelector('input[name="rating"]:checked');
+        const note        = noteInput ? parseInt(noteInput.value) : null;
+
+        // Validation
+        let valid = true;
+
+        if (!titre) {
+            document.getElementById('titleReviewInput')?.classList.add('is-invalid');
+            valid = false;
+        } else {
+            document.getElementById('titleReviewInput')?.classList.remove('is-invalid');
+        }
+
+        if (!description) {
+            document.getElementById('reviewTextarea')?.classList.add('is-invalid');
+            valid = false;
+        } else {
+            document.getElementById('reviewTextarea')?.classList.remove('is-invalid');
+        }
+
+        if (!note) {
+            document.querySelector('.star-rating')?.classList.add('is-invalid');
+            valid = false;
+        } else {
+            document.querySelector('.star-rating')?.classList.remove('is-invalid');
+        }
+
+        if (!valid) return;
+
+        try {
+            const res = await api.post('/avis/create', { titre, description, note });
+
+            if (res.success) {
+                bootstrap.Modal.getInstance(modal)?.hide();
+                resetModal();
+                
+                showAlert('Votre avis a bien été envoyé. Il sera visible après modération.', 'success');
+            } else {
+                showAlert('Erreur : ' + (res.error ?? 'Une erreur est survenue.'), 'danger');
+            }
+        } catch (err) {
+            if (err.status === 401) {
+                showAlert('Vous devez être connecté pour laisser un avis.', 'danger');
+            } else {
+                showAlert('Erreur lors de l\'envoi de l\'avis.', 'danger');
+            }
+        }
+    });
+}
+
+function resetModal() {
+    document.getElementById('titleReviewInput').value    = '';
+    document.getElementById('reviewTextarea').value      = '';
+    document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+    document.getElementById('titleReviewInput')?.classList.remove('is-invalid', 'is-valid');
+    document.getElementById('reviewTextarea')?.classList.remove('is-invalid', 'is-valid');
+}
+
+// ─── Utils ────────────────────────────────────────────────────────────────────
+function formatDate(dateField) {
+    const str = typeof dateField === 'string' ? dateField : (dateField?.date ?? '');
+    if (!str) return '—';
+    const [year, month, day] = str.split(/[-T ]/);
+    return `${day}/${month}/${year}`;
+}
+
+function escHtml(str) {
+    return str ? str.replace(/[&<>"']/g, m =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m])
+    ) : '';
 }

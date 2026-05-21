@@ -2,6 +2,7 @@ import { api } from '../../../modules/api.js';
 import TomSelect from 'tom-select';
 import 'tom-select/dist/css/tom-select.bootstrap5.css';
 import { loadPlats, getPlats } from './account-plats.js';
+import { showAlert } from '../../../modules/alerts.js';
 
 let menus          = [];
 let themes         = [];
@@ -35,7 +36,7 @@ export function initMenus() {
             await loadAll();
             bootstrap.Modal.getInstance(document.getElementById('confirmationDeleteModal'))?.hide();
         } else {
-            alert('Erreur : ' + (data.error ?? 'Une erreur est survenue.'));
+            showAlert('Erreur : ' + (data.error ?? 'Une erreur est survenue.'), 'danger');
         }
         pendingDeleteId = null;
     });
@@ -82,7 +83,7 @@ export function initMenus() {
                     if (updated.success) themes = updated.data;
                     callback({ value: data.data?.id, text: input });
                 } else {
-                    alert('Erreur lors de la création du thème.');
+                    showAlert('Erreur lors de la création du thème.', 'danger');
                     callback(null);
                 }
             },
@@ -100,82 +101,54 @@ export function initMenus() {
         regimes.forEach(r => sel.innerHTML += `<option value="${r.id}">${r.libelle}</option>`);
     }
 
+    function getPlatOptions(cat) {
+        const plats = getPlats();
+        return plats
+            .filter(p => p.category === cat)
+            .map(p => `<option value="${p.id}">${p.titre}</option>`)
+            .join('');
+    }
+
     function initPlatSelects() {
         const config = [
-            { containerId: 'entreeNewMenuSelect', btnId: 'btnAddEntree', cat: 'entree' },
-            { containerId: 'platNewMenuSelect',   btnId: 'btnAddPlat',   cat: 'plat' },
-            { containerId: 'dessertNewMenuSelect',btnId: 'btnAddDessert',cat: 'dessert' },
+            { containerId: 'entreeNewMenuSelect', cat: 'entree' },
+            { containerId: 'platNewMenuSelect',   cat: 'plat'   },
+            { containerId: 'dessertNewMenuSelect',cat: 'dessert' },
         ];
 
-        config.forEach(({ containerId }) => {
+        config.forEach(({ containerId, cat }) => {
             const container = document.getElementById(containerId);
-            if (container) container.innerHTML = '';
-        });
-
-        config.forEach(({ containerId, btnId, cat }) => {
-            const btn = document.getElementById(btnId);
-            if (!btn) return;
-
-            const newBtn = btn.cloneNode(true);
-            btn.replaceWith(newBtn);
-            newBtn.addEventListener('click', (e) => { e.preventDefault(); addPlatSelect(containerId, cat); });
-            addPlatSelect(containerId, cat);
+            if (!container) return;
+            container.innerHTML = `
+                <select class="form-select form-select-sm" data-cat="${cat}">
+                    <option value="">— Choisir —</option>
+                    ${getPlatOptions(cat)}
+                </select>`;
         });
     }
 
     function initEditPlatSelects(menu) {
         const config = [
-            { containerId: 'entreeEditSelects',  btnId: 'addEntreeEditMenu', cat: 'entree' },
-            { containerId: 'platEditSelects',    btnId: 'addPlatEditMenu',   cat: 'plat' },
-            { containerId: 'dessertEditSelects', btnId: 'addDessertEditMenu',cat: 'dessert' },
+            { containerId: 'entreeEditSelects',  cat: 'entree'  },
+            { containerId: 'platEditSelects',    cat: 'plat'    },
+            { containerId: 'dessertEditSelects', cat: 'dessert' },
         ];
 
-        config.forEach(({ containerId, btnId, cat }) => {
+        config.forEach(({ containerId, cat }) => {
             const container = document.getElementById(containerId);
-            if (container) container.innerHTML = '';
+            if (!container) return;
 
-            const btn = document.getElementById(btnId);
-            if (!btn) return;
+            const existing = menu.plats?.find(p => p.category === cat);
+            container.innerHTML = `
+                <select class="form-select form-select-sm" data-cat="${cat}">
+                    <option value="">— Choisir —</option>
+                    ${getPlatOptions(cat)}
+                </select>`;
 
-            const newBtn = btn.cloneNode(true);
-            btn.replaceWith(newBtn);
-            newBtn.addEventListener('click', (e) => { e.preventDefault(); addPlatSelect(containerId, cat); });
-
-            const existingPlats = menu.plats?.filter(p => p.category === cat) ?? [];
-            if (existingPlats.length > 0) {
-                existingPlats.forEach(p => addPlatSelect(containerId, cat, p.id));
-            } else {
-                addPlatSelect(containerId, cat);
-            }
+            if (existing) container.querySelector('select').value = String(existing.id);
         });
     }
 
-    function addPlatSelect(containerId, cat, defaultId = null) {
-        const plats = getPlats().filter(p => p.category === cat);
-        const container = document.getElementById(containerId);
-        if (!container) return;
-
-        const wrapper = document.createElement('div');
-        wrapper.className = 'd-flex gap-2 mb-2';
-
-        const select = document.createElement('select');
-        select.className = 'form-select form-select-sm';
-        select.dataset.cat = cat;
-        select.innerHTML = '<option value="">— Sélectionner —</option>';
-        plats.forEach(p => {
-            select.innerHTML += `<option value="${p.id}" ${defaultId == p.id ? 'selected' : ''}>${p.titre}</option>`;
-        });
-
-        const btnRemove = document.createElement('button');
-        btnRemove.type = 'button';
-        btnRemove.className = 'btn btn-sm btn-danger';
-        btnRemove.textContent = '✕';
-        btnRemove.addEventListener('click', () => wrapper.remove());
-
-        wrapper.appendChild(select);
-        wrapper.appendChild(btnRemove);
-        container.appendChild(wrapper);
-    }
 
     function renderMenus(list) {
         tbody.innerHTML = '';
@@ -187,7 +160,6 @@ export function initMenus() {
                     <td>${m.description ?? '—'}</td>
                     <td>${m.themeLibelle ?? '—'}</td>
                     <td>${m.nombrePersonneMinimum ?? '—'}</td>
-                    <td>${m.service ?? '—'}</td>
                     <td>${m.prixParPersonne ?? '—'} €</td>
                     <td>${m.regimeLibelle ?? '—'}</td>
                     <td><input type="number" class="form-control form-control-sm" value="${m.quantiteRestante ?? 0}" data-field="quantiteRestante" min="0" style="width:80px;"></td>
@@ -228,7 +200,6 @@ export function initMenus() {
         document.getElementById('editMenuPriceInput').value          = menu.prixParPersonne       ?? '';
         document.getElementById('editMenuMinPersInput').value        = menu.nombrePersonneMinimum ?? '';
         document.getElementById('editMenuDelaiInput').value          = menu.delai                ?? '';
-        document.getElementById('serviceEditMenuSelect').value       = menu.service               ?? '';
 
         // TomSelect thème
         if (tomSelectThemeEdit) { tomSelectThemeEdit.destroy(); tomSelectThemeEdit = null; }
@@ -286,7 +257,6 @@ export function initMenus() {
             prixParPersonne:       parseFloat(document.getElementById('newMenuPriceInput').value),
             nombrePersonneMinimum: parseInt(document.getElementById('newMenuMinPersInput').value),
             delai:                 parseInt(document.getElementById('newMenuDelaiInput').value),
-            service:               document.getElementById('serviceNewMenuSelect').value,
             themeId,
             regimeId:              parseInt(document.getElementById('dietNewMenuSelect').value),
             quantiteRestante:      0,
@@ -298,8 +268,7 @@ export function initMenus() {
             bootstrap.Modal.getInstance(document.getElementById('newMenuModal'))?.hide();
             await loadAll();
         } else {
-            console.log('erreur:', data);
-            alert('Erreur : ' + JSON.stringify(data.error));
+            showAlert('Erreur : ' + JSON.stringify(data.error), 'danger');
         }
     });
 
@@ -315,7 +284,7 @@ export function initMenus() {
             const menu   = menus.find(m => m.id === id);
             
             const payload = {};
-            const quantite = parseInt(row.querySelector('[data-field="quantiteRestante"]').value);
+            const quantite = parseInt(row.querySelector('[data-field="quantiteRestante"]').value, 10);
 
             if (quantite !== menu?.quantiteRestante) payload.quantiteRestante = quantite;
             if (titre  !== menu?.titre)  payload.titre  = titre;
@@ -324,10 +293,12 @@ export function initMenus() {
             if (Object.keys(payload).length > 0) promises.push(api.put(`/menu/${id}`, payload));
         });
 
-        if (promises.length === 0) { alert('Aucune modification détectée.'); return; }
+        if (promises.length === 0) { showAlert('Aucune modification détectée.', 'info'); return; }
         await Promise.all(promises);
-        alert('Menus mis à jour.');
+        showAlert('Menus mis à jour.', 'success');
         await loadAll();
+
+        
     });
 
     // Valider modification modal détail
@@ -355,7 +326,6 @@ export function initMenus() {
             prixParPersonne:       parseFloat(document.getElementById('editMenuPriceInput').value),
             nombrePersonneMinimum: parseInt(document.getElementById('editMenuMinPersInput').value),
             delai:                 parseInt(document.getElementById('editMenuDelaiInput').value) || 48,
-            service:               document.getElementById('serviceEditMenuSelect').value,
             themeId,
             regimeId:              parseInt(document.getElementById('dietEditMenuSelect').value),
             image:                 imageUrl,
@@ -366,7 +336,7 @@ export function initMenus() {
             bootstrap.Modal.getInstance(document.getElementById('detailMenuModal'))?.hide();
             await loadAll();
         } else {
-            alert('Erreur : ' + JSON.stringify(data.error));
+            showAlert('Erreur : ' + JSON.stringify(data.error), 'danger');
         }
     });
 }

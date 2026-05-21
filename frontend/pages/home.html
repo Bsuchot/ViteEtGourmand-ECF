@@ -1,3 +1,4 @@
+<div id="alertContainer" class="mt-2"></div>
 <section>
     <!--contenu principal-->
     <article>
@@ -55,78 +56,41 @@
 
         <!--Avis client-->
         <div class="container my-4">
-            <h5 class="text-primary">Avis des clients</h5>
-            <!--avis 1-->
-            <div class="d-flex align-items-start border-top border-bottom border-secondary avis1">
-                <div>
-                    <strong class="d-block mb-2">Par Prénom Nom</strong>
-                    <div class="text-info">
-                        <p class="mb-0">Publié le 01/01/2026</p>
-                        <p class="mb-0">Pour le menu :</p>
-                        <p class="mb-0">Festin de noël</p>
-                    </div>   
-                </div>
-                <div class="flex-grow-1 d-flex flex-column align-items-start ms-3">
-                    <div>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <i class="bi bi-star text-warning"></i> 
+            <h5 class="text-primary mb-3">Avis des clients</h5>
+            <!-- REVIEW -->
+            <div class="review-card py-3 border-bottom">
+                <div class="d-flex">
+                    <!-- Auteur -->
+                    <div class="review-author pe-3">
+                        <strong class="d-block">Prénom Nom</strong>
+                        <small class="text-muted">Publié le 01/01/2026</small>
                     </div>
-                    <div class="mt-2 w-100 d-flex justify-content-center">
-                        <p class="mb-0 text-center">commentaire du client ici</p> 
-                    </div>      
-                </div>    
+                    <!-- Contenu -->
+                    <div class="flex-grow-1">
+                        <!-- Rating + titre -->
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+
+                            <div class="text-warning d-flex gap-1">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star"></i>
+                            </div>
+                            <strong class="review-title">Titre de l'avis</strong>
+                        </div>
+                        <!-- commentaire -->
+                        <p class="review-text mt-2 mb-0">
+                            Commentaire du client ici. Texte lisible, aéré, responsive.
+                        </p>
+                    </div>
+                </div>
             </div>
-            <!--avis 2-->
-            <div class="d-flex align-items-start border-top border-bottom border-secondary avis2">
-                <div>
-                    <strong class="d-block mb-2">Par Prénom Nom</strong>
-                    <div class="text-info">
-                        <p class="mb-0">Publié le 01/01/2026</p>
-                        <p class="mb-0">Pour le menu :</p>
-                        <p class="mb-0">Festin de noël</p>
-                    </div>
-                </div>
-                <div class="flex-grow-1 d-flex flex-column align-items-start ms-3">
-                    <div>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <i class="bi bi-star text-warning"></i> 
-                    </div>
-                    <div class="mt-2 w-100 d-flex justify-content-center">
-                        <p class="mb-0 text-center">commentaire du client ici</p> 
-                    </div>      
-                </div>    
-            </div>
-            <!--avis 3-->
-            <div class="d-flex align-items-start border-top border-bottom border-secondary avis3">
-                <div>
-                    <strong class="d-block mb-2">Par Prénom Nom</strong>
-                    <div class="text-info">
-                        <p class="mb-0">Publié le 01/01/2026</p>
-                        <p class="mb-0">Pour le menu :</p>
-                        <p class="mb-0">Festin de noël</p>
-                    </div>   
-                </div>
-                <div class="flex-grow-1 d-flex flex-column align-items-start ms-3">
-                    <div>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <i class="bi bi-star text-warning"></i> 
-                    </div>
-                    <div class="mt-2 w-100 d-flex justify-content-center">
-                        <p class="mb-0 text-center">commentaire du client ici</p> 
-                    </div>      
-                </div>    
-            </div>     
+            <!-- bouton -->
             <div class="d-flex justify-content-center my-3">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">Donner votre avis</button>   
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                    Donner votre avis
+                </button>
             </div>
         </div>                
     </article>
@@ -154,16 +118,11 @@
                             Le nom est requis.
                         </div>
                     </div>
-                    <div>
-                        <select class="form-select" id="menuReviewFormSelect" aria-label="Default select avisMenus">
-                            <option value="" selected>Pour quel menu ?</option>
-                            <option value="1">Menu 1</option>
-                            <option value="2">Menu 2</option>
-                            <option value="3">Menu 3</option>
-                        </select>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="titleReviewInput" placeholder="Titre de l'avis">
                         <div class="invalid-feedback">
-                            Merci de choisir un menu.
-                        </div>  
+                            Le titre est requis.
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="rating-card p-4">

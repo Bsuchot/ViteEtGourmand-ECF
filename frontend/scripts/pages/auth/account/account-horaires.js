@@ -1,4 +1,5 @@
 import { api } from '../../../modules/api.js';
+import { showAlert } from '../../../modules/alerts.js';
 
 const jours = [
     { label: 'Lundi',    statut: 'statutLundi',    ouverture: 'ouvertureLundi',    fermeture: 'fermetureLundi' },
@@ -47,6 +48,6 @@ export function initHoraires() {
         })).filter(h => h.id);
 
         const data = await api.put('/horaire/update', payload);
-        alert(data.success ? 'Horaires mis à jour.' : 'Erreur : ' + (data.error ?? 'Une erreur est survenue.'));
+        showAlert(data.success ? 'Horaires mis à jour.' : 'Erreur : ' + (data.error ?? 'Une erreur est survenue.'), data.success ? 'success' : 'danger');
     });
 }

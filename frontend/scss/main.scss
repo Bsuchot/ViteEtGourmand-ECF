@@ -2,6 +2,7 @@
 @import 'custom';
 
 //style général
+
 html, body {
   height: 100%;
 }
@@ -52,12 +53,26 @@ footer.footer {
 
 }
 
+#alertContainer {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: 90%;
+    max-width: 600px;
+}
+
 .btn {
   color: #fff;
 }
 
 .bg-tertiary {
   background-color: $tertiary;
+}
+
+.hidden {
+    display: none !important;
 }
 
 
@@ -70,6 +85,29 @@ footer.footer {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.review-card {
+    transition: background 0.2s ease;
+}
+
+.review-card:hover {
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.review-author {
+    min-width: 150px;
+}
+
+.review-title {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.review-text {
+    color: #555;
+    line-height: 1.5;
 }
 
 .star-rating {
@@ -110,32 +148,64 @@ footer.footer {
 
   .accordion-button {
     position: relative;
+    display: flex;
+    flex-direction: column; // 🔥 important pour éviter les conflits flex horizontaux
+    align-items: stretch;
+
     color: #fff;
     background-image: var(--menu-image);
     background-size: cover;
     background-position: center;
-    z-index: 1;
-    align-items: stretch;
-    padding-right: 3rem;
 
-    &::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: -1;
-    }
+    z-index: 1;
+    padding-right: 3rem;
   }
 
-  // ACCORDION
+  // overlay sombre
+  .accordion-button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+  }
+
+  // chevron blanc
   .accordion-button::after {
     filter: brightness(0) invert(1);
   }
 
+  // structure interne Bootstrap
+  .accordion-button .container-fluid {
+    width: 100%;
+  }
+
+  .accordion-button .row {
+    width: 100%;
+    flex-wrap: wrap; // 🔥 évite débordement horizontal
+  }
+
+  // 🔥 FIX CRUCIAL anti-superposition
+  .accordion-button * {
+    min-width: 0;
+  }
+
+  // texte propre
+  .accordion-button p {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    margin-bottom: 0.25rem;
+  }
+
+  // prix ne doit jamais écraser le reste
+  .accordion-button .text-end {
+    flex-shrink: 0;
+  }
+
   // SOLD OUT
   .accordion-item.soldout {
+
     .accordion-button {
-      position: relative;
       color: #fff;
       pointer-events: none;
       overflow: hidden;
@@ -160,76 +230,6 @@ footer.footer {
 
     .container-fluid {
       opacity: 0.4;
-    }
-  }
-
-  // IMAGE CARD
-  .image-card {
-    position: relative;
-    max-width: 200px;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-    margin: 0 auto;
-    border-radius: 8px;
-    cursor: pointer;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: 0.3s ease;
-      position: relative;
-      z-index: 0;
-    }
-
-    .titre-image {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      transition: 0.3s ease;
-      color: #fff;
-      font-weight: 600;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-      padding: 6px 10px;
-      background: rgba(0,0,0,0.4);
-      border-radius: 6px;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .action-image-buttons {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      opacity: 0;
-      transition: 0.3s ease;
-      z-index: 2;
-    }
-
-    // overlay correct
-    &::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0);
-      transition: 0.3s ease;
-      z-index: 1;
-    }
-
-    &:hover::before {
-      background: rgba(0,0,0,0.35);
-    }
-
-    &:hover img {
-      filter: brightness(0.3);
-    }
-
-    &:hover .titre-image,
-    &:hover .action-image-buttons {
-      opacity: 1;
     }
   }
 }

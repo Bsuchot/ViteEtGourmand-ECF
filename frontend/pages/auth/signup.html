@@ -3,6 +3,7 @@
         <h1>Inscription</h1>
     </div>
 </div>
+<div id="alertContainer" class="mt-2"></div>
 <div class="container">
     <form>
         <div class="text-center text-primary my-4">
@@ -23,10 +24,10 @@
             </div>
         </div>
         <div class="mb-3">
-            <label for="GsmInput" class="form-label">Gsm</label>
-            <input type="text" class="form-control" id="GsmInput" placeholder="Votre Gsm" name="Telephone">
+            <label for="telephoneInput" class="form-label">Téléphone</label>
+            <input type="text" class="form-control" id="telephoneInput" placeholder="Votre téléphone" name="Telephone">
             <div class="invalid-feedback">
-                Le gsm est requis.
+                Le téléphone est requis.
             </div>
         </div>
         <div class="mb-3">
@@ -49,10 +50,15 @@
         </div>
         <div class="mb-3">
             <label for="CityInput" class="form-label">Ville</label>
-            <input type="text" class="form-control" id="CityInput" name="city" placeholder="Votre ville">
-            <div class="invalid-feedback">
-                La ville est requis.
-            </div>
+            <input type="text" class="form-control" id="CityInput" name="city" 
+                placeholder="Votre ville" autocomplete="on" list="citysuggestions">
+            <datalist id="citysuggestions"></datalist>
+            <div class="invalid-feedback">La ville est requise.</div>
+        </div>
+        <div class="mb-3">
+            <label for="PostalInput" class="form-label">Code postal</label>
+            <input type="text" class="form-control" id="PostalInput" name="postal" 
+                placeholder="Code postal" readonly>
         </div>
         <div class="mb-3">
             <label for="CountryInput" class="form-label">Pays</label>

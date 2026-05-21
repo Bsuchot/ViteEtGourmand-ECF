@@ -5,6 +5,7 @@
         <span class="badge bg-dark" data-show="employe">Employé</span>
     </div> 
 </div>
+<div id="alertContainer" class="mt-2"></div>
 <div class="accordion" id="accordionAccount">
   <!--Données personnel-->
   <div class="accordion-item">
@@ -49,7 +50,14 @@
                 </div>
                 <div class="mb-3">
                   <label for="changeCityFormInput" class="form-label">Ville</label>
-                  <input type="text" class="form-control" id="changeCityFormInput" name="city" placeholder="Ville">
+                  <input type="text" class="form-control" id="changeCityFormInput" 
+                        name="city" placeholder="Ville" autocomplete="on" list="citysuggestions">
+                  <datalist id="citysuggestions"></datalist>
+                </div>
+                <div class="mb-3">
+                  <label for="changePostalFormInput" class="form-label">Code postal</label>
+                  <input type="text" class="form-control" id="changePostalFormInput" 
+                        name="postal" placeholder="Code postal" readonly>
                 </div>
                 <div class="mb-3">
                   <label for="changecountryFormInput" class="form-label">Pays</label>
@@ -345,23 +353,37 @@
     <div id="collapseBudget" class="accordion-collapse collapse" data-bs-parent="#accordionAccount">
       <div class="accordion-body">
         <div class="container">
-          <div class="container">
-            <div class="row mb-3">
-              <div class="col-md-6">
-                <div class="card p-3 text-center">
-                  <h6>Total CA</h6>
-                  <h3 id="totalCa">--</h3>
-                </div>
+          <div class="row mb-3 g-2">
+            <div class="col-md-4">
+                <select class="form-select" id="filterMenu">
+                    <option value="">Tous les menus</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="date" class="form-control" id="filterDateDebut" placeholder="Date début">
+            </div>
+            <div class="col-md-3">
+                <input type="date" class="form-control" id="filterDateFin" placeholder="Date fin">
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100" id="btnFilterStats">Filtrer</button>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <div class="card p-3 text-center">
+                <h6>Total CA</h6>
+                <h3 id="totalCa">--</h3>
               </div>
-
-              <div class="col-md-6">
-                <div class="card p-3 text-center">
-                  <h6>Commandes</h6>
-                  <h3 id="totalOrders">--</h3>
-                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card p-3 text-center">
+                <h6>Commandes</h6>
+                <h3 id="totalOrders">--</h3>
               </div>
             </div>
           </div>
+          <canvas id="statsChart" height="100"></canvas>
         </div>
       </div>
     </div>
@@ -459,7 +481,6 @@
                     <th scope="col">Description</th>
                     <th scope="col">Thème</th>
                     <th scope="col">Pers. min</th>
-                    <th scope="col">Service</th>
                     <th scope="col">Prix</th>
                     <th scope="col">Régime</th>
                     <th scope="col">Stock</th>
@@ -498,9 +519,8 @@
               <table id="reviewTable" class="table table-info table-striped-columns align-middle">
                 <thead>
                   <tr>
-                    <th>Date de création</th>
                     <th>Client</th>
-                    <th>menu</th>
+                    <th>Titre</th>
                     <th>Note</th>
                     <th>Avis</th>
                     <th>Statut</th>
@@ -509,9 +529,8 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td>01/01/2026</td>
                     <td>Nom Prénom</td> 
-                    <td>titre du menu</td>
+                    <td>titre</td>
                     <td>
                       <div>
                         <i class="bi bi-star-fill text-warning"></i>
@@ -525,8 +544,8 @@
                     <!--statut-->
                     <td>
                       <select class="form-select" aria-label="review statut select">
-                        <option value="1" selected>En attente</option>
-                        <option value="2">Publiée</option>
+                        <option value="en attente" selected>En attente</option>
+                        <option value="publié">Publié</option>
                       </select>
                     </td>
                     <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationDeleteModal">Supprimer</button></td>
@@ -535,7 +554,7 @@
               </table>
             </div>
             <div class="text-center">
-              <button type="submit" class="btn btn-primary">Valider les changements</button>
+              <button type="button" class="btn btn-primary" id="btnSaveReviewChanges">Valider les changements</button>
             </div>
           </div>
         </form>
@@ -560,7 +579,7 @@
                     <th>#</th>
                     <th>Nom</th>
                     <th>Prénom</th>
-                    <th>Gsm</th>
+                    <th>Telephone</th>
                     <th>Email</th>
                     <th>Statut</th>
                     <th></th>
@@ -655,70 +674,64 @@
                   <input type="text" class="form-control" id="commandeDetailAdressFormControlInput" name="adress" placeholder="Adresse">
                 </div>
                 <div class="mb-3">
-                    <input type="text" class="form-control" id="commandeDetailPostalCodeFormControlInput" name="postal_code" placeholder="Code postal">
+                    <input type="text" class="form-control" id="commandeDetailCityFormControlInput" name="city" placeholder="Ville">
                 </div>
                 <div class="mb-3">
-                    <input type="text" class="form-control" id="commandeDetailCityFormControlInput" name="city" placeholder="Ville">
+                    <input type="text" class="form-control" id="commandeDetailCountryFormControlInput" name="country" placeholder="Pays">
                 </div>
                </div>
             </div>
-              <!--GSM-->
+              <!--Email-->
             <div class="row my-2">
                <div class="col-6 text-end">
-                <p>GSM :</p>
+                <p>Email :</p>
                </div>
                <div class="col-6 align-items-center">
-                <input type="text" class="form-control" id="commandeDetailGsmFormControlInput" name="gsm" placeholder="numéro de GSM">
+                <input type="email" class="form-control" id="commandeDetailEmailFormControlInput" name="email" placeholder="Adresse email">
+               </div>
+            </div>
+              <!--Téléphone-->
+            <div class="row my-2">
+               <div class="col-6 text-end">
+                <p>Téléphone :</p>
+               </div>
+               <div class="col-6 align-items-center">
+                <input type="text" class="form-control" id="commandeDetailTelephoneFormControlInput" name="telephone" placeholder="numéro de téléphone">
                </div>
             </div>
             <hr>
             <h5 class="text-center text-primary my-4">Récapitulatif du menu</h5>
             <div class="row">
-              <div class="col">
-                <h6 class="text-center">Entrée</h6>
-                <select class="form-select" aria-label="Menu select entree" name="command_detail_menu_entree" id="commandeDetailMenuEntree">
-                  <option value="">Choisir une Entrée</option>
-                </select>
+              <div class="col text-center">
+                <h6>Entrée</h6>
+                <p id="detailEntree">entrée du menu</p>
                 <br>
-                <h6 class="text-center">Plat</h6>
-                <select class="form-select" aria-label="Menu select plat" name="command_detail_menu_plat" id="commandeDetailMenuPlat">
-                  <option value="">Choisir un Plat</option>
-                </select>
+                <h6>Plat</h6>
+                <p id="detailPlat">plat du menu</p>
                 <br>
-                <h6 class="text-center">Dessert</h6>
-                <select class="form-select" aria-label="Menu select entree" name="command_detail_menu_dessert" id="commandeDetailMenuDessert">
-                  <option value="">Choisir un Dessert</option>
-                </select>
+                <h6>Dessert</h6>
+                <p id="detailDessert">dessert du menu</p>
               </div>
             </div>
             <hr>
             <h5 class="text-center text-primary my-4">Détail du prix</h5>
-            <!--Prix du menu-->
             <div class="col-12 col-md-8 mx-auto">
               <ul class="list-unstyled mb-0">
                 <li class="d-flex justify-content-between py-1">
                   <span>Prix du menu</span>
-                  <span class="price text-end">
-                    <span class="menuPrice">60</span> €
-                  </span>
+                  <span class="price text-end"><span class="menuPrice">60</span> €</span>
                 </li>
-                <li class="d-flex justify-content-between py-1 text-success">
+                <li class="d-flex justify-content-between py-1 text-success" id="rowReductionDetail">
                   <span>Réduction (10%)</span>
-                  <span class="price text-end">
-                    -<span class="promoPrice">6</span> €
-                  </span>
+                  <span class="price text-end">-<span class="promoPrice"></span> €</span>
                 </li>
                 <li class="d-flex justify-content-between py-1">
                   <span>Frais de livraison</span>
-                  <span class="price text-end">
-                    <span class="deliveryCost">5</span> €
-                  </span>
+                  <span class="price text-end"><span class="deliveryCost">5</span> €</span>
                 </li>
                 <li class="d-flex justify-content-between border-top pt-2 mt-2 fs-5">
                   <strong>Total TTC</strong>
-                  <strong class="price text-end">
-                    <span class="ttcPrice">59</span> €
-                  </strong>
+                  <strong class="price text-end"><span class="ttcPrice">59</span> €</strong>
                 </li>
               </ul>
             </div>
@@ -732,7 +745,7 @@
     </div>
   </div>
 </div>
-<!-- Modal annulation commande -->
+<!-- Modal annulation commande-->
 <div class="modal fade" id="annulationCommandModal" tabindex="-1" aria-labelledby="annulationCommandModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -741,19 +754,17 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <!--message user-->
-        <p>Étes-vous sur de vouloir annuler votre commande ?</p>
-        <!--message admin et emplyé-->
-        <p>Avez-vous contacter le client avant d'annuler la commande ?</p>
+          <p id="annulMsgUser" data-show="connected">Êtes-vous sûr de vouloir annuler votre commande ?</p>
+          <p id="annulMsgAdmin" data-show="admin employe">Avez-vous contacté le client avant d'annuler la commande ?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger">Oui</button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Non</button>
+          <button type="button" class="btn btn-danger" id="btnConfirmAnnulAdmin">Oui</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Non</button>
       </div>
     </div>
   </div>
 </div>
-<!--Modal détail commande amin-->
+<!--Modal détail commande admin-->
 <div class="modal fade" id="detailCommandeAdminModal" tabindex="-1" aria-labelledby="detailCommandeAdminModalLabel" data-bs-focus="true" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -771,39 +782,30 @@
                 <p>statut :</p>
                </div>
                <div class="col-6 align-items-center">
-                <select class="form-select" aria-label="Delivery select time" name="delivery_time" id="deliveryTime">
-                    <option value="1">Commande reçus</option>
-                    <option value="2">Acceptée</option>
-                    <option value="3">En préparartion</option>
-                    <option value="4">En cours de livraison</option>
-                    <option value="5">Livré</option>
-                    <option value="6">En attente retour matériel</option>
-                    <option value="7">Terminée</option>
-                </select>
+                <select class="form-select" id="deliveryTime">
+                  <option value="en attente">En attente</option>
+                  <option value="accepté">Acceptée</option>
+                  <option value="en préparation">En préparation</option>
+                  <option value="livré">Livré</option>
+                  <option value="en attente du retour de matériel">En attente retour matériel</option>
+                  <option value="terminée">Terminée</option>
+              </select>
                </div>
             </div>
             <!--date de commande-->
             <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>commande passée le :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <p>JJ/MM/AAAA</p>
-               </div>
+              <div class="col-6 text-end"><p>commande passée le :</p></div>
+              <div class="col-6"><p id="detailDateCommande">JJ/MM/AAAA</p></div>
             </div>
             <!--Nombre de personne-->
             <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>Pour :</p>
-               </div>
-               <div class="col-6 align-items-center">
+              <div class="col-6 text-end"><p>Pour :</p></div>
+              <div class="col-6">
                 <div class="input-group">
-                  <input type="number" class="form-control text-center" id="commandeDetailNumberPersonFormControlInput1" placeholder="5">
-                    <span class="input-group-text">
-                      <i class="bi bi-person-arms-up"></i>
-                    </span>
+                  <input type="number" class="form-control text-center" id="commandeDetailNumberPersonFormControlInput1">
+                  <span class="input-group-text"><i class="bi bi-person-arms-up"></i></span>
                 </div>
-               </div>
+              </div>
             </div>
             <!--Date et heure de livraison-->
             <div class="row my-2">
@@ -811,7 +813,7 @@
                 <p>A livrer le :</p>
                </div>
                <div class="col-6 align-items-center">
-                <input type="date" class="form-control" name="commande_detail_delivery_date" id="commandeDetailDeliveryDateFormControlInput1">
+                <input type="date" class="form-control" id="commandeDetailDeliveryDateFormControlInput1">
                </div>
             </div>
             <div class="row my-2">
@@ -832,39 +834,21 @@
                <div class="col-6 align-items-center">
                 <ul class="list-unstyled">
                   <li><span class="text-uppercase">nom</span> Prénom</li>
+                  <li>Téléphone : 06 06 06 06 06</li>
+                  <li>Email : exemple@domaine.com</li>
                   <li class="text-uppercase">adresse</li>
-                  <li class="text-uppercase">code postal</li>
-                  <li class="text-uppercase">ville</li>
+                  <li class="text-uppercase">Ville</li>
+                  <li class="text-uppercase">Pays</li>
                 </ul>
-               </div>
-            </div>
-              <!--GSM-->
-            <div class="row my-2">
-               <div class="col-6 text-end">
-                <p>GSM :</p>
-               </div>
-               <div class="col-6 align-items-center">
-                <input type="text" class="form-control" id="commandeDetailGsmFormControlInput1" name="gsm" placeholder="numéro de GSM">
                </div>
             </div>
             <hr>
             <h5 class="text-center text-primary my-4">Récapitulatif du menu</h5>
             <div class="row">
-              <div class="col">
-                <h6 class="text-center">Entrée</h6>
-                <select class="form-select" aria-label="Menu select entree" name="command_detail_menu_entree" id="commandeDetailMenuEntree1">
-                  <option value="">Choisir une Entrée</option>
-                </select>
-                <br>
-                <h6 class="text-center">Plat</h6>
-                <select class="form-select" aria-label="Menu select plat" name="command_detail_menu_plat" id="commandeDetailMenuPlat1">
-                  <option value="">Choisir un Plat</option>
-                </select>
-                <br>
-                <h6 class="text-center">Dessert</h6>
-                <select class="form-select" aria-label="Menu select entree" name="command_detail_menu_dessert" id="commandeDetailMenuDessert1">
-                  <option value="">Choisir un Dessert</option>
-                </select>
+              <div class="col text-center ">
+                <h6>Entrée</h6><p id="detailEntree">entrée du menu</p>
+                <h6>Plat</h6><p id="detailPlat">plat du menu</p>
+                <h6>Dessert</h6><p id="detailDessert">dessert du menu</p>
               </div>
             </div>
             <hr>
@@ -874,15 +858,11 @@
               <ul class="list-unstyled mb-0">
                 <li class="d-flex justify-content-between py-1">
                   <span>Prix du menu</span>
-                  <span class="price text-end">
-                    <span class="menuPrice">60</span> €
-                  </span>
+                  <span class="menuPrice">60</span> €
                 </li>
-                <li class="d-flex justify-content-between py-1 text-success">
-                  <span>Réduction (10%)</span>
-                  <span class="price text-end">
-                    -<span class="promoPrice">6</span> €
-                  </span>
+                <li class="d-flex justify-content-between py-1 text-success" id="rowReduction">
+                    <span>Réduction (10%)</span>
+                    <span class="price text-end">-<span class="promoPrice">0</span> €</span>
                 </li>
                 <li class="d-flex justify-content-between py-1">
                   <span>Frais de livraison</span>
@@ -930,7 +910,6 @@
 <div class="modal fade" id="newEmployeeModal" tabindex="-1" aria-labelledby="newEmployeeModalLabel" data-bs-focus="true" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="newEmployeeModalLabel">Création nouvel employé</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -946,13 +925,28 @@
             <div class="my-3">
               <input type="email" class="form-control" id="newEmployeeMailInput" placeholder="Email" name="Email">
             </div>
+            <div class="my-3">
+              <input type="password" class="form-control" id="newEmployeePasswordInput" placeholder="Mot de passe" name="Mot de passe">
+              <div class="invalid-feedback">
+                Le mot de passe doit contenir au moins 10 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.
+              </div>
+              <div class="valid-feedback">
+                Mot de passe valide.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="ValidateNewEmployeePasswordInput" class="form-label">Confirmez votre mot de passe</label>
+              <input type="password" class="form-control" id="ValidateNewEmployeePasswordInput" name="PasswordConfirm">
+              <div class="invalid-feedback">
+                  Les mots de passe ne correspondent pas.
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Valider</button>
+          <button type="button" class="btn btn-primary" id="btnCreateEmployee">Valider</button>
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
         </div>
-      </form> 
     </div>
   </div>
 </div>
@@ -974,7 +968,7 @@
             </div>
             <div class="mb-3">
               <label for="editMenuDescriptionTextarea" class="form-label">Description du menu</label>
-              <textarea class="form-control" id="editMenuDescriptionTextarea" rows="3"></textarea>
+              <textarea class="form-control" id="editMenuDescriptionTextarea" rows="4"></textarea>
             </div>
             <div class="row">
               <div class="col">
@@ -1007,15 +1001,6 @@
             </div>
             <div class="row mb-3">
               <div class="col">
-                <label for="serviceEditMenuSelect" class="form-label">Service</label>
-                <select class="form-select" id="serviceEditMenuSelect">
-                  <option value="Entrée/Plat/dessert">Entrée/Plat/dessert</option>
-                  <option value="Entrée/Plat-Plat/dessert">Entrée/Plat-Plat/dessert</option>
-                  <option value="Entrée/Plat">Entrée/Plat</option>
-                  <option value="Plat/dessert">Plat/dessert</option>
-                </select>
-              </div>
-              <div class="col">
                 <label for="theme" class="form-label">Thèmes</label>
                 <select id="themeEditMenuSelect"
                         name="themes[]"
@@ -1038,13 +1023,10 @@
             <hr>
             <h5 class="text-center text-primary my-4">Entrées</h5>
             <div id="entreeEditSelects"></div>
-            <button class="btn btn-primary" id="addEntreeEditMenu" type="button">Ajouter une entrée</button>
             <h5 class="text-center text-primary my-4">Plats</h5>
             <div id="platEditSelects"></div>
-            <button class="btn btn-primary" id="addPlatEditMenu" type="button">Ajouter un plat</button>
             <h5 class="text-center text-primary my-4">Desserts</h5>
             <div id="dessertEditSelects"></div>
-            <button class="btn btn-primary" id="addDessertEditMenu" type="button">Ajouter un dessert</button>
           </div>
         </div>
         <div class="modal-footer">
@@ -1107,15 +1089,6 @@
             </div>
             <div class="row mb-3">
               <div class="col">
-                <label for="serviceNewMenuSelect" class="form-label">Service</label>
-                <select class="form-select" aria-label="service new menu select" id="serviceNewMenuSelect">
-                  <option value="Entrée/Plat/dessert" selected>Entrée/Plat/dessert</option>
-                  <option value="Entrée/Plat-Plat/dessert">Entrée/Plat-Plat/dessert</option>
-                  <option value="Entrée/Plat">Entrée/Plat</option>
-                  <option value="Plat/dessert">Plat/dessert</option>
-                </select>
-              </div>
-              <div class="col">
                 <label for="theme" class="form-label">Thèmes</label>
                 <select id="themes"
                         name="themes[]"
@@ -1140,17 +1113,12 @@
             <!--entrée-->
             <h5 class="text-center text-primary my-4">Entrées</h5>
             <div id="entreeNewMenuSelect" class="mb-3"></div>
-            <button class="btn btn-primary" id="btnAddEntree" type="button">Ajouter une entrée</button>
-
             <!--Plats-->
             <h5 class="text-center text-primary my-4">Plats</h5>
             <div id="platNewMenuSelect" class="mb-3"></div>
-            <button class="btn btn-primary" id="btnAddPlat" type="button">Ajouter un plat</button>
-
             <!--Desserts-->
             <h5 class="text-center text-primary my-4">Desserts</h5>
             <div id="dessertNewMenuSelect" class="mb-3"></div>
-            <button class="btn btn-primary" id="btnAddDessert" type="button">Ajouter un dessert</button>
           </div>
         </div>
         <div class="modal-footer">

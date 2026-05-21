@@ -1,6 +1,7 @@
 import { api } from '../../../modules/api.js';
 import TomSelect from 'tom-select';
 import 'tom-select/dist/css/tom-select.bootstrap5.css';
+import { showAlert } from '../../../modules/alerts.js';
 
 let allPlats            = [];
 let allergenes          = [];
@@ -38,7 +39,7 @@ export function initPlats() {
             renderPlats();
             bootstrap.Modal.getInstance(document.getElementById('confirmationDeleteModal'))?.hide();
         } else {
-            alert('Erreur : ' + (data.error ?? 'Une erreur est survenue.'));
+            showAlert('Erreur : ' + (data.error ?? 'Une erreur est survenue.'), 'danger');
         }
         pendingDeletePlatId = null;
     });
@@ -72,7 +73,7 @@ export function initPlats() {
         }
 
         if (!fileInput.files[0]) {
-            alert('La photo est obligatoire.');
+            showAlert('La photo est obligatoire.', 'danger');
             return;
         }
 
@@ -82,7 +83,7 @@ export function initPlats() {
         // Upload de l'image
         const uploadData = await api.post('/upload', { photo });
         if (!uploadData.success) {
-            alert('Erreur lors de l\'upload de l\'image.');
+            showAlert('Erreur lors de l\'upload de l\'image.', 'danger');
             return;
         }
 
@@ -102,8 +103,7 @@ export function initPlats() {
             await loadPlats();
             renderPlats();
         } else {
-            console.log('erreur:', data);
-            alert('Erreur : ' + JSON.stringify(data.error));
+            showAlert('Erreur : ' + JSON.stringify(data.error), 'danger');
         }
     });
 }
@@ -130,7 +130,7 @@ function initTomSelect() {
                 if (updated.success) allergenes = updated.data;
                 callback({ value: data.data.id, text: input });
             } else {
-                alert('Erreur lors de la création de l\'allergène.');
+                showAlert('Erreur lors de la création de l\'allergène.', 'danger');
                 callback(null);
             }
         },

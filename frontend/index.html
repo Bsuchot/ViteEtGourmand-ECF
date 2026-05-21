@@ -13,37 +13,37 @@
 <body>
   <!--header-->
   <nav class="navbar navbar-expand-lg bg-secondary" data-bs-theme="dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Vite & Gourmand</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-end">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/menu">Nos menus</a>
-                    </li>
-                    <li class="nav-item" data-show="connected">
-                        <a class="nav-link" href="/account">Mon compte</a>
-                    </li>
-                    <li class="nav-item" data-show="disconnected">
-                        <a class="nav-link" href="/signin">Connexion</a>
-                    </li>
-                    <li class="nav-item" data-show="disconnected">
-                        <a class="nav-link" href="/signup">Inscription</a>
-                    </li>
-                    <li class="nav-item" >
-                        <a class="nav-link" href="/contact">Nous contacter</a>
-                    </li>
-                    <li class="nav-item" data-show="connected">
-                        <button type="submit" class="nav-link" id="signout-btn">Déconnexion</button>
-                    </li>
-                </ul>
-            </div>
-        </div>
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Vite & Gourmand</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/">Accueil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/menu">Nos menus</a>
+          </li>
+          <li class="nav-item" data-show="connected">
+            <a class="nav-link" href="/account">Mon compte</a>
+          </li>
+          <li class="nav-item" data-show="disconnected">
+            <a class="nav-link" href="/signin">Connexion</a>
+          </li>
+          <li class="nav-item" data-show="disconnected">
+            <a class="nav-link" href="/signup">Inscription</a>
+          </li>
+          <li class="nav-item" >
+            <a class="nav-link" href="/contact">Nous contacter</a>
+          </li>
+          <li class="nav-item" data-show="connected">
+            <a class="nav-link" href="#" id="logout-link">Déconnexion</a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </nav>
   <main id="main-page">
     <!--Contenu de la page-->
@@ -67,36 +67,7 @@
         <!-- Horaires -->
         <div class="col-12 col-md-3 mb-3 mb-md-0">
           <h5 class="mb-3 text-center text-md-start">Nos horaires</h5>
-          <ul class="list-unstyled mb-0">
-            <li class="d-flex justify-content-between border-bottom border-light pb-1 mb-1">
-              <span>Lundi</span>
-              <span>9h30-12h30 / 13h30-18h30</span>
-            </li>
-            <li class="d-flex justify-content-between border-bottom border-light pb-1 mb-1">
-              <span>Mardi</span>
-              <span>9h - 18h</span>
-            </li>
-            <li class="d-flex justify-content-between border-bottom border-light pb-1 mb-1">
-              <span>Mercredi</span>
-              <span>9h - 18h</span>
-            </li>
-            <li class="d-flex justify-content-between border-bottom border-light pb-1 mb-1">
-              <span>Jeudi</span>
-              <span>9h - 18h</span>
-            </li>
-            <li class="d-flex justify-content-between border-bottom border-light pb-1 mb-1">
-              <span>Vendredi</span>
-              <span>9h - 18h</span>
-            </li>
-            <li class="d-flex justify-content-between border-bottom border-light pb-1 mb-1">
-              <span>Samedi</span>
-              <span>9h - 18h</span>
-            </li>
-            <li class="d-flex justify-content-between border-bottom border-light pb-1 mb-1">
-              <span>Dimanche</span>
-              <span>9h - 18h</span>
-            </li>
-          </ul>   
+          <ul id="footer-hours" class="list-unstyled mb-0"></ul>   
         </div>
       </div> 
       <!-- CVG et mentions légales -->

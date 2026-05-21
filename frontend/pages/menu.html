@@ -3,7 +3,7 @@
         <h1>Nos menus</h1>
     </div> 
 </div>
-
+<div id="alertContainer" class="mt-2"></div>
 <div class="container">
     <div class="row">
         <!--Filtre-->
@@ -138,7 +138,7 @@
                 <input type="email" class="form-control" id="mailOrderInput" name="email" placeholder="Email">
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="gsmOrderInput" name="gsm" placeholder="numéro de GSM">
+                <input type="text" class="form-control" id="telephoneOrderInput" name="telephone" placeholder="numéro de téléphone">
             </div>
             <!--Adresse livraison-->
             <h6 class="text-primary text-center">Adresse de livraison</h6>
@@ -146,10 +146,16 @@
                 <input type="text" class="form-control" id="adressOrderInput" name="adress" placeholder="Adresse">
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="postalCodeOrderInput" name="postal_code" placeholder="Code postal">
+                <input type="text" class="form-control" id="cityOrderInput" 
+                    name="city" placeholder="Ville" autocomplete="off" list="cityOrderSuggestions">
+                <datalist id="cityOrderSuggestions"></datalist>
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control" id="cityOrderInput" name="city" placeholder="Ville">
+                <input type="text" class="form-control" id="postalOrderInput" 
+                    name="postal" placeholder="Code postal" readonly>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="countryOrderInput" name="country" placeholder="Pays">
             </div>
             <p class="text-secondary text-justify">(facturation de 5 euros (majoré de 59 centimes par kilomètre parcouru) si la livraison n’est pas dans la ville de bordeaux).</p>
             <!--date et heure de livraison-->
@@ -242,20 +248,15 @@
             </div>
             <!--Composition du menu-->
             <h5 class="text-primary text-center my-4">Composition du menu</h5>
+
             <h6 class="text-center">Entrée</h6>
-            <select class="form-select" aria-label="Menu select entree" name="command_menu_entree" id="commandeMenuEntree">
-                    <option value="">Choisir une Entrée</option>
-            </select>
-            <br>
+            <div id="commandeMenuEntree" class="border rounded p-3 mb-3 bg-light"></div>
+
             <h6 class="text-center">Plat</h6>
-            <select class="form-select" aria-label="Menu select plat" name="command_menu_plat" id="commandeMenuPlat">
-                    <option value="">Choisir un Plat</option>
-            </select>
-            <br>
+            <div id="commandeMenuPlat" class="border rounded p-3 mb-3 bg-light"></div>
+
             <h6 class="text-center">Dessert</h6>
-            <select class="form-select" aria-label="Menu select entree" name="command_menu_dessert" id="commandeMenuDessert">
-                    <option value="">Choisir un Dessert</option>
-            </select>
+            <div id="commandeMenuDessert" class="border rounded p-3 mb-3 bg-light"></div>
         </div>
         <div class="modal-footer align-items-center">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#comfirmationcommandModal">Commander</button>
@@ -276,40 +277,38 @@
       </div>
       <form action="">
         <div class="modal-body text-center align-items-center">
-            <!--Choix du menu-->
-            <div>
-                <h5>Nom du menu</h5>
-                <!--Composition du menu-->
-                <h5 class="text-primary my-4">Composition du menu</h5>
-                <h6>Entrée</h6>
-                <p>Entrée 1</p>
-                <hr/>
-                <h6>Plat</h6>
-                <p>Plat 1</p>
-                <hr/>
-                <h6>Dessert</h6>
-                <p>Dessert 1</p>
-                <button type="button" class="btn btn-primary my-4" data-bs-toggle="modal" data-bs-target="#commandModal">Modifier le menu</button>
-            </div> 
-            <!--coordonées-->
-            <div>
-                <h5 class="text-primary my-4">Coordonées de livraison</h5>
-                <p>Prénom Name</p>
-                <p>Adresse</p>
-                <p>Code postal</p>
-                <p>Ville</p>
-                <p>Email</p>
-                <p>Gsm</p>
-                <button type="button" class="btn btn-primary my-4" data-bs-toggle="modal" data-bs-target="#coordoneesModal">Modifier vos coordonées</button>
+            <!-- Menu -->
+            <h5 id="confirmMenuNom">Nom du menu</h5>
+            <h5 class="text-primary my-4">Composition du menu</h5>
+            <div id="confirmRowEntree">
+                <h6>Entrée</h6><p id="confirmEntree">—</p><hr/>
             </div>
-            <!--Prix-->
-            <div>
-                <h5 class="text-primary my-4">Facturation</h5>
-                <p>Coût du menu : 60€</p>
-                <p class="text-info">Réduction de 10% : -6€</p>
-                <p class="text-info">Frais de livraison : 5€</p>
-                <strong class="text-success">Total : 59€</strong>
+            <h6>Plat</h6><p id="confirmPlat">—</p><hr/>
+            <div id="confirmRowDessert">
+                <h6>Dessert</h6><p id="confirmDessert">—</p>
             </div>
+            <button type="button" class="btn btn-primary my-4" 
+                    data-bs-toggle="modal" data-bs-target="#commandModal">Modifier le menu</button>
+
+            <!-- Coordonnées -->
+            <h5 class="text-primary my-4">Coordonnées de livraison</h5>
+            <p id="confirmNomPrenom">—</p>
+            <p id="confirmAdresse">—</p>
+            <p id="confirmVille">—</p>
+            <p id="confirmPays">—</p>
+            <p id="confirmEmail">—</p>
+            <p id="confirmTelephone">—</p>
+            <p id="confirmDate">—</p>
+            <p id="confirmHeure">—</p>
+            <button type="button" class="btn btn-primary my-4"
+                    data-bs-toggle="modal" data-bs-target="#coordoneesModal">Modifier vos coordonnées</button>
+
+            <!-- Facturation -->
+            <h5 class="text-primary my-4">Facturation</h5>
+            <p>Coût du menu : <span id="confirmPrixMenu">—</span></p>
+            <p id="confirmRowReduction" class="text-info">Réduction 10% : <span id="confirmReduction">—</span></p>
+            <p class="text-info">Frais de livraison : <span id="confirmFraisLivraison">—</span></p>
+            <strong class="text-success">Total : <span id="confirmTotal">—</span></strong>
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Commander</button>

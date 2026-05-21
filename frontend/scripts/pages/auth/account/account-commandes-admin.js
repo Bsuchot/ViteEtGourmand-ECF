@@ -1,4 +1,5 @@
 import { api } from '../../../modules/api.js';
+import { showAlert } from '../../../modules/alerts.js';
 
 function getDateStr(dateField) {
     if (!dateField) return '';
@@ -146,8 +147,108 @@ export function initCommandesAdmin() {
             select.addEventListener('change', async () => {
                 const id = select.dataset.id;
                 const data = await api.put(`/employe/commande/${id}/statut`, { statut: select.value });
-                if (!data.success) alert('Erreur lors du changement de statut.');
+                if (!data.success){showAlert('Erreur lors du changement de statut.', 'danger')   
+                }else {showAlert('Statut mis à jour avec succès !', 'success')}
+                ;
             });
         });
+        document.querySelectorAll('#adminOrderTable button[data-id]').forEach(btn => {
+            btn.addEventListener('click', () => openDetailModal(parseInt(btn.dataset.id)));
+        });
+    }
+
+    // Détails de la commande
+    async function openDetailModal(id) {
+        const c = allCommandes.find(c => c.id === id);
+        if (!c) return;
+
+        const modal = document.querySelector('#detailCommandeAdminModal');
+
+        // Charger le détail complet
+        const res = await api.get(`/employe/commande/${id}`);
+        const detail = res.success ? res.data : c;
+
+        // Titre menu
+        modal.querySelector('#detailCommandeAdminModalLabel').textContent = 'Détail de la commande';
+        modal.querySelector('.text-center.text-primary').textContent = detail.menuTitre ?? '—';
+
+        // Statut
+        modal.querySelector('#deliveryTime').value = detail.statut ?? '';
+
+        // Date commande
+        modal.querySelector('#detailDateCommande').textContent = formatDate(getDateStr(detail.dateCommande));
+
+        // Nombre de personnes
+        modal.querySelector('#commandeDetailNumberPersonFormControlInput1').value = detail.nombrePersonne ?? '';
+
+        // Date livraison
+        modal.querySelector('#commandeDetailDeliveryDateFormControlInput1').value = getDateStr(detail.datePrestation).split(' ')[0];
+
+        // Heure livraison
+        const selHeure = modal.querySelector('#commandeDetaildeliveryTime1');
+        selHeure.innerHTML = `<option value="${detail.heureLivraison}">${detail.heureLivraison}</option>`;
+
+        // Coordonnées client
+        const ul = modal.querySelector('.list-unstyled');
+        ul.innerHTML = `
+            <li><span class="text-uppercase">${detail.utilisateurNom ?? ''}</span> ${detail.utilisateurPrenom ?? ''}</li>
+            <li>Téléphone : ${detail.utilisateurTelephone ?? '—'}</li>
+            <li>Email : ${detail.utilisateurEmail ?? '—'}</li>
+            <li>${detail.adresseLivraison ?? '—'}</li>
+        `;
+
+        // Plats depuis le menu
+        const menuRes = await api.get(`/menu/${detail.menuId}`);
+        const plats = menuRes.success ? (menuRes.data.plats ?? []) : [];
+
+        
+        const entree  = plats.find(p => p.category === 'entree')?.titre ?? '—';
+        const plat    = plats.find(p => p.category === 'plat')?.titre   ?? '—';
+        const dessert = plats.find(p => p.category === 'dessert')?.titre ?? '—';
+
+        modal.querySelector('#detailEntree').textContent  = entree;
+        modal.querySelector('#detailPlat').textContent    = plat;
+        modal.querySelector('#detailDessert').textContent = dessert;
+
+        // Prix
+        const personMin      = parseInt(menuRes.data?.nombrePersonneMinimum ?? 0);
+        const seuil          = personMin + 5;
+        const reduction      = detail.nombrePersonne >= seuil ? 0.10 : 0;
+        const prixAvantReduc = parseFloat(detail.prixMenu ?? 0) / (1 - reduction || 1);
+        const montantReduc   = prixAvantReduc * reduction;
+        const prixMenu       = parseFloat(detail.prixMenu ?? 0);
+        const prixLiv        = parseFloat(detail.prixLivraison ?? 0);
+        const total          = prixMenu + prixLiv;
+
+        modal.querySelector('.menuPrice').textContent    = prixAvantReduc.toFixed(2);
+        modal.querySelector('.deliveryCost').textContent = prixLiv.toFixed(2);
+        modal.querySelector('.ttcPrice').textContent     = total.toFixed(2);
+
+        const rowReduc = modal.querySelector('#rowReduction');
+        if (rowReduc) {
+            rowReduc.classList.toggle('hidden', reduction === 0);
+            if (reduction > 0) modal.querySelector('.promoPrice').textContent = montantReduc.toFixed(2);
+        }
+        // Bouton annulation
+        const btnAnnul = document.getElementById('btnConfirmAnnulAdmin');
+        if (btnAnnul) {
+            const newBtn = btnAnnul.cloneNode(true);
+            btnAnnul.parentNode.replaceChild(newBtn, btnAnnul);
+
+            newBtn.addEventListener('click', async () => {
+                const res = await api.delete(`/commande/${id}`);
+                if (res.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('annulationCommandModal'))?.hide();
+                    bootstrap.Modal.getInstance(modal)?.hide();
+                    showAlert('Commande annulée avec succès.', 'success');
+                    await loadCommandes();
+                } else {
+                    showAlert('Erreur lors de l\'annulation.', 'danger');
+                }
+            });
+        }
+        const isAdminOrEmploye = getRole() === 'admin' || getRole() === 'employe';
+        document.getElementById('annulMsgUser')?.style.setProperty('display', isAdminOrEmploye ? 'none' : '');
+        document.getElementById('annulMsgAdmin')?.style.setProperty('display', isAdminOrEmploye ? '' : 'none');
     }
 }

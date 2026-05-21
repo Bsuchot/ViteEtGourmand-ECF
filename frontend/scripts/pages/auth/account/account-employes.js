@@ -1,4 +1,5 @@
 import { api } from '../../../modules/api.js';
+import { showAlert } from '../../../modules/alerts.js';
 
 export function initEmployes() {
     const collapse = document.getElementById('collapseEmployeeManagement');
@@ -6,7 +7,7 @@ export function initEmployes() {
 
     const tbody         = document.querySelector('#employeeTable tbody');
     const btnSave = document.getElementById('btnSaveChanges');
-    const btnValiderNew = document.querySelector('#newEmployeeModal .btn-primary');
+    const btnValiderNew = document.getElementById('btnCreateEmployee');
 
     let employes = [];
     let pendingDeleteId = null;
@@ -19,7 +20,7 @@ export function initEmployes() {
             loadEmployes();
             bootstrap.Modal.getInstance(document.getElementById('confirmationDeleteModal'))?.hide();
         } else {
-            alert('Erreur : ' + (data.error ?? 'Une erreur est survenue.'));
+            showAlert('Erreur : ' + (data.error ?? 'Une erreur est survenue.'), 'danger');
         }
         pendingDeleteId = null;
     });
@@ -93,35 +94,78 @@ export function initEmployes() {
     });
 
     if (payload.length === 0) {
-        alert('Aucune modification détectée.');
+        showAlert('Aucune modification détectée.', 'warning');
         return;
     }
 
     const data = await api.put('/admin/employe/update', payload);
     if (data.success) {
-        alert('Employés mis à jour.');
+        showAlert('Employés mis à jour.', 'success');
         loadEmployes();
     } else {
-        alert('Erreur : ' + (data.error ?? 'Une erreur est survenue.'));
+        showAlert('Erreur : ' + (data.error ?? 'Une erreur est survenue.'), 'danger');
     }
 });
 
     btnValiderNew?.addEventListener('click', async () => {
-        const email = document.getElementById('newEmployeeMailInput').value.trim();
+        const emailInput           = document.getElementById('newEmployeeMailInput');
+        const nomInput             = document.getElementById('newEmployeeNameInput');
+        const prenomInput          = document.getElementById('newEmployeeFirstnameInput');
+        const passwordInput        = document.getElementById('newEmployeePasswordInput');
+        const passwordConfirmInput = document.getElementById('ValidateNewEmployeePasswordInput');
 
-        if (!email) {
-            document.getElementById('newEmployeeMailInput').classList.add('is-invalid');
-            return;
+        function validateRequired(input) {
+            const ok = input.value.trim() !== '';
+            input.classList.toggle('is-valid', ok);
+            input.classList.toggle('is-invalid', !ok);
+            return ok;
         }
 
-        const data = await api.post('/admin/employe/create', { email });
+        function validateEmail(input) {
+            const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+            input.classList.toggle('is-valid', ok);
+            input.classList.toggle('is-invalid', !ok);
+            return ok;
+        }
+
+        function validatePassword(input) {
+            const ok = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{10,}$/.test(input.value);
+            input.classList.toggle('is-valid', ok);
+            input.classList.toggle('is-invalid', !ok);
+            return ok;
+        }
+
+        function validatePasswordConfirm(inputPwd, inputConfirm) {
+            const ok = inputPwd.value === inputConfirm.value && inputConfirm.value !== '';
+            inputConfirm.classList.toggle('is-valid', ok);
+            inputConfirm.classList.toggle('is-invalid', !ok);
+            return ok;
+        }
+
+        const ok = validateRequired(nomInput)
+            && validateRequired(prenomInput)
+            && validateEmail(emailInput)
+            && validatePassword(passwordInput)
+            && validatePasswordConfirm(passwordInput, passwordConfirmInput);
+
+        if (!ok) return;
+
+        const data = await api.post('/admin/employe/create', {
+            email:    emailInput.value.trim(),
+            nom:      nomInput.value.trim(),
+            prenom:   prenomInput.value.trim(),
+            password: passwordInput.value,
+        });
 
         if (data.success) {
             bootstrap.Modal.getInstance(document.getElementById('newEmployeeModal'))?.hide();
-            document.getElementById('newEmployeeMailInput').value = '';
+            [emailInput, nomInput, prenomInput, passwordInput, passwordConfirmInput].forEach(el => {
+                el.value = '';
+                el.classList.remove('is-valid', 'is-invalid');
+            });
             loadEmployes();
         } else {
-            alert('Erreur : ' + (data.error ?? 'Une erreur est survenue.'));
+            showAlert('Erreur : ' + (data.error ?? 'Une erreur est survenue.'), 'danger');
         }
     });
 }
