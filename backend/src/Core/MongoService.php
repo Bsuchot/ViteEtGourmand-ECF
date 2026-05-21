@@ -11,8 +11,9 @@ class MongoService
 
     public function __construct()
     {
-        $this->client = new Client("mongodb://localhost:27017");
-        $this->db = $this->client->viteEtGourmand;
+        $uri = $_ENV['MONGO_URI'] ?? getenv('MONGO_URI');
+        $this->client = new Client($uri);
+        $this->db = $this->client->selectDatabase('viteEtGourmand');
     }
 
     public function getCollection($name)

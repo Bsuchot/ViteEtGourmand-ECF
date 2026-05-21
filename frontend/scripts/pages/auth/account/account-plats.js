@@ -1,4 +1,4 @@
-import { api } from '../../../modules/api.js';
+import { api, API_URL } from '../../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
 
 let allPlats            = [];
@@ -161,7 +161,7 @@ function renderPlats() {
             tbodies[cat].innerHTML += `
                 <tr data-id="${p.id}">
                     <td>${p.titre}</td>
-                    <td>${p.photo ? `<img src="${p.photo}" height="40" alt="${p.titre}">` : '—'}</td>
+                    <td>${p.photo ? `<img src="${p.photo?.startsWith('/') ? API_URL + p.photo : p.photo}" height="40" alt="${p.titre}">` : '—'}</td>
                     <td>
                         <button type="button" class="btn btn-sm btn-info btn-allergenes" 
                             data-allergenes="${p.allergenesLibelle ?? ''}">
