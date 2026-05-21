@@ -1,4 +1,4 @@
-const BASE_URL = '/api';
+const BASE_URL = 'https://vite-et-gourmand-ecf-8adbd2933cc2.herokuapp.com/api';
 let csrfToken = null;
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
