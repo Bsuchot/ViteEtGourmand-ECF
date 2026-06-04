@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../../modules/api.js';
+import { api } from '../../../modules/api.js';
 import { loadPlats, getPlats } from './account-plats.js';
 import { showAlert } from '../../../modules/alerts.js';
 import TomSelect from 'tom-select';

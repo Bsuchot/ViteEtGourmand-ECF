@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7f54c494-f663-4ae1-adaa-66eec350b875" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/backend/src/Controllers/HoraireController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controllers/HoraireController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Controllers/MenuController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controllers/MenuController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Controllers/PlatController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controllers/PlatController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Controllers/SecurityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controllers/SecurityController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Core/MongoService.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Core/MongoService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/scripts/pages/auth/account/account-menus.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/scripts/pages/auth/account/account-menus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/scripts/pages/auth/account/account-plats.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/scripts/pages/auth/account/account-plats.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/scripts/pages/auth/account/account-stats-admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/scripts/pages/auth/account/account-stats-admin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/scss/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/scss/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/scss/main.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/scss/main.css.map" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/backend/composer.json</pharConfigPath>
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Bsuchot&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Bsuchot/ViteEtGourmand-ECF.git&quot;,
+    &quot;accountId&quot;: &quot;a3b562e4-4f55-479f-8a68-035364d85555&quot;
+  }
+}</component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="$PROJECT_DIR$/../../../../../xampp/php/php.exe">
+    <include_path>
+      <path value="$PROJECT_DIR$/backend/vendor/composer" />
+      <path value="$PROJECT_DIR$/backend/vendor/graham-campbell/result-type" />
+      <path value="$PROJECT_DIR$/backend/vendor/phpoption/phpoption" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/backend/vendor/vlucas/phpdotenv" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/backend/vendor/phpstan/phpdoc-parser" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/backend/vendor/zircote/swagger-php" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/type-info" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/backend/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/backend/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/backend/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/backend/vendor/radebatz/type-info-extras" />
+      <path value="$PROJECT_DIR$/backend/vendor/phpmailer/phpmailer" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-php85" />
+      <path value="$PROJECT_DIR$/backend/vendor/mongodb/mongodb" />
+    </include_path>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="3E1UV1aeeVlJp4kCKL634U11Hst" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "develop",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/env/Workspace/Projets/ECF/ViteEtGourmand-ECF",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\env\Workspace\Projets\ECF\ViteEtGourmand-ECF\backend\hash" />
+      <recent name="C:\env\Workspace\Projets\ECF\ViteEtGourmand-ECF\backend" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-PS-253.30387.85" />
+        <option value="bundled-php-predefined-a98d8de5180a-0e0d91225499-com.jetbrains.php.sharedIndexes-PS-253.30387.85" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7f54c494-f663-4ae1-adaa-66eec350b875" name="Changes" comment="" />
+      <created>1779345589487</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1779345589487</updated>
+      <workItem from="1779345590872" duration="3955000" />
+      <workItem from="1779363048926" duration="3448000" />
+      <workItem from="1779368732477" duration="1662000" />
+      <workItem from="1779381479309" duration="1620000" />
+      <workItem from="1780581474839" duration="705000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

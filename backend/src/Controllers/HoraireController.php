@@ -6,7 +6,7 @@ use App\Core\AbstractController;
 use App\Core\Security\Validator\HoraireValidator;
 use App\Models\Horaire;
 use App\Repository\HoraireRepository;
-use OpenApi\Attributes as OA;                                                                        // Fix: "Annotations" → "Attributes"
+use OpenApi\Attributes as OA;
 
 class HoraireController extends AbstractController
 {
