@@ -12,7 +12,7 @@ class MongoService
     public function __construct()
     {
         $this->client = new Client($_ENV['MONGO_URI']);
-        $this->db = $this->client->viteEtGourmand;
+        $this->db = $this->client->viteetgourmand;
     }
 
     public function getCollection($name)
