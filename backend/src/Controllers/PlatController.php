@@ -6,7 +6,7 @@ use App\Core\AbstractController;
 use App\Core\Security\Validator\PlatValidator;
 use App\Models\Plat;
 use App\Repository\PlatRepository;
-use OpenApi\Attributes as OA;                                                                        // Fix: "Annotations" → "Attributes"
+use OpenApi\Attributes as OA;
 
 class PlatController extends AbstractController
 {

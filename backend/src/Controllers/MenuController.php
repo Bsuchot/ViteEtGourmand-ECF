@@ -6,7 +6,7 @@ use App\Core\AbstractController;
 use App\Core\Security\Validator\MenuValidator;
 use App\Models\Menu;
 use App\Repository\MenuRepository;
-use OpenApi\Attributes as OA;                                                                        // Fix: "Annotations" → "Attributes"
+use OpenApi\Attributes as OA;
 
 class MenuController extends AbstractController
 {

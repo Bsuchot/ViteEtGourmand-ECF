@@ -1,6 +1,4 @@
 import { api } from '../../../modules/api.js';
-import TomSelect from 'tom-select';
-import 'tom-select/dist/css/tom-select.bootstrap5.css';
 import { loadPlats, getPlats } from './account-plats.js';
 import { showAlert } from '../../../modules/alerts.js';
 

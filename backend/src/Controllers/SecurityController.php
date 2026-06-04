@@ -593,18 +593,30 @@ class SecurityController extends AbstractController
 
             if (!$base64) { $this->error('Aucune image', 400); return; }
 
-            preg_match('/^data:image\/(\w+);base64,/', $base64, $matches);
-            $extension = $matches[1] ?? 'jpg';
-            $imageData = base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $base64));
+            // Upload vers Cloudinary
+            $cloudName = $_ENV['CLOUD_NAME'];
+            $apiKey    = $_ENV['CLOUD_API_KEY'];
+            $apiSecret = $_ENV['CLOUD_API_SECRET'];
 
-            $filename  = uniqid('plat_') . '.' . $extension;
-            $uploadDir = __DIR__ . '/../../public/uploads/';
+            $ch = curl_init("https://api.cloudinary.com/v1_1/{$cloudName}/image/upload");
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST           => true,
+                CURLOPT_POSTFIELDS     => [
+                    'file'      => $base64,
+                    'upload_preset' => 'ml_default', // ou ton preset
+                    'api_key'   => $apiKey,
+                    'timestamp' => time(),
+                ],
+            ]);
+            $response = json_decode(curl_exec($ch), true);
+            curl_close($ch);
 
-            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
-
-            file_put_contents($uploadDir . $filename, $imageData);
-
-            $this->success(['url' => '/uploads/' . $filename]);
+            if (isset($response['secure_url'])) {
+                $this->success(['url' => $response['secure_url']]);
+            } else {
+                $this->error('Erreur upload Cloudinary', 500);
+            }
         });
     }
 }
