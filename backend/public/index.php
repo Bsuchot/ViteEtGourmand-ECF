@@ -16,25 +16,40 @@ use App\Controllers\AvisController;
 use App\Controllers\EmployeController;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-$dotenv = Dotenv::createImmutable(__DIR__.'/..');
-$dotenv->load();
+if (file_exists(__DIR__.'/../.env')) {
+    $dotenv = Dotenv::createImmutable(__DIR__.'/..');
+    $dotenv->load();
+}
+error_reporting(E_ALL);
+ini_set('log_errors', 1);
+ini_set('error_log', 'php://stderr');
+
+$isProduction = !isset($_ENV['APP_ENV']) || $_ENV['APP_ENV'] === 'production';
 
 session_set_cookie_params([
     'lifetime' => 86400,
     'path'     => '/',
-    'domain'   => 'localhost',
-    'secure'   => false,
+    'domain'   => '',
+    'secure'   => true,
     'httponly' => true,
-    'samesite' => 'Lax'
+    'samesite' => 'None'
 ]);
 session_start();
 
-header('Access-Control-Allow-Origin: http://localhost:5500');
+$allowedOrigins = [
+    'http://localhost:5500',
+    'https://vite-et-gourmand-ecf.alwaysdata.net'
+];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (in_array($origin, $allowedOrigins)) {
+    header('Access-Control-Allow-Origin: ' . $origin);
+}
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-CSRF-TOKEN');
 header('Content-Type: application/json');
-header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self' http://localhost:5500 https://geo.api.gouv.fr https://api-adresse.data.gouv.fr https://api.openrouteservice.org; frame-ancestors 'none';");
+header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self' http://localhost:5500 https://vite-et-gourmand-ecf.alwaysdata.net https://vite-et-gourmand-ecf-8adbd2933cc2.herokuapp.com https://geo.api.gouv.fr https://api-adresse.data.gouv.fr https://api.openrouteservice.org; frame-ancestors 'none';");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);

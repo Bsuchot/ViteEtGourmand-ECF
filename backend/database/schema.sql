@@ -134,7 +134,7 @@ INSERT INTO role (libelle) VALUES
     ('ROLE_EMPLOYE'),
     ('ROLE_USER');
 
-INSERT INTO utilisateur (email, password, prenom, nom, telephone, ville, pays, adresse, role_id) VALUES
+INSERT INTO utilisateur (email, password, prenom, nom, telephone, ville, pays, adresse, statut, role_id) VALUES
     (
      'admin@mail.fr',
      '$2y$10$6W.7FUTUvRXWGQbaXp9Wlu51aNNigZ9VXxCX5vouW8QIxcLyN2EG2',
@@ -144,6 +144,7 @@ INSERT INTO utilisateur (email, password, prenom, nom, telephone, ville, pays, a
      'ville',
      'pays',
      'adresse',
+     'actif',
      1
      );
 INSERT INTO horaire (jour, statut, heure_ouverture, heure_fermeture) VALUES

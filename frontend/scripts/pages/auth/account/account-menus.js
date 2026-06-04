@@ -1,6 +1,8 @@
 import { api } from '../../../modules/api.js';
 import { loadPlats, getPlats } from './account-plats.js';
 import { showAlert } from '../../../modules/alerts.js';
+import TomSelect from 'tom-select';
+import 'tom-select/dist/css/tom-select.bootstrap5.css';
 
 
 let menus          = [];
@@ -163,7 +165,7 @@ export function initMenus() {
                     <td>${m.prixParPersonne ?? '—'} €</td>
                     <td>${m.regimeLibelle ?? '—'}</td>
                     <td><input type="number" class="form-control form-control-sm" value="${m.quantiteRestante ?? 0}" data-field="quantiteRestante" min="0" style="width:80px;"></td>
-                    <td>${m.image ? `<img src="${m.image}" height="40" alt="${m.titre}">` : '—'}</td>
+                    <td>${m.image ? `<img src="${m.image?.startsWith('/') ? API_URL + m.image : m.image}" height="40" alt="${m.titre}">` : '—'}</td>
                     <td>${m.delai ?? '—'} jours</td>
                     <td>
                         <select class="form-select form-select-sm" data-field="statut">
@@ -229,7 +231,7 @@ export function initMenus() {
         if (imgContainer) {
             const isValidUrl = menu.image?.startsWith('/');
             imgContainer.innerHTML = isValidUrl
-                ? `<img src="${menu.image}" height="60" class="mb-2">`
+                ? `<img src="${menu.image?.startsWith('/') ? API_URL + menu.image : menu.image}" height="60" class="mb-2">`
                 : '<p class="text-muted small text-danger">Image invalide — veuillez en choisir une nouvelle.</p>';
         }
     }
