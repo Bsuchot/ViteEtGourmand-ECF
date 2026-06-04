@@ -2,17 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7f54c494-f663-4ae1-adaa-66eec350b875" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/backend/src/Controllers/HoraireController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controllers/HoraireController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/Controllers/MenuController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controllers/MenuController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/Controllers/PlatController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controllers/PlatController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/Controllers/SecurityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controllers/SecurityController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/Core/MongoService.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Core/MongoService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/scripts/pages/auth/account/account-menus.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/scripts/pages/auth/account/account-menus.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/scripts/pages/auth/account/account-plats.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/scripts/pages/auth/account/account-plats.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/scripts/pages/auth/account/account-stats-admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/scripts/pages/auth/account/account-stats-admin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/scss/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/scss/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/scss/main.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/scss/main.css.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,6 +69,7 @@
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "git-widget-placeholder": "develop",
@@ -114,7 +105,7 @@
       <workItem from="1779363048926" duration="3448000" />
       <workItem from="1779368732477" duration="1662000" />
       <workItem from="1779381479309" duration="1620000" />
-      <workItem from="1780581474839" duration="705000" />
+      <workItem from="1780581474839" duration="1992000" />
     </task>
     <servers />
   </component>

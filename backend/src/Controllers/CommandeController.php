@@ -324,7 +324,7 @@ class CommandeController extends AbstractController
     )]
     public function stats(): void
     {
-        if (!$this->requireAdminOrEmploye()) return;
+        if (!$this->requireAdmin()) return;
 
         $this->tryCatch(function () {
             $menuTitre = $_GET['menuTitre'] ?? null;
