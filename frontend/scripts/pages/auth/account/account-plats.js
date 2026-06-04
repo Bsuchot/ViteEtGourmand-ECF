@@ -1,5 +1,7 @@
 import { api, API_URL } from '../../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
+import TomSelect from 'tom-select';
+import 'tom-select/dist/css/tom-select.bootstrap5.css';
 
 let allPlats            = [];
 let allergenes          = [];

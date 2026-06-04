@@ -1,6 +1,8 @@
 import { api, API_URL } from '../../../modules/api.js';
 import { loadPlats, getPlats } from './account-plats.js';
 import { showAlert } from '../../../modules/alerts.js';
+import TomSelect from 'tom-select';
+import 'tom-select/dist/css/tom-select.bootstrap5.css';
 
 
 let menus          = [];
