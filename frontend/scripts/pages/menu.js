@@ -1,6 +1,6 @@
-import { api } from '../modules/api.js';
 import { showAlert } from '../modules/alerts.js';
 import { isConnected } from '../main.js';
+import { api, API_URL } from '../modules/api.js';
 
 // ─── État global ─────────────────────────────────────────────────────────────
 let allMenus = [];
@@ -90,7 +90,8 @@ function renderMenus(menus) {
         const item = document.createElement('div');
         item.className = `accordion-item border-secondary${isSoldOut ? ' soldout' : ''}`;
         item.dataset.menuId = menu.id;
-        item.style.setProperty('--menu-image', `url(${menu.image ?? ''})`);
+        const imageUrl = menu.image?.startsWith('/') ? API_URL + menu.image : (menu.image ?? '');
+        item.style.setProperty('--menu-image', `url(${imageUrl})`);
 
         item.innerHTML = `
             <h2 class="accordion-header">
@@ -200,7 +201,7 @@ function renderPlatSection(label, plats) {
         <div class="col-4 d-flex justify-content-center">
             ${plat.photo ? `
             <div class="plat-image shadow">
-                <img src="${escHtml(plat.photo)}"
+                <img src="${escHtml(plat.photo?.startsWith('/') ? API_URL + plat.photo : plat.photo)}"
                      alt="${escHtml(plat.titre)}"
                      style="width:100%; max-width:280px; height:200px; object-fit:cover; border-radius:8px;">
             </div>` : ''}

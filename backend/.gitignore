@@ -5,3 +5,4 @@ node_modules
 /public/bundles/
 /var/
 /vendor/vendor/
+vendor/
