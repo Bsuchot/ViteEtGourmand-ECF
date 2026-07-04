@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../modules/api.js';
+import { api } from '../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
 
 function getDateStr(dateField) {
@@ -30,7 +30,7 @@ export function initCommandesAdmin() {
     });
 
     async function loadCommandes() {
-        const data = await api.get(`${API_URL}/employe/commande/readAll`);
+        const data = await api.get('/employe/commande/readAll');
         if (!data.success) return;
         allCommandes = data.data;
         populateFilters(allCommandes);
@@ -137,7 +137,7 @@ export function initCommandesAdmin() {
         document.querySelectorAll('#adminOrderTable select[data-id]').forEach(select => {
             select.addEventListener('change', async () => {
                 const id = select.dataset.id;
-                const data = await api.put(`${API_URL}/employe/commande/${id}/statut`, { statut: select.value });
+                const data = await api.put(`/employe/commande/${id}/statut`, { statut: select.value });
                 if (data.success){showAlert('Statut mis à jour avec succès !', 'success')}else {showAlert('Erreur lors du changement de statut.', 'danger')   
                 }
                 ;
@@ -156,7 +156,7 @@ export function initCommandesAdmin() {
         const modal = document.querySelector('#detailCommandeAdminModal');
 
         // Charger le détail complet
-        const res = await api.get(`${API_URL}/employe/commande/${id}`);
+        const res = await api.get(`/employe/commande/${id}`);
         const detail = res.success ? res.data : c;
 
         // Titre menu
@@ -189,7 +189,7 @@ export function initCommandesAdmin() {
         `;
 
         // Plats depuis le menu
-        const menuRes = await api.get(`${API_URL}/menu/${detail.menuId}`);
+        const menuRes = await api.get(`/menu/${detail.menuId}`);
         const plats = menuRes.success ? (menuRes.data.plats ?? []) : [];
 
         
@@ -227,7 +227,7 @@ export function initCommandesAdmin() {
             btnAnnul.parentNode.replaceChild(newBtn, btnAnnul);
 
             newBtn.addEventListener('click', async () => {
-                const res = await api.delete(`${API_URL}/commande/${id}`);
+                const res = await api.delete(`/commande/${id}`);
                 if (res.success) {
                     bootstrap.Modal.getInstance(document.getElementById('annulationCommandModal'))?.hide();
                     bootstrap.Modal.getInstance(modal)?.hide();

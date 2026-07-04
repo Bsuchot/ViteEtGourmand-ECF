@@ -1,6 +1,6 @@
 import { showAlert } from '../modules/alerts.js';
 import { isConnected } from '../main.js';
-import { api, API_URL } from '../modules/api.js';
+import { api } from '../modules/api.js';
 
 // ─── État global ─────────────────────────────────────────────────────────────
 let allMenus = [];
@@ -28,9 +28,9 @@ function displayPlat(container, plat, label) {
 // ─── Point d'entrée (appelé par le Router) ───────────────────────────────────
 export async function init() {
     const [data, dataThemes, dataRegimes] = await Promise.all([
-        api.get('${API_URL}/menu/readAll'),
-        api.get('${API_URL}/theme/readAll'),
-        api.get('${API_URL}/regime/readAll'),
+        api.get('/menu/readAll'),
+        api.get('/theme/readAll'),
+        api.get('/regime/readAll'),
     ]);
 
     if (data.success) {
@@ -462,7 +462,7 @@ function initCommandModal() {
         let plats = menuCache.get(String(menuId));
 
         if (!plats) {
-            const res = await api.get(`${API_URL}/menu/${menuId}`);
+            const res = await api.get(`/menu/${menuId}`);
             if (!res.success) return;
             plats = res.data.plats ?? [];
             menuCache.set(String(menuId), plats);
@@ -589,7 +589,7 @@ function initConfirmationModal() {
         btnCommander?.addEventListener('click', async (e) => {
             e.preventDefault();
             try {
-                const res = await api.post('${API_URL}/commande/create', {
+                const res = await api.post('/commande/create', {
                     datePrestation:   date,
                     heureLivraison:   heure,
                     adresseLivraison: adresseLivraison,
@@ -618,7 +618,7 @@ function initConfirmationModal() {
 // ─── CALCUL FRAIS LIVRAISON ──────────────────────────────────────────────────
 async function calculerFraisLivraison(adresseDestination) {
     try {
-        const res = await api.post('${API_URL}/commande/fraisLivraison', { adresse: adresseDestination });
+        const res = await api.post('/commande/fraisLivraison', { adresse: adresseDestination });
         return res.success ? (res.data.frais ?? 5) : 5;
     } catch {
         return 5; // fallback si API indisponible

@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../modules/api.js';
+import { api } from '../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
 
 
@@ -46,7 +46,7 @@ export function initEmployes() {
     // Confirmation suppression — une seule fois
     document.getElementById('btnConfirmDelete')?.addEventListener('click', async () => {
         if (!pendingDeleteId) return;
-        const data = await api.delete(`${API_URL}/admin/employe/${pendingDeleteId}`);
+        const data = await api.delete(`/admin/employe/${pendingDeleteId}`);
         if (data.success) {
             loadEmployes();
             bootstrap.Modal.getInstance(document.getElementById('confirmationDeleteModal'))?.hide();
@@ -61,7 +61,7 @@ export function initEmployes() {
     });
 
     async function loadEmployes() {
-        const data = await api.get(`${API_URL}/admin/employe/readAll`);
+        const data = await api.get('/admin/employe/readAll');
         if (!data.success) return;
         employes = data.data;
         renderEmployes(employes);
@@ -129,7 +129,7 @@ export function initEmployes() {
         return;
     }
 
-    const data = await api.put(`${API_URL}/admin/employe/update`, payload);
+    const data = await api.put('/admin/employe/update', payload);
     if (data.success) {
         showAlert('Employés mis à jour.', 'success');
         loadEmployes();
@@ -155,7 +155,7 @@ export function initEmployes() {
 
         if (!ok) return;
 
-        const data = await api.post(`${API_URL}/admin/employe/create`, {
+        const data = await api.post('/admin/employe/create', {
             email:    emailInput.value.trim(),
             nom:      nomInput.value.trim(),
             prenom:   prenomInput.value.trim(),

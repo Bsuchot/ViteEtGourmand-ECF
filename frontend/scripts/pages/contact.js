@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../modules/api.js';
+import { api } from '../../modules/api.js';
 import { showAlert } from '../modules/alerts.js';
 
 const emailInput     = document.getElementById('contactEmailFormControlInput');
@@ -29,7 +29,7 @@ document.querySelector('#contactForm')?.addEventListener('submit', async (e) => 
         return;
     }
 
-    const res = await api.post(`${API_URL}/contact`, { email, nom, prenom, titre, message });
+    const res = await api.post('/contact', { email, nom, prenom, titre, message });
     if (res.success) {
         showAlert('Votre message a bien été envoyé !', 'success');
         emailInput.value     = '';

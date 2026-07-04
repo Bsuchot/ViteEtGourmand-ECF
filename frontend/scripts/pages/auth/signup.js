@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../modules/api.js';
+import { api } from '../../modules/api.js';
 import { showAlert } from '../../modules/alerts.js';
 
 
@@ -152,7 +152,7 @@ export function init() {
             ? `${inputCity.value.trim()} (${inputPostal.value.trim()})`
             : inputCity.value.trim();
 
-        const data = await api.post(`${API_URL}/utilisateur/registration`, {
+        const data = await api.post('/utilisateur/registration', {
             nom: inputNom.value.trim(),
             prenom: inputPrenom.value.trim(),
             telephone: inputTelephone.value.trim(),

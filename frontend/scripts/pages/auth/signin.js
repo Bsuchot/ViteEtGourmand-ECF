@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../modules/api.js';
+import { api } from '../../modules/api.js';
 import { setCookie } from '../../main.js';
 import { showAlert } from '../../modules/alerts.js';
 
@@ -21,7 +21,7 @@ async function checkCredentials() {
         return;
     }
 
-    const data = await api.post(`${API_URL}/utilisateur/login`, { email, password });
+    const data = await api.post('/utilisateur/login', { email, password });
 
     if (data.success) {
         const role = data.data.user.role.replace('ROLE_', '').toLowerCase();

@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../modules/api.js';
+import { api } from '../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
 
 export function initStatsAdmin() {
@@ -19,7 +19,7 @@ export function initStatsAdmin() {
         if (dateDebut) params.append('dateDebut', dateDebut);
         if (dateFin)   params.append('dateFin',   dateFin);
 
-        const res = await api.get(`${API_URL}/commande/stats?${params.toString()}`);
+        const res = await api.get('/commande/stats', { params });
         if (!res.success || !res.data?.length) {
             showAlert('Aucune stat disponible.', 'warning');
             return;

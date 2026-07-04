@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../modules/api.js';
+import { api } from '../../modules/api.js';
 import { getCookie } from '../../../main.js';
 import { showAlert } from '../../../modules/alerts.js';
 
@@ -78,7 +78,7 @@ export function initProfile() {
 
     // ─── Chargement utilisateur ───────────────────────────────────────────────
     async function loadUser() {
-        const data = await api.get(`${API_URL}/utilisateur/${userId}`);
+        const data = await api.get(`/utilisateur/${userId}`);
         if (!data.success) return;
         const u = data.data;
 
@@ -137,7 +137,7 @@ export function initProfile() {
             return;
         }
 
-        const data = await api.put(`${API_URL}/utilisateur/${userId}`, payload);
+        const data = await api.put(`/utilisateur/${userId}`, payload);
         if (data.success) {
             originalData = { ...originalData, ...payload };
             showAlert('Données mises à jour.', 'success');
@@ -148,7 +148,7 @@ export function initProfile() {
 
     // ─── Mot de passe ─────────────────────────────────────────────────────────
     btnPassword?.addEventListener('click', async () => {
-        const data = await api.put(`${API_URL}/utilisateur/${userId}/password`, {
+        const data = await api.put(`/utilisateur/${userId}/password`, {
             currentPassword: inputPassword.value,
             newPassword:     inputNewPassword.value,
         });

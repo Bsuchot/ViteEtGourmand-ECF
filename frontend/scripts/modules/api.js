@@ -1,4 +1,3 @@
-export const API_URL = 'https://vite-et-gourmand-ecf-8adbd2933cc2.herokuapp.com';
 
 const BASE_URL = 'https://vite-et-gourmand-ecf-8adbd2933cc2.herokuapp.com/api';
 

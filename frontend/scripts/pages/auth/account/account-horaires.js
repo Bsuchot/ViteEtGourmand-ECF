@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../modules/api.js';
+import { api } from '../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
 
 const jours = [
@@ -24,7 +24,7 @@ export function initHoraires() {
     });
 
     async function loadHoraires() {
-        const data = await api.get(`${API_URL}/horaire/readAll`);
+        const data = await api.get('/horaire/readAll');
         if (!data.success) return;
 
         data.data.forEach(h => {
@@ -47,7 +47,7 @@ export function initHoraires() {
             heureFermeture: document.getElementById(j.fermeture).value,
         })).filter(h => h.id);
 
-        const data = await api.put(`${API_URL}/horaire/update`, payload);
+        const data = await api.put('/horaire/update', payload);
         showAlert(data.success ? 'Horaires mis à jour.' : 'Erreur : ' + (data.error ?? 'Une erreur est survenue.'), data.success ? 'success' : 'danger');
     });
 }

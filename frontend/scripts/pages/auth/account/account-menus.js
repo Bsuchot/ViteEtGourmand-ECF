@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../modules/api.js';
+import { api } from '../../modules/api.js';
 import { loadPlats, getPlats } from './account-plats.js';
 import { showAlert } from '../../../modules/alerts.js';
 import TomSelect from 'tom-select';
@@ -40,7 +40,7 @@ export function initMenus() {
 
     document.getElementById('btnConfirmDelete')?.addEventListener('click', async () => {
         if (!pendingDeleteId) return;
-        const data = await api.delete(`${API_URL}/menu/${pendingDeleteId}`);
+        const data = await api.delete(`/menu/${pendingDeleteId}`);
         if (data.success) {
             await loadAll();
             bootstrap.Modal.getInstance(document.getElementById('confirmationDeleteModal'))?.hide();
@@ -61,9 +61,9 @@ export function initMenus() {
 
     async function loadAll() {
         const [dataMenus, dataThemes, dataRegimes] = await Promise.all([
-            api.get(`${API_URL}/menu/readAll`),
-            api.get(`${API_URL}/theme/readAll`),
-            api.get(`${API_URL}/regime/readAll`),
+            api.get('/menu/readAll'),
+            api.get('/theme/readAll'),
+            api.get('/regime/readAll'),
         ]);
         await loadPlats();
 
@@ -86,9 +86,9 @@ export function initMenus() {
 
         tomSelectThemeNew = new TomSelect('#themes', {
             create: async (input, callback) => {
-                const data = await api.post(`${API_URL}/theme/create`, { libelle: input });
+                const data = await api.post('/theme/create', { libelle: input });
                 if (data.success) {
-                    const updated = await api.get(`${API_URL}/theme/readAll`);
+                    const updated = await api.get('/theme/readAll');
                     if (updated.success) themes = updated.data;
                     callback({ value: data.data?.id, text: input });
                 } else {
@@ -165,7 +165,7 @@ export function initMenus() {
                     <td>${m.prixParPersonne ?? '—'} €</td>
                     <td>${m.regimeLibelle ?? '—'}</td>
                     <td><input type="number" class="form-control form-control-sm" value="${m.quantiteRestante ?? 0}" data-field="quantiteRestante" min="0" style="width:80px;"></td>
-                    <td>${m.image ? `<img src="${m.image?.startsWith('/') ? API_URL + m.image : m.image}" height="40" alt="${m.titre}">` : '—'}</td>
+                    <td>${m.image ? `<img src="${m.image?.startsWith('/') ? m.image : m.image}" height="40" alt="${m.titre}">` : '—'}</td>
                     <td>${m.delai ?? '—'} jours</td>
                     <td>
                         <select class="form-select form-select-sm" data-field="statut">

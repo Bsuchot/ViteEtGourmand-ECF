@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../modules/api.js';
+import { api } from '../../modules/api.js';
 import { showAlert } from '../../modules/alerts.js';
 
 const token   = new URLSearchParams(globalThis.location.search).get('token');
@@ -17,7 +17,7 @@ btn?.addEventListener('click', async () => {
         return;
     }
 
-    const res = await api.post(`${API_URL}/utilisateur/reset-password`, { token, newPassword: password });
+    const res = await api.post('/utilisateur/reset-password', { token, newPassword: password });
     if (res.success) {
         showAlert('Mot de passe réinitialisé ! Vous pouvez vous connecter.', 'success');
         setTimeout(() => globalThis.location.href = '/signin', 2000);

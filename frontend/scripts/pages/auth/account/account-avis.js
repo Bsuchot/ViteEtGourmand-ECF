@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../modules/api.js';
+import { api } from '../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────
@@ -26,7 +26,7 @@ export function initAvis() {
 
     // ─── Chargement ───────────────────────────────────────────────────────────
     async function loadAvis() {
-        const res = await api.get(`${API_URL}/avis/readAll`);
+        const res = await api.get('/avis/readAll');
         if (!res.success) {
             showAlert('Erreur lors du chargement des avis.', 'danger');
             return;
@@ -99,7 +99,7 @@ export function initAvis() {
 
             if (current && current.statut !== statut) {
                 promises.push(
-                    api.put(`${API_URL}/employe/avis/${id}/statut`, { statut })
+                    api.put(`/employe/avis/${id}/statut`, { statut })
                 );
             }
         });
@@ -124,7 +124,7 @@ export function initAvis() {
     document.getElementById('btnConfirmDelete')?.addEventListener('click', async () => {
         if (!pendingDeleteId) return;
 
-        const res = await api.delete(`${API_URL}/avis/${pendingDeleteId}`);
+        const res = await api.delete(`/avis/${pendingDeleteId}`);
         if (res.success) {
             bootstrap.Modal.getInstance(document.getElementById('confirmationDeleteModal'))?.hide();
             await loadAvis();

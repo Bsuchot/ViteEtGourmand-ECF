@@ -1,4 +1,4 @@
-import { api, API_URL } from '../../modules/api.js';
+import { api } from '../../modules/api.js';
 import { showAlert } from '../modules/alerts.js';
 
 // ─── Point d'entrée ───────────────────────────────────────────────────────────
@@ -12,7 +12,7 @@ async function loadAvis() {
     const container = document.querySelector('.container.my-4');
     if (!container) return;
 
-    const res = await api.get(`${API_URL}/avis/readAll`);
+    const res = await api.get('/avis/readAll');
     if (!res.success) return;
 
     const avis = (res.data ?? []).filter(a => a.statut === 'Publié');
@@ -72,13 +72,13 @@ function initModal() {
     // Préremplir prénom/nom si connecté
     modal.addEventListener('show.bs.modal', async () => {
         try {
-            const me = await api.get(`${API_URL}/utilisateur/me`);
+            const me = await api.get('/utilisateur/me');
             if (!me.success) return;
 
             const userId = me.data.user?.id ?? me.data.id;
             if (!userId) return;
 
-            const res = await api.get(`${API_URL}/utilisateur/${userId}`);
+            const res = await api.get(`/utilisateur/${userId}`);
             if (!res.success) return;
 
             const u = res.data;
@@ -125,7 +125,7 @@ function initModal() {
         if (!valid) return;
 
         try {
-            const res = await api.post(`${API_URL}/avis/create`, { titre, description, note });
+            const res = await api.post('/avis/create', { titre, description, note });
 
             if (res.success) {
                 bootstrap.Modal.getInstance(modal)?.hide();
