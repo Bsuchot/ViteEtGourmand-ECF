@@ -28,9 +28,9 @@ function displayPlat(container, plat, label) {
 // ─── Point d'entrée (appelé par le Router) ───────────────────────────────────
 export async function init() {
     const [data, dataThemes, dataRegimes] = await Promise.all([
-        api.get('/menu/readAll'),
-        api.get('/theme/readAll'),
-        api.get('/regime/readAll'),
+        api.get('${API_URL}/menu/readAll'),
+        api.get('${API_URL}/theme/readAll'),
+        api.get('${API_URL}/regime/readAll'),
     ]);
 
     if (data.success) {
@@ -300,14 +300,14 @@ function initOrderModal() {
         if (!isConnected()) return;
         try {
             // 1. Récupérer l'id de l'utilisateur connecté
-            const me = await api.get('/utilisateur/me');
+            const me = await api.get('${API_URL}/utilisateur/me');
             if (!me.success) return;
 
             const userId = me.data.user?.id ?? me.data.id;
             if (!userId) return;
 
             // 2. Récupérer le profil complet
-            const res = await api.get(`/utilisateur/${userId}`);
+            const res = await api.get(`${API_URL}/utilisateur/${userId}`);
             if (!res.success) return;
 
             const u = res.data;
@@ -462,7 +462,7 @@ function initCommandModal() {
         let plats = menuCache.get(String(menuId));
 
         if (!plats) {
-            const res = await api.get(`/menu/${menuId}`);
+            const res = await api.get(`${API_URL}/menu/${menuId}`);
             if (!res.success) return;
             plats = res.data.plats ?? [];
             menuCache.set(String(menuId), plats);
@@ -589,7 +589,7 @@ function initConfirmationModal() {
         btnCommander?.addEventListener('click', async (e) => {
             e.preventDefault();
             try {
-                const res = await api.post('/commande/create', {
+                const res = await api.post('${API_URL}/commande/create', {
                     datePrestation:   date,
                     heureLivraison:   heure,
                     adresseLivraison: adresseLivraison,
@@ -618,7 +618,7 @@ function initConfirmationModal() {
 // ─── CALCUL FRAIS LIVRAISON ──────────────────────────────────────────────────
 async function calculerFraisLivraison(adresseDestination) {
     try {
-        const res = await api.post('/commande/fraisLivraison', { adresse: adresseDestination });
+        const res = await api.post('${API_URL}/commande/fraisLivraison', { adresse: adresseDestination });
         return res.success ? (res.data.frais ?? 5) : 5;
     } catch {
         return 5; // fallback si API indisponible

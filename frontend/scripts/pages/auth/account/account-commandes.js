@@ -1,4 +1,4 @@
-import { api } from '../../../modules/api.js';
+import { api, API_URL } from '../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
 
 function getDateStr(dateField) {
@@ -72,7 +72,7 @@ function setTextById(modal, selector, text) {
 function fillModalPlats(modal, c, inputNb, elMenu, elTtc, liPromo, prixLivraison) {
     if (!c.menuId) return;
 
-    api.get(`/menu/${c.menuId}`).then(res => {
+    api.get(`${API_URL}/menu/${c.menuId}`).then(res => {
         if (!res.success) return;
 
         const min      = Number.parseInt(res.data.nombrePersonneMinimum ?? 1);
@@ -108,7 +108,7 @@ export function initCommandes() {
     });
 
     async function loadCommandes() {
-        const data = await api.get('/commande/mesCommandes');
+        const data = await api.get(`${API_URL}/commande/mesCommandes`);
         if (!data.success) return;
         allCommandes = data.data;
         populateFilters(allCommandes);
