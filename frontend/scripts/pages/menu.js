@@ -300,14 +300,14 @@ function initOrderModal() {
         if (!isConnected()) return;
         try {
             // 1. Récupérer l'id de l'utilisateur connecté
-            const me = await api.get('${API_URL}/utilisateur/me');
+            const me = await api.get('/utilisateur/me');
             if (!me.success) return;
 
             const userId = me.data.user?.id ?? me.data.id;
             if (!userId) return;
 
             // 2. Récupérer le profil complet
-            const res = await api.get(`${API_URL}/utilisateur/${userId}`);
+            const res = await api.get(`/utilisateur/${userId}`);
             if (!res.success) return;
 
             const u = res.data;

@@ -1,4 +1,4 @@
-import { api } from '../../modules/api.js';
+import { api } from '../../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
 
 export function initStatsAdmin() {
