@@ -1,4 +1,4 @@
-import { api } from '../../../modules/api.js';
+import { api, API_URL } from '../../modules/api.js';
 import { showAlert } from '../../../modules/alerts.js';
 
 let allPlats            = [];
@@ -18,8 +18,8 @@ function fileToBase64(file) {
 
 export async function loadPlats() {
     const [dataPlats, dataAllergenes] = await Promise.all([
-        api.get('/plat/readAll'),
-        api.get('/allergene/readAll'),
+        api.get(`${API_URL}/plat/readAll`),
+        api.get(`${API_URL}/allergene/readAll`),
     ]);
     if (dataPlats.success)      allPlats   = dataPlats.data;
     if (dataAllergenes.success) allergenes = dataAllergenes.data;
@@ -41,7 +41,7 @@ export function initPlats() {
     // Confirmation suppression plat
     document.getElementById('btnConfirmDelete')?.addEventListener('click', async () => {
         if (!pendingDeletePlatId) return;
-        const data = await api.delete(`/plat/${pendingDeletePlatId}`);
+        const data = await api.delete(`${API_URL}/plat/${pendingDeletePlatId}`);
         if (data.success) {
             await loadPlats();
             renderPlats();
@@ -80,14 +80,14 @@ export function initPlats() {
         const photo = await fileToBase64(fileInput.files[0]);
 
         // Upload de l'image
-        const uploadData = await api.post('/upload', { photo });
+        const uploadData = await api.post(`${API_URL}/upload`, { photo });
         if (!uploadData.success) {
             showAlert('Erreur lors de l\'upload de l\'image.', 'danger');
             return;
         }
 
         // Créer le plat avec l'URL
-        const data = await api.post('/plat/create', {
+        const data = await api.post(`${API_URL}/plat/create`, {
             titre,
             category,
             photo:      uploadData.data.url,
@@ -123,9 +123,9 @@ function initTomSelect() {
 
     tomSelectInstance = new TomSelect('#allergenes', {
         create: async (input, callback) => {
-            const data = await api.post('/allergene/create', { libelle: input });
+            const data = await api.post(`${API_URL}/allergene/create`, { libelle: input });
             if (data.success) {
-                const updated = await api.get('/allergene/readAll');
+                const updated = await api.get(`${API_URL}/allergene/readAll`);
                 if (updated.success) allergenes = updated.data;
                 callback({ value: data.data.id, text: input });
             } else {

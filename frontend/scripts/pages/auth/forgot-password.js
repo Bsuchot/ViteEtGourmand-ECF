@@ -1,4 +1,4 @@
-import { api } from '../../modules/api.js';
+import { api, API_URL } from '../../modules/api.js';
 import { showAlert } from '../../modules/alerts.js';
 
 const btn   = document.getElementById('btnForgotPassword');
@@ -11,7 +11,7 @@ btn?.addEventListener('click', async () => {
         return;
     }
 
-    const res = await api.post('/utilisateur/forgot-password', { email });
+    const res = await api.post(`${API_URL}/utilisateur/forgot-password`, { email });
     if (res.success) {
         showAlert(res.data?.message ?? 'Lien envoyé.', 'success');
     } else {
