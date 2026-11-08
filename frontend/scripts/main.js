@@ -13,7 +13,7 @@ async function signout(e) {
     if (e) e.preventDefault();
 
     try {
-        await fetch(`${API_URL}/utilisateur/logout`, {
+        await fetch(`${API_URL}/api/utilisateur/logout`, {
             method: "POST",
             credentials: "include",
             headers: {
@@ -68,7 +68,7 @@ function eraseCookie(name) {
 -------------------------- */
 async function initSession() {
     try {
-        const data = await fetch(`${API_URL}/utilisateur/me`, {
+        const data = await fetch(`${API_URL}/api/utilisateur/me`, {
             credentials: "include"
         }).then(r => r.json());
 
