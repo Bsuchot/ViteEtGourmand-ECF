@@ -1,4 +1,5 @@
-CREATE DATABASE vite_et_gourmand;
+CREATE DATABASE IF NOT EXISTS vite_et_gourmand;
+
 
 USE vite_et_gourmand;
 
@@ -129,32 +130,7 @@ CREATE TABLE horaire
     heure_fermeture VARCHAR(50) NOT NULL
 );
 
-INSERT INTO role (libelle) VALUES
-    ('ROLE_ADMIN'),
-    ('ROLE_EMPLOYE'),
-    ('ROLE_USER');
 
-INSERT INTO utilisateur (email, password, prenom, nom, telephone, ville, pays, adresse, statut, role_id) VALUES
-    (
-     'admin@mail.fr',
-     '$2y$10$6W.7FUTUvRXWGQbaXp9Wlu51aNNigZ9VXxCX5vouW8QIxcLyN2EG2',
-     'prenom',
-     'nom',
-     'telephone',
-     'ville',
-     'pays',
-     'adresse',
-     'actif',
-     1
-     );
-INSERT INTO horaire (jour, statut, heure_ouverture, heure_fermeture) VALUES
-    ('lundi','fermé','00:00','00:00'),
-    ('mardi','fermé','00:00','00:00'),
-    ('mercredi','fermé','00:00','00:00'),
-    ('jeudi','fermé','00:00','00:00'),
-    ('vendredi','fermé','00:00','00:00'),
-    ('samedi','fermé','00:00','00:00'),
-    ('dimanche','fermé','00:00','00:00');
 
 
 
