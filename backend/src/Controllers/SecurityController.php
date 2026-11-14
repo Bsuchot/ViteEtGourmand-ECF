@@ -496,7 +496,6 @@ class SecurityController extends AbstractController
             if (!$user) { $this->success(['message' => 'Si cet email existe, un lien a été envoyé.']); return; }
 
             $token     = bin2hex(random_bytes(32));
-            $expiresAt = (new \DateTimeImmutable('+1 hour'))->format('Y-m-d H:i:s');
 
             $repository->saveResetToken($user['id'], $token, $expiresAt);
 

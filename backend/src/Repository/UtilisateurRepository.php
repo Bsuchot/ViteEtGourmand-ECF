@@ -120,24 +120,28 @@ class UtilisateurRepository extends Repository
             'id'       => $utilisateur->getId(),
         ]);
     }
-    public function saveResetToken(int $id, string $token, string $expiresAt): void
+    public function saveResetToken(int $id, string $token): void
     {
         $stmt = $this->pdo->prepare("
-        UPDATE utilisateur 
-        SET reset_token = :token, reset_token_expires_at = :expiresAt 
-        WHERE id = :id
-    ");
-        $stmt->execute(['token' => $token, 'expiresAt' => $expiresAt, 'id' => $id]);
+            UPDATE utilisateur
+            SET reset_token = :token,
+                reset_token_expires_at = DATE_ADD(NOW(), INTERVAL 1 HOUR)
+            WHERE id = :id
+        ");
+        $stmt->execute([
+            'token' => hash('sha256', $token),
+            'id'    => $id,
+        ]);
     }
 
     public function findByResetToken(string $token): ?array
     {
         $stmt = $this->pdo->prepare("
-        SELECT * FROM utilisateur 
-        WHERE reset_token = :token 
-        AND reset_token_expires_at > NOW()
-    ");
-        $stmt->execute(['token' => $token]);
+            SELECT * FROM utilisateur
+            WHERE reset_token = :token
+            AND reset_token_expires_at > NOW()
+        ");
+        $stmt->execute(['token' => hash('sha256', $token)]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
