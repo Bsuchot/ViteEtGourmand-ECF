@@ -8,12 +8,12 @@ export default defineConfig({
         },
         proxy: {
             '/api': {
-                target: 'http://localhost:8000',
+                target: 'http://backend:80',
                 changeOrigin: true,
                 secure: false,
             },
             '/uploads': {
-                target: 'http://localhost:8000',
+                target: 'http://backend:80',
                 changeOrigin: true,
                 secure: false,
             }
