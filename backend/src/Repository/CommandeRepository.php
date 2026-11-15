@@ -97,8 +97,8 @@ class CommandeRepository extends Repository
             'nombrePersonne'         => $commande->getNombrePersonne(),
             'prixLivraison'      => $commande->getPrixLivraison(),
             'statut'             => $commande->getStatut(),
-            'pretMateriel'       => $commande->getPretMateriel(),
-            'restitutionMateriel'=> $commande->getRestitutionMateriel(),
+            'pretMateriel'       => (int) $commande->getPretMateriel(),
+            'restitutionMateriel'=> (int) $commande->getRestitutionMateriel(),
             'utilisateur_id'     => $commande->getUtilisateurId(),
             'menu_id'            => $commande->getMenuId(),
         ]);
@@ -132,8 +132,8 @@ class CommandeRepository extends Repository
             'nombrePersonne'         => $commande->getNombrePersonne(),
             'prixLivraison'      => $commande->getPrixLivraison(),
             'statut'             => $commande->getStatut(),
-            'pretMateriel'       => $commande->getPretMateriel(),
-            'restitutionMateriel'=> $commande->getRestitutionMateriel(),
+            'pretMateriel'       => (int) $commande->getPretMateriel(),
+            'restitutionMateriel'=> (int) $commande->getRestitutionMateriel(),
             'menu_id'            => $commande->getMenuId(),
             'id'                 => $commande->getId(),
         ]);
