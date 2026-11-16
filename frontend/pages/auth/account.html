@@ -352,6 +352,7 @@
             <div class="text-center">
               <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#newMenuModal">Créer un nouveau menu</button>
               <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#allPlatModal">Liste des plats</button>
+              <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#allAllergeneModal">Liste des allergènes</button>
               <button type="button" class="btn btn-primary" id="btnSaveMenuChanges">Valider les changements</button>
             </div>
           </div>
@@ -1006,6 +1007,7 @@
                       <th scope="col">Photo</th>
                       <th scope="col">Allergènes</th>
                       <th scope="col"></th>
+                      <th scope="col"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1023,6 +1025,7 @@
                       <th scope="col">Titre</th>
                       <th scope="col">Photo</th>
                       <th scope="col">Allergènes</th>
+                      <th scope="col"></th>
                       <th scope="col"></th>
                     </tr>
                   </thead>
@@ -1042,6 +1045,7 @@
                       <th scope="col">Photo</th>
                       <th scope="col">Allergènes</th>
                       <th scope="col"></th>
+                      <th scope="col"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1060,13 +1064,111 @@
     </div>
   </div>
 </div>
+<!--Modal edition plats-->
+<div class="modal fade" id="editPlatModal" tabindex="-1" aria-labelledby="editPlatModalLabel" data-bs-focus="true" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="" novalidate>
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editPlatModalLabel">Édition du plat</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <h5 class="text-center text-primary my-4">Modifier le plat</h5>
+            <div class="mb-3">
+              <label for="editPlatTitleInput" class="form-label">Titre du plat</label>
+              <input type="text" class="form-control" id="editPlatTitleInput" placeholder="Titre du plat">
+              <div class="invalid-feedback">Le titre est requis.</div>
+            </div>
+            <div class="mb-3">
+              <label for="editPlatCategorySelect" class="form-label">Catégorie du plat</label>
+              <select class="form-select" aria-label="Catégorie du plat" id="editPlatCategorySelect">
+                <option value="entree">Entrée</option>
+                <option value="plat">Plat</option>
+                <option value="dessert">Dessert</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="editPlatPhotoFormFile" class="form-label">Photo du plat</label>
+              <div class="mb-2">
+                <img id="editPlatPhotoPreview" class="img-thumbnail d-none" style="max-height: 120px;" alt="">
+              </div>
+              <input class="form-control" type="file" id="editPlatPhotoFormFile" accept="image/*">
+              <div class="form-text">Laisser vide pour conserver la photo actuelle.</div>
+            </div>
+            <div class="mb-3">
+              <label for="editAllergenes" class="form-label">Allergènes</label>
+              <select id="editAllergenes" class="form-select" multiple></select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="btnValiderEditPlat">Valider</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--Modal gestion allergènes-->
+<div class="modal fade" id="allAllergeneModal" tabindex="-1" aria-labelledby="allAllergeneModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="allAllergeneModalLabel">Gestion des allergènes</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <h5 class="text-center text-primary my-4">Liste des allergènes</h5>
+
+          <!-- Messages (succès / erreur) -->
+          <div id="allergeneFeedback" class="alert d-none py-2" role="alert"></div>
+
+          <!-- Ajout -->
+          <form id="formNewAllergene" class="row g-2 mb-4" novalidate>
+            <div class="col">
+              <label for="newAllergeneInput" class="visually-hidden">Nouvel allergène</label>
+              <input type="text" class="form-control" id="newAllergeneInput" placeholder="Nouvel allergène (ex : Gluten)" autocomplete="off">
+              <div class="invalid-feedback">Le nom de l'allergène est requis.</div>
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
+          </form>
+
+          <!-- Liste (remplie dynamiquement) -->
+          <div class="table-responsive">
+            <table class="table align-middle" id="tableAllergenes">
+              <thead>
+                <tr>
+                  <th scope="col">Allergène</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Les allergènes seront ajoutés ici dynamiquement -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer la liste</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!--Modal creation plats-->
 <div class="modal fade" id="newPlatModal" tabindex="-1" aria-labelledby="newPlatModalLabel" data-bs-focus="true" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="">
+      <form action="" novalidate>
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="newPlatModalLabel">Creation plats</h1>
+          <h1 class="modal-title fs-5" id="newPlatModalLabel">Création d'un plat</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -1075,32 +1177,31 @@
             <div class="mb-3">
               <label for="newPlatTitleInput" class="form-label">Titre du plat</label>
               <input type="text" class="form-control" id="newPlatTitleInput" placeholder="Titre du plat">
+              <div class="invalid-feedback">Le titre est requis.</div>
             </div>
-            <label for="newPlatCategorySelect" class="form-label">Catégorie du plat</label>
-                <select class="form-select" aria-label="new plat category select" id="newPlatCategorySelect">
-                  <option value="entree">Entrée</option>
-                  <option value="plat">Plat</option>
-                  <option value="dessert">Dessert</option>
-                </select>
-            </div> 
+            <div class="mb-3">
+              <label for="newPlatCategorySelect" class="form-label">Catégorie du plat</label>
+              <select class="form-select" aria-label="Catégorie du plat" id="newPlatCategorySelect">
+                <option value="entree">Entrée</option>
+                <option value="plat">Plat</option>
+                <option value="dessert">Dessert</option>
+              </select>
+            </div>
             <div class="mb-3">
               <label for="newPlatPhotoFormFile" class="form-label">Photo du plat</label>
-              <input class="form-control" type="file" id="newPlatPhotoFormFile">
+              <input class="form-control" type="file" id="newPlatPhotoFormFile" accept="image/*">
+            </div>
+            <div class="mb-3">
+              <label for="allergenes" class="form-label">Allergènes</label>
+              <select id="allergenes" name="allergenes[]" class="form-select" multiple></select>
+            </div>
           </div>
-        </div>
-        <div class="mb-3">
-            <label for="allergenes" class="form-label">Allergènes</label>
-            <select id="allergenes"
-                    name="allergenes[]"
-                    class="form-select"
-                    multiple>
-            </select>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" id="btnValiderNewPlat">Valider</button>
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
         </div>
-      </form> 
+      </form>
     </div>
   </div>
 </div>
