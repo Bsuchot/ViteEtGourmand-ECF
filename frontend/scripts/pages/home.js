@@ -1,4 +1,5 @@
 import { api } from '../modules/api.js';
+import { isConnected } from '../main.js';
 import { showAlert } from '../modules/alerts.js';
 
 // ─── Point d'entrée ───────────────────────────────────────────────────────────
@@ -69,8 +70,15 @@ function initModal() {
     const btnValider  = document.getElementById('btn-validate-review');
     if (!modal || !btnValider) return;
 
-    // Préremplir prénom/nom si connecté
-    modal.addEventListener('show.bs.modal', async () => {
+    modal.addEventListener('show.bs.modal', async (e) => {
+        // Visiteur non connecté : on annule l'ouverture
+        if (!isConnected()) {
+            e.preventDefault();
+            showAlert('Veuillez <a href="/signin">vous connecter</a> ou <a href="/signup">créer un compte</a> pour déposer un avis.', 'warning');
+            return;
+        }
+
+        // Préremplir prénom/nom
         try {
             const me = await api.get('/utilisateur/me');
             if (!me.success) return;
@@ -86,7 +94,7 @@ function initModal() {
             const inputNom    = document.getElementById('nameReviewInput');
             if (inputPrenom && u.prenom) inputPrenom.value = u.prenom;
             if (inputNom    && u.nom)    inputNom.value    = u.nom;
-        } catch { /* non connecté, champs vides */ }
+        } catch { /* champs vides */ }
     });
 
     // Soumission

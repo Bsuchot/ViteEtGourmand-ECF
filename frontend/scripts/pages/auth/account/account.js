@@ -5,6 +5,7 @@ import { initHoraires }        from './account-horaires.js';
 import { initEmployes }        from './account-employes.js';
 import { initMenus }           from './account-menus.js';
 import { initPlats }           from './account-plats.js';
+import { initAllergenes }      from './account-allergenes.js';
 import { initStatsAdmin }      from './account-stats-admin.js';
 import { initAvis }            from './account-avis.js';
 
@@ -17,6 +18,7 @@ export function init() {
     initEmployes();
     initMenus();
     initPlats();
+    initAllergenes();
     initStatsAdmin();
     initAvis();
 }

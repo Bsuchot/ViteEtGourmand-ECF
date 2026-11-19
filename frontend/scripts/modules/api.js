@@ -1,4 +1,9 @@
-export const API_URL = 'https://vite-et-gourmand-ecf-8adbd2933cc2.herokuapp.com';
+const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+export const API_URL = isLocal
+    ? ''
+    : 'https://vite-et-gourmand-ecf-8adbd2933cc2.herokuapp.com';
+
 const BASE_URL = `${API_URL}/api`;
 
 let csrfToken = null;
